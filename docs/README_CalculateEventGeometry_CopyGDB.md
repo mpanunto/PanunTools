@@ -22,7 +22,7 @@ Lastly, any features in the new Master Incident GDB and new Master Incident Back
 
 The general idea behind this tool is that it reduces the GISS workload down to simply ensuring that IncidentName values are clean.
 
-If using this tool, the general workflow is:
+### If using this tool, the general workflow is:
 1) Download Map (aka Create Local Copy) or Sync
 2) Perform all feature and attribute edits
     - The tool will calculate geometries for you
