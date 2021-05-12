@@ -19,26 +19,8 @@ Lastly, any features in the new Master Incident GDB and new Backup GDB whose Inc
 
 The general idea behind this tool is that it reduces the GISS workload down to simply ensuring that IncidentName values are clean.
 
-If using this script, the general workflow is that you first perform all your feature and attribute edits, save/stop editing, then you run this script to:
-
-Calculate geometry
-Create a new master incident fGDB
-Create a new backup fGDB
-Rename feature classes for the master incident fGDB and backup fGDB
- 
-
-After the script has ran, you then manually sync your edits to the server. Interested in trying it out? You can download the script here:
-
-https://drive.google.com/file/d/114VISXtzo_aTUOJPg2XywnUJiq6QAcGv/view?usp=sharing 
-
-Also, just for reference, below is a summary of some of the major differences between ArcGIS Pro and ArcMap that I’ve encountered which can make this edit process a bit cumbersome, warranting a scripted solution.
-
- 
-
-ArGIS Pro:
-
-- “Download Map” results in a local mobile/runtime geodatabase file (.geodatabase)
-- When selecting Download Map, ArcGIS Pro projects all the feature classes to the Map Frame’s coordinate system when creating the local .geodatabase file. So, you need to make sure you set your Map Frame’s projection before clicking Download Map. Otherwise, there will only be geographic/geodesic options when calculating geometry due to the NIFS’s coordinate system being WGS84.
-- The Calculate Geometry tool allows you to specify a different coordinate system when calculating geometry. However, this tool seems to have poor performance when calculating geometry for the feature classes within the mobile/runtime .geodatabase file when there are many features present. Additionally, it yields lots of decimals when calculating Lat/Long coordinates, which is not a big deal, just kind of annoying.
-- An additional step must be taken in order to convert the mobile/runtime .geodatabase file to a fGDB, by running the “Mobile Geodatabase to File Geodatabase” tool.
-- The feature class names in the mobile/runtime .geodatabase differ compared to those in an ArcMap local copy fGDB. Not a big deal as long as everyone is using the same software, just kind of annoying.
+If using this tool, the general workflow is:
+- Perform all your feature and attribute edits
+- Save Edits
+- Run this tool
+- Sync
