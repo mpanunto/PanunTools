@@ -1,5 +1,4 @@
 # Panuntools
-Panunto derived tools for the GISS
 
 1) [Calculate Ownership](docs/README_CalculateOwnership.md)
 2) [Create Fire Progression](docs/README_CreateFireProgression.md)
