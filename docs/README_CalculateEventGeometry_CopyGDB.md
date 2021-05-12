@@ -1,7 +1,7 @@
 # GISS Workflow Assistant
 
 To improve quality of life while performing the GISS Workflow, this tool does the following:
-- Calculates geometry for all 8 Event feature classes (only if the geometry has changed)
+- Calculates geometry for all 8 Event feature classes (only geometries have changed)
 - Inserts missing IrwinIDs
 - Creates a new Master Incident GDB
 - Creates a new Master Incident Backup GDB
