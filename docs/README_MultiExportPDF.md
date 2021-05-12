@@ -17,7 +17,7 @@ Here is a sample of what the spreadsheet looks like:
 2. Edit the spreadsheet so the information corresponds to the incident
 3. Keep the script in the same directory as the toolbox
 4. Set the path to the script in the script tool properties
-5. Specify Incident Name, Incident ID, Products directory, and the path to the MultiExportPDF.xlsx spreadsheet.
+5. Specify tool inputs: Incident Name, Incident ID, Products directory, and the path to the MultiExportPDF.xlsx spreadsheet.
 6. Run
 
 ![screenshot_MultiExportPDF_2.png](/docs/screenshot_MultiExportPDF_2.png?raw=true)
