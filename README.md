@@ -1,6 +1,6 @@
 # Panuntools
 
-A GitHub repository of tools that may be useful to GISS on wildfire incidents, created by [Matt Panunto](https://github.com/mpanunto)
+A GitHub repository of tools for GISS on wildfire incidents, created by [Matt Panunto](https://github.com/mpanunto)
 
 ## About
 
