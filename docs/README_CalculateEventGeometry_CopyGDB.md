@@ -1,4 +1,4 @@
-# Calculate Event Geometry & Copy GDB
+# GISS Workflow Assistant
 
 To improve GISS quality of life during the edit process, this tool does the following:
 - Calculates geometry for all 8 Event feature classes (only if the geometry has changed)
