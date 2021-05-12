@@ -20,7 +20,7 @@ After geometries have been calculated, the tool will copy the Mobile GDB to a ne
 
 Lastly, any features in the new Master Incident GDB and new Master Incident Backup GDB whose IncidentName does not match the user specified value will be deleted. However, users may specify additional incident names that they want to keep in these new GDBs. This is simply to maintain clean datasets that are relevant to only the fire(s) of interest.
 
-The idea behind this tool is that once all feature and attribute edits are made, it reduces the GISS workload down to simply ensuring that IncidentName values are clean. It's a lot easier to focus on one thing, rather than having to navigate through several processes.
+The idea behind this tool is that once all feature and attribute edits are made, it reduces the GISS workload down to simply ensuring that IncidentName values are clean. It's a lot easier to focus on one thing, rather than having to remember and navigate through several processes.
 
 ![screenshot_GISSWorkflowAssistant_1.png](/docs/screenshot_GISSWorkflowAssistant_1.png?raw=true)
 
