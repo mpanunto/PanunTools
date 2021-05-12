@@ -20,17 +20,28 @@ To improve quality of life while performing the GISS Workflow, this tool does th
 
 - Lastly, any features in the new Master Incident GDB and new Master Incident Backup GDB whose IncidentName does not match the user specified value will be deleted. However, users may specify additional incident names that they want to keep in these new GDBs. This is simply to maintain clean datasets that are relevant to only the fire(s) of interest.
 
+### User inputs
+1. Specify Incident Name
+2. Specify Incident IrwinID
+3. Path to Mobile GDB (aka local copy)
+4. Path to Master Incident GDB
+5. Specify Incident GDB Backup directory
+6. Specify Coordinate System to use for GISAcres and LengthFeet Calculations
+    --Point feature geometries are always calculated in WGS84
+7. Specify Scratch Directory
+8. Specify Other IncidentNames to keep in the newly created Master Incident GDB and Backup GDB
+
 ![screenshot_GISSWorkflowAssistant_1.png](/docs/screenshot_GISSWorkflowAssistant_1.png?raw=true)
 
 ### When using this tool, the general workflow is:
-1) Download Map (aka Create Local Copy) or Sync
-2) Perform all feature and attribute edits
+1. Download Map (aka Create Local Copy) or Sync
+2. Perform all feature and attribute edits
     - The tool will calculate geometries for you
     - The tool will insert IrwinIDs for you
-3) Save Edits
-4) Run this tool
-5) Sync
-6) Swap out Master Incident GDB
+3. Save Edits
+4. Run this tool
+5. Sync
+6. Swap out Master Incident GDB
 
 To speed things up, I would recommend setting your incident's default input values in the script tool parameters, that way you can just open the tool and run.
 
