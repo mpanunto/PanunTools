@@ -1,4 +1,4 @@
 # Create Fire Progression
 
-Stuff
+I know there are several fire progression tools out there, this is simply one that I created a few years ago, and offer it up as an alternative.
 
