@@ -10,7 +10,7 @@ In addition to automating the export process, this tool can also be used to quic
 
 Here is a sample of what the spreadsheet looks like:
 
-![Alt text](Docs/screenshot_MultiExportPDF_1.png?raw=true)
+![Alt text](/docs/screenshot_MultiExportPDF_1.png?raw=true)
 
 
 To run the tool itself, users must:
