@@ -13,11 +13,11 @@ Here is a sample of what the spreadsheet looks like:
 ![screenshot_MultiExportPDF_1.png](/docs/screenshot_MultiExportPDF_1.png?raw=true)
 
 ### To run the tool, users must:
-1) Extract the toolbox, script, and spreadsheet
-2) Keep the script in the same directory as the toolbox
-3) Set the path to the script in the script tool properties
-4) Specify Incident Name, Incident ID, Products directory, and the path to the MultiExportPDF.xlsx spreadsheet.
-5) Run
+1. Extract the toolbox, script, and spreadsheet
+2. Keep the script in the same directory as the toolbox
+3. Set the path to the script in the script tool properties
+4. Specify Incident Name, Incident ID, Products directory, and the path to the MultiExportPDF.xlsx spreadsheet.
+5. Run
 
 ![screenshot_MultiExportPDF_2.png](/docs/screenshot_MultiExportPDF_2.png?raw=true)
 
