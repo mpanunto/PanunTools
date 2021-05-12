@@ -32,11 +32,11 @@ Also, just for reference, below is a summary of some of the major differences be
 
 ArGIS Pro:
 
-“Download Map” results in a local mobile/runtime geodatabase file (.geodatabase)
-When selecting Download Map, ArcGIS Pro projects all the feature classes to the Map Frame’s coordinate system when creating the local .geodatabase file. So, you need to make sure you set your Map Frame’s projection before clicking Download Map. Otherwise, there will only be geographic/geodesic options when calculating geometry due to the NIFS’s coordinate system being WGS84.
-The Calculate Geometry tool allows you to specify a different coordinate system when calculating geometry. However, this tool seems to have poor performance when calculating geometry for the feature classes within the mobile/runtime .geodatabase file when there are many features present. Additionally, it yields lots of decimals when calculating Lat/Long coordinates, which is not a big deal, just kind of annoying.
-An additional step must be taken in order to convert the mobile/runtime .geodatabase file to a fGDB, by running the “Mobile Geodatabase to File Geodatabase” tool.
-The feature class names in the mobile/runtime .geodatabase differ compared to those in an ArcMap local copy fGDB. Not a big deal as long as everyone is using the same software, just kind of annoying.
+-“Download Map” results in a local mobile/runtime geodatabase file (.geodatabase)
+-When selecting Download Map, ArcGIS Pro projects all the feature classes to the Map Frame’s coordinate system when creating the local .geodatabase file. So, you need to make sure you set your Map Frame’s projection before clicking Download Map. Otherwise, there will only be geographic/geodesic options when calculating geometry due to the NIFS’s coordinate system being WGS84.
+-The Calculate Geometry tool allows you to specify a different coordinate system when calculating geometry. However, this tool seems to have poor performance when calculating geometry for the feature classes within the mobile/runtime .geodatabase file when there are many features present. Additionally, it yields lots of decimals when calculating Lat/Long coordinates, which is not a big deal, just kind of annoying.
+-An additional step must be taken in order to convert the mobile/runtime .geodatabase file to a fGDB, by running the “Mobile Geodatabase to File Geodatabase” tool.
+-The feature class names in the mobile/runtime .geodatabase differ compared to those in an ArcMap local copy fGDB. Not a big deal as long as everyone is using the same software, just kind of annoying.
   
 
 ArcMap:
