@@ -27,7 +27,7 @@ To improve quality of life while performing the GISS Workflow, this tool does th
 4. Path to Master Incident GDB
 5. Specify Incident GDB Backup directory
 6. Specify Coordinate System to use for GISAcres and LengthFeet Calculations
-    --Point feature geometries are always calculated in WGS84
+    - Point feature geometries are always calculated in WGS84
 7. Specify Scratch Directory
 8. Specify Other IncidentNames to keep in the newly created Master Incident GDB and Backup GDB
 
