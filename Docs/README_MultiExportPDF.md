@@ -12,8 +12,8 @@ Here is a sample of what the spreadsheet looks like:
 
 ![Alt text](https://github.com/mpanunto/Panuntools/blob/main/Docs/screenshot_MultiExportPDF_1.png)
 
-To run the tool itself, users must:
 
+To run the tool itself, users must:
 1) Extract the toolbox, script, and spreadsheet
 2) Keep the script in the same directory as the toolbox
 3) Set the path to the script in the script tool properties
