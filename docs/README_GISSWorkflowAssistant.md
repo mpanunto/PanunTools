@@ -16,7 +16,7 @@ To improve quality of life while performing the GISS Workflow, this tool does th
 
 - The tool will first copy each Event feature class from the Mobile GDB (aka local copy) to a Scratch GDB. Geometries will then be calculated for all features in this Scratch GDB, and will be compared to the values in the Mobile GDB. Each feature is tested to determine if the geometry has changed. If a change is detected, the tool will insert the value from the Scratch GDB into the Mobile GDB, triggering an edit. No edit will be made if a change is not detected, thus minimizing [conflicts that might arise due to offline edits](https://www.nwcg.gov/publications/pms936-1/edit-incident-data/securing-incident-information#collapseX)
 
-- After geometries have been calculated, the tool will convert the Mobile GDB to a new Master Incident GDB, and place it in the same directory as the original. It will also place a new Backup GDB in the backups folder with an appropriate date/time stamp. 
+- After geometries have been calculated, the tool will convert the Mobile GDB to a new Master Incident GDB, and place it in the same directory as the original. It will also place a new Master Incident Backup GDB in the backups folder with an appropriate date/time stamp. 
 
 - Lastly, any features in the new Master Incident GDB and new Master Incident Backup GDB whose IncidentName does not match the user specified value will be deleted. However, users may specify additional incident names that they want to keep in these new GDBs. This is simply to maintain clean datasets that are relevant to only the fire(s) of interest.
 
