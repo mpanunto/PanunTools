@@ -14,7 +14,7 @@ In the future some of these tools may be migrated to the [Community GISS Tools](
 
 To use this toolbox:
 1. [Download the repository](https://github.com/mpanunto/Panuntools/archive/refs/heads/main.zip)
-2. Extract Panuntools.tbx, and the following accompanying scripts & files to directory of choice:
+2. Extract Panuntools.tbx, and the following accompanying python scripts & files to directory of choice:
     - MultiExportPDF.py
     - MultiExportPDF.xlsx
 3. Keep accompanying python scripts in the same directory as the toolbox
