@@ -5,7 +5,7 @@ To improve GISS quality of life during the edit process, this tool does the foll
 - Inserts missing IrwinIDs
 - Creates a new Master Incident GDB
 - Creates a new Backup GDB
-- Deletes all features from the new GDBs that do not match the user specified IncidentName
+- Deletes all features from the new GDBs that do not match the user specified IncidentName(s)
 - Checks for case sensitivity issues and hidden spaces in IncidentName fields
 - Checks for missing Drop Point and Helispot labels
 
