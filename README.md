@@ -1,6 +1,6 @@
 # Panuntools
 
-In the future some of these tools may be migrated to the [Community GISS Tools](https://github.com/smHooper/giss_community_tools), but for now it was easier to create my own repository.
+In the future some of these tools may be migrated to the [Community GISS Tools](https://github.com/smHooper/giss_community_tools) repository, but for now it was easier to create my own.
 
 1) [Calculate Ownership](docs/README_CalculateOwnership.md)
 2) [Create Fire Progression](docs/README_CreateFireProgression.md)
