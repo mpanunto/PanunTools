@@ -4,7 +4,7 @@ To improve quality of life when performing the GISS Workflow, this tool does the
 - Calculates geometry for all 8 Event feature classes (only if the geometry has changed)
 - Inserts missing IrwinIDs
 - Creates a new Master Incident GDB
-- Creates a new Backup GDB
+- Creates a new Master Incident Backup GDB
 - Deletes all features from the newly created GDBs that do not match the user specified IncidentName(s)
 - Checks for case sensitivity issues and hidden spaces in IncidentName fields
 - Checks for missing Drop Point and Helispot labels
