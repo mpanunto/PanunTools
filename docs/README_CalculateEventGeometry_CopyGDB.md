@@ -2,6 +2,7 @@
 
 To improve GISS quality of life during the edit process, this tool does the following:
 - Calculates geometry for all 8 Event feature classes
+- Inserts IrwinIDs for features missing this information
 - Creates a new Master Incident GDB
 - Creates a new Backup GDB
 - Checks for case sensitivity issues and hidden spaces in IncidentName fields
