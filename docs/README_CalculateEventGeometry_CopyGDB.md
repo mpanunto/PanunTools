@@ -6,6 +6,8 @@ To improve quality of life during the edit process, I wrote a script that automa
 - Geometry calculations for Event features
 - Creating a new master incident GDB
 - A backup GDB.
+- Checks for case sensitivity and hidden spaces in IncidentName fields
+- Checks for missing Drop Point and Helispot labels
 
 *Update 07/11/20*: I modified the script a bit to minimize conflicts that might arise due to offline edits. Thanks to SW - Carl Beyerhelm (GISS) for pointing these concerns out. Now, for both ArcGIS Pro and ArcMap users, the script will first copy each NIFS feature class to a scratch GDB. Geometry will be calculated for all features in this scratch GDB, and will then be compared with the actual values in the local copy. It will test each feature to determine if the geometry has changed. If it has, it will insert the value from the scratch GDB. If it hasn't, no edit will be made.
 
