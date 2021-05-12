@@ -17,6 +17,7 @@ Here is a sample of what the spreadsheet looks like:
 ![screenshot_MultiExportPDF_1.png](/docs/screenshot_MultiExportPDF_1.png?raw=true)
 \
 \
+\
 To run the tool itself, users must:
 1) Extract the toolbox, script, and spreadsheet
 2) Keep the script in the same directory as the toolbox
