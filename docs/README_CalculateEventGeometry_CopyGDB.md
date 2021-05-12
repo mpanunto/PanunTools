@@ -21,7 +21,7 @@ The general idea behind this tool is that it reduces the GISS workload down to s
 
 If using this tool, the general workflow is:
 - Download Map (aka Create Local Copy) or Sync
-- Perform all your feature and attribute edits
+- Perform all feature and attribute edits
 - Save Edits
 - Run this tool
 - Sync
