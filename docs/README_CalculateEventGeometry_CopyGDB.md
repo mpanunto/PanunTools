@@ -22,6 +22,8 @@ Lastly, any features in the new Master Incident GDB and new Master Incident Back
 
 The idea behind this tool is that once all feature and attribute edits are made, it reduces the GISS workload down to simply ensuring that IncidentName values are clean.
 
+![screenshot_GISSWorkflowAssistant_1.png](/docs/screenshot_GISSWorkflowAssistant_1.png?raw=true)
+
 ### If using this tool, the general workflow is:
 1) Download Map (aka Create Local Copy) or Sync
 2) Perform all feature and attribute edits
