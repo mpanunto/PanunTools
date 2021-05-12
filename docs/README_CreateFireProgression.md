@@ -11,6 +11,6 @@ For this tool to work, the fire perimeter feature classes within the incident's 
 
 Users have two options:
 1. Create a new FireProgression feature class from scratch
-2. Add to existing FireProgression feature class
+2. Update an already existing FireProgression feature class
 
 ![screenshot_CreateFireProgression_2.png](/docs/screenshot_CreateFireProgression_2.png?raw=true)
