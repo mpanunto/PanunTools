@@ -9,13 +9,9 @@ To improve GISS quality of life during the edit process, this tool does the foll
 
 The tool will first copy each Event feature class from the Mobile GDB (aka local copy) to a Scratch GDB. Geometries will then be calculated for all features in this Scratch GDB, and will be compared to the actual values in the Mobile GDB. Each feature is tested to determine if the geometry has changed. If a change is detected, the tool will insert the value from the Scratch GDB into the Mobile GDB, triggering an edit. No edit will be made if a change is not detected, thus minimizing [conflicts that might arise due to offline edits](https://www.nwcg.gov/publications/pms936-1/edit-incident-data/securing-incident-information#collapseX)
 
-      Additionally, users must specify the IncidentName as input. Edits will only be made to those features whose IncidentName matches the user specified value. The onus in on the user to ensure all their data is properly attributed. This is a better safeguard than having to remember to remove features from neighboring fires each edit cycle.
+Additionally, users must specify the IncidentName as input. Edits will only be made to those features whose IncidentName matches the user specified value. As such, the onus is on the user to ensure all their data is properly attributed.  This is a better safeguard than having to remember to remove features from neighboring fires each edit cycle. The checks for case sensitivity issues and hidden spaces in IncidenName values aim to assist the user in keeping this field clean.
 
- 
-
-Additionally, the script will copy the local copy fGDB or mobile/runtime .geodatabase to a new master incident fGDB, and place it into the same directory as the old master incident fGDB. It will also place an additional copy into the backups folder with an appropriate date/time stamp. Lastly, it will rename the feature classes inside of these fGDBs to a series of user specified values in order to maintain adherence to the incident’s feature class naming standard (whatever the incident GISS decide they should be).
-
- 
+After geometries have been calculated, the tool will copy the Mobile GDB to a new Master Incident GDB, and place it into the same directory as original. It will also place a new Backup GDB in the backups folder with an appropriate date/time stamp. 
 
 If using this script, the general workflow is that you first perform all your feature and attribute edits, save/stop editing, then you run this script to:
 
