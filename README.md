@@ -18,7 +18,7 @@ To use this toolbox:
     - MultiExportPDF.py
     - MultiExportPDF.xlsx
 3. Keep accompanying python scripts in the same directory as the extracted toolbox
-4. Run tools in ArcGIS Pro
+4. Run tools using ArcGIS Pro
 
 
 
