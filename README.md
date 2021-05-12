@@ -1,6 +1,6 @@
 # Panuntools
 
-A GitHub repository of tools that may be useful to GISS
+A GitHub repository of tools that may be useful to GISS, created by Matt Panunto
 
 ## About
 
