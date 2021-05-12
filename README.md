@@ -12,7 +12,7 @@ Panuntools is a toolbox of script tools.
 4. [Multi Export PDF](docs/README_MultiExportPDF.md)
 5. [Update Fire Edge](docs/README_UpdateFireEdge.md)
 
-In the future some of these tools may be migrated to the [Community GISS Tools](https://github.com/smHooper/giss_community_tools) repository, but for now it was easier to just create my own. I also hope to eventually convert this toolbox of script tools into a Python toolbox to tidy up files, enhance collaboration, and improve visibility of version changes.
+In the future some of these tools may be migrated to the [Community GISS Tools](https://github.com/smHooper/giss_community_tools) repository, but for now it was easier to just create my own. I also hope to eventually convert this toolbox of script tools into a Python toolbox to tidy up files, enhance collaboration, and improve the visibility of version changes.
 
 ## Usage
 
