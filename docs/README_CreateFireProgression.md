@@ -12,6 +12,6 @@ For this tool to work, the fire perimeter feature classes within the incident's 
 ### Users have two options:
 1. Create a FireProgression feature class by processing all perimeters
 2. Create a FireProgression feature class by processing only the latest perimeter
-    - Requires an already existing FireProgression feature class
+    - Requires a previously generated FireProgression feature class
 
 ![screenshot_CreateFireProgression_2.png](/docs/screenshot_CreateFireProgression_2.png?raw=true)
