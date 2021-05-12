@@ -5,14 +5,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li><a href="#about">About</a></li>
-    <li><a href="#requirements">Requirements</a></li>
-    <li><a href="#installation">Installation</a></li>
-    <li><a href="#usage">Usage</a>
-      <ul>
-        <li><a href="#using-in-arcgis-pro">In ArcGIS Pro</a></li>
-        <li><a href="#using-from-the-command-line">From the command line</a></li>
-      </ul>
-    </li>
+    <li><a href="#usage">Usage</a></li>
     <li><a href="#contact">Contact</a></li>    
   </ol>
 </details>
