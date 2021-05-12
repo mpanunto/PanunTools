@@ -31,3 +31,5 @@ The general idea behind this tool is that it reduces the GISS workload down to s
 4) Run this tool
 5) Sync
 6) Swap out Master Incident GDB
+
+To speed things up, I would recommend setting your incident's default input values in the script tool parameters, that way you can just open the tool and run.
