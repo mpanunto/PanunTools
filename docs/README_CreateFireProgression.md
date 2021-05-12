@@ -19,4 +19,6 @@ For this tool to work, the fire perimeter feature classes within the incident's 
 
 ### Output FireProgression Feature Class
 
+The below screenshot shows what the attribute table looks like for the output FireProgression feature class. Users can quickly create a symbology be referencing any of the label fields, or they can create their own symbology field with the parsed datetime information and acreage values.
+
 ![screenshot_CreateFireProgression_3.png](/docs/screenshot_CreateFireProgression_3.png?raw=true)
