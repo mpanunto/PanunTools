@@ -27,3 +27,4 @@ If using this tool, the general workflow is:
 - Save Edits
 - Run this tool
 - Sync
+- Swap out Master Incident GDB
