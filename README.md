@@ -4,7 +4,7 @@ A GitHub repository of tools that may be useful to GISS, created by [Matt Panunt
 
 ## About
 
-Panuntools is a toolbox of script tools.
+Panuntools is a very cleverly named toolbox of script tools.
 
 1. [Calculate Ownership](docs/README_CalculateOwnership.md)
 2. [Create Fire Progression](docs/README_CreateFireProgression.md)
