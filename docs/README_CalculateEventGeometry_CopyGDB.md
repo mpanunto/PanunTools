@@ -1,9 +1,9 @@
 # Calculate Event Geometry & Copy GDB
 
-To improve quality of life during the edit process, I wrote a script that automates:
-- Geometry calculations for Event features
-- Creating a new master incident GDB
-- A backup GDB.
+To improve GISS quality of life during the edit process, this tool does the following:
+- Calculates geometry for all 8 Event feature classes
+- Creates a new Master Incident GDB
+- Creates a new Backup GDB
 - Checks for case sensitivity and hidden spaces in IncidentName fields
 - Checks for missing Drop Point and Helispot labels
 
