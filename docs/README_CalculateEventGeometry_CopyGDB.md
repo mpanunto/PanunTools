@@ -8,6 +8,8 @@ To improve quality of life when performing the GISS Workflow, this tool does the
 - Deletes all features from the newly created GDBs that do not match the user specified IncidentName(s)
 - Checks for case sensitivity issues and hidden spaces in IncidentName fields
 - Checks for missing Drop Point and Helispot labels
+
+\
 \
 \
 ### How does it work?
