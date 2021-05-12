@@ -7,9 +7,11 @@ This tool harnesses the Python multiprocessing module to run several instances o
 The accompanying spreadsheet is used to control your export settings for each map product. It may seem a bit daunting, but the export settings only need to be specified one time for each product. After that, users only need to enter their export request, map dates, product dates, and day/shift values prior to running the tool. For each map product, a user’s export request can be IMAGE, AVENZA, BOTH, or NONE. The script will then use the information entered into the spreadsheet to export the requested PDFs.
 
 In addition to automating the export process, this tool can also be used to quickly update all the incident map dates. It will update the map’s “Summary” metadata field with the user defined spreadsheet value. So for this value to actually be visible on your map, the layout must be using dynamic text that references the Summary metadata field (like the default GeoOps layouts do).
-\
-\
-\
+
+
+
+
+
 Here is a sample of what the spreadsheet looks like:
 
 ![screenshot_MultiExportPDF_1.png](/docs/screenshot_MultiExportPDF_1.png?raw=true)
