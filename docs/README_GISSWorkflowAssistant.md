@@ -20,6 +20,8 @@ To improve quality of life while performing the GISS Workflow, this tool does th
 
 - Lastly, any features in the new Master Incident GDB and new Master Incident Backup GDB whose IncidentName does not match the user specified value will be deleted. However, users may specify additional incident names that they want to keep in these new GDBs. This is simply to maintain clean datasets that are relevant to only the fire(s) of interest.
 
+The main idea behind this tool is that once all feature and attribute edits are made, it reduces the GISS workload down to simply ensuring that IncidentName values are clean. It's a lot easier to focus on one thing, rather than having to manually navigate through several processes.
+
 ### User inputs
 1. Specify Incident Name
 2. Specify Incident IrwinID
@@ -44,5 +46,3 @@ To improve quality of life while performing the GISS Workflow, this tool does th
 6. Swap out Master Incident GDB
 
 To speed things up, I would recommend setting your incident's default input values in the script tool parameters, that way you can just open the tool and run.
-
-The main idea behind this tool is that once all feature and attribute edits are made, it reduces the GISS workload down to simply ensuring that IncidentName values are clean. It's a lot easier to focus on one thing, rather than having to manually navigate through several processes.
