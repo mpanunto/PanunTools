@@ -7,7 +7,7 @@ To improve GISS quality of life during the edit process, this tool does the foll
 - Checks for case sensitivity issues and hidden spaces in IncidentName fields
 - Checks for missing Drop Point and Helispot labels
 
-The script will first copy each Event feature class from the Mobile GDB (aka local copy) to a scratch GDB. Geometry will be calculated for all features in this scratch GDB, and will then be compared with the actual values in the Mobile GDB. It will test each feature to determine if the geometry has changed. If it has, it will insert the value from the scratch GDB. If it hasn't, no edit will be made, thus minimizing [conflicts that might arise due to offline edits](https://www.nwcg.gov/publications/pms936-1/edit-incident-data/securing-incident-information#collapseX)
+The tool will first copy each Event feature class from the Mobile GDB (aka local copy) to a Scratch GDB. Geometries will then be calculated for all features in this Scratch GDB, and will be compared to the actual values in the Mobile GDB. Each feature is tested to determine if the geometry has changed. If a change is detected, the tool will insert the value from the Scratch GDB into the Mobile GDB, triggering an edit. No edit will be made if a change is not detected, thus minimizing [conflicts that might arise due to offline edits](https://www.nwcg.gov/publications/pms936-1/edit-incident-data/securing-incident-information#collapseX)
 
       Additionally, users must specify the IncidentName as input. Edits will only be made to those features whose IncidentName matches the user specified value. The onus in on the user to ensure all their data is properly attributed. This is a better safeguard than having to remember to remove features from neighboring fires each edit cycle.
 
