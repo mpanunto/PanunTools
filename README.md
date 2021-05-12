@@ -1,4 +1,4 @@
-# Panuntools
+<p align="center"># Panuntools</p>
 
 <p align="center">A GitHub repository of tools for GISS on wildfire incidents, created by [Matt Panunto](https://github.com/mpanunto)</p>
 
