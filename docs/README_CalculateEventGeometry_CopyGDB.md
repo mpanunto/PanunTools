@@ -18,7 +18,7 @@ The tool will first copy each Event feature class from the Mobile GDB (aka local
 
 After geometries have been calculated, the tool will copy the Mobile GDB to a new Master Incident GDB, and place it into the same directory as original. It will also place a new Backup GDB in the backups folder with an appropriate date/time stamp. 
 
-Lastly, any features in the new Master Incident GDB and new Backup GDB whose IncidentName does not match the user specified value will be deleted. However, users may specify additional incident names that they want to keep in these new GDBs. This is simply to maintain clean datasets that are relevant to only the fire(s) of interest.
+Lastly, any features in the new Master Incident GDB and new Master Incident Backup GDB whose IncidentName does not match the user specified value will be deleted. However, users may specify additional incident names that they want to keep in these new GDBs. This is simply to maintain clean datasets that are relevant to only the fire(s) of interest.
 
 The general idea behind this tool is that it reduces the GISS workload down to simply ensuring that IncidentName values are clean.
 
