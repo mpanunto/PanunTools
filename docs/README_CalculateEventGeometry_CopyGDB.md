@@ -2,7 +2,10 @@
 
 For whatever reason, geometry calculations for feature classes within a fGDB seem to have better performance compared to those within a mobile/runtime .geodatabase. This discrepancy seems to become more of a problem as the number of features increases for an incident. See this GeoNet post for more background information of this issue.
 
-To improve quality of life during the edit process, I wrote a script that automates geometry calculations for both ArcGIS Pro (Python 3) and ArcMap (Python 2) users:
+To improve quality of life during the edit process, I wrote a script that automates:
+- Geometry calculations for Event features
+- Creating a new master incident GDB
+- A backup GDB.
 
 *Update 07/11/20*: I modified the script a bit to minimize conflicts that might arise due to offline edits. Thanks to SW - Carl Beyerhelm (GISS) for pointing these concerns out. Now, for both ArcGIS Pro and ArcMap users, the script will first copy each NIFS feature class to a scratch GDB. Geometry will be calculated for all features in this scratch GDB, and will then be compared with the actual values in the local copy. It will test each feature to determine if the geometry has changed. If it has, it will insert the value from the scratch GDB. If it hasn't, no edit will be made.
 
