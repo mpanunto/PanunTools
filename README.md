@@ -1,10 +1,10 @@
 # Panuntools
 
-A GitHub repository of tools that may be useful to GISS on wildfire incidents. Created by [Matt Panunto](https://github.com/mpanunto)
+A GitHub repository of tools that may be useful to GISS on wildfire incidents, created by [Matt Panunto](https://github.com/mpanunto)
 
 ## About
 
-Panuntools is a very cleverly named toolbox of script tools.
+Panuntools is a *very* cleverly named toolbox of script tools.
 
 1. [Calculate Ownership](docs/README_CalculateOwnership.md)
 2. [Create Fire Progression](docs/README_CreateFireProgression.md)
