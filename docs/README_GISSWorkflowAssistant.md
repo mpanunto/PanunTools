@@ -32,4 +32,6 @@ To improve quality of life while performing the GISS Workflow, this tool does th
 5) Sync
 6) Swap out Master Incident GDB
 
-The main idea behind this tool is that once all feature and attribute edits are made, it reduces the GISS workload down to simply ensuring that IncidentName values are clean. It's a lot easier to focus on one thing, rather than having to remember and navigate through several processes. To speed things up, I would recommend setting your incident's default input values in the script tool parameters, that way you can just open the tool and run.
+To speed things up, I would recommend setting your incident's default input values in the script tool parameters, that way you can just open the tool and run.
+
+The main idea behind this tool is that once all feature and attribute edits are made, it reduces the GISS workload down to simply ensuring that IncidentName values are clean. It's a lot easier to focus on one thing, rather than having to remember and navigate through several processes.
