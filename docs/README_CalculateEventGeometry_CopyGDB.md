@@ -1,10 +1,11 @@
 # Calculate Event Geometry & Copy GDB
 
 To improve GISS quality of life during the edit process, this tool does the following:
-- Calculates geometry for all 8 Event feature classes
-- Inserts IrwinIDs for features missing this information
+- Calculates geometry for all 8 Event feature classes (only if the geometry has changed)
+- Inserts missing IrwinIDs
 - Creates a new Master Incident GDB
 - Creates a new Backup GDB
+- Deletes all features from the new GDBs that do not match the user specified IncidentName
 - Checks for case sensitivity issues and hidden spaces in IncidentName fields
 - Checks for missing Drop Point and Helispot labels
 
@@ -15,6 +16,8 @@ Users must specify the IncidentName as input. Edits will only be made to those f
 After geometries have been calculated, the tool will copy the Mobile GDB to a new Master Incident GDB, and place it into the same directory as original. It will also place a new Backup GDB in the backups folder with an appropriate date/time stamp. 
 
 Lastly, any features in the new Master Incident GDB and new Backup GDB whose IncidentName does not match the user specified value will be deleted. However, users may specify additional incident names that they want to keep in these new GDBs. This is simply to maintain clean datasets that are relevant to only the fire(s) of interest.
+
+The general idea behind this tool is that it reduces the GISS workload down to simply ensuring that IncidentName values are clean.
 
 If using this script, the general workflow is that you first perform all your feature and attribute edits, save/stop editing, then you run this script to:
 
