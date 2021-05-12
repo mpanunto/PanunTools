@@ -21,6 +21,8 @@ To use:
 2. Extract Panuntools.tbx, and the following accompanying scripts & files to directory of choice:
     - MultiExportPDF.py
     - MultiExportPDF.xlsx
+3. Keep accompanying python scripts in the same directory as the toolbox
+4. Run tools in ArcGIS Pro
 
 
 
