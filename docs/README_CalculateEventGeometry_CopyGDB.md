@@ -22,8 +22,8 @@ The general idea behind this tool is that it reduces the GISS workload down to s
 If using this tool, the general workflow is:
 1. Download Map (aka Create Local Copy) or Sync
 2. Perform all feature and attribute edits
-  - The tool will calculate geometries for you
-  - The tool will insert IrwinIDs for you
+    - The tool will calculate geometries for you
+    - The tool will insert IrwinIDs for you
 3. Save Edits
 4. Run this tool
 5. Sync
