@@ -15,3 +15,8 @@ For this tool to work, the fire perimeter feature classes within the incident's 
     - Requires a previously generated FireProgression feature class
 
 ![screenshot_CreateFireProgression_2.png](/docs/screenshot_CreateFireProgression_2.png?raw=true)
+
+
+### Output FireProgression Feature Class
+
+![screenshot_CreateFireProgression_3.png](/docs/screenshot_CreateFireProgression_3.png?raw=true)
