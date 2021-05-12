@@ -1,17 +1,7 @@
 # Panuntools
 
-<!-- TABLE OF CONTENTS -->
-<details open="open">
-  <summary>Table of Contents</summary>
-  <ol>
-    <li><a href="#about">About</a></li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#contact">Contact</a></li>    
-  </ol>
-</details>
-
-
 ## About
+A GitHub repository of tools that may be useful to GISS
 
 1. [Calculate Ownership](docs/README_CalculateOwnership.md)
 2. [Create Fire Progression](docs/README_CreateFireProgression.md)
