@@ -1,7 +1,5 @@
 # Calculate Event Geometry & Copy GDB
 
-For whatever reason, geometry calculations for feature classes within a fGDB seem to have better performance compared to those within a mobile/runtime .geodatabase. This discrepancy seems to become more of a problem as the number of features increases for an incident. See this GeoNet post for more background information of this issue.
-
 To improve quality of life during the edit process, I wrote a script that automates:
 - Geometry calculations for Event features
 - Creating a new master incident GDB
