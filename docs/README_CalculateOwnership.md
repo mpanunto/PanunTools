@@ -3,7 +3,7 @@
 Pretty basic tool that automates the Intersect & Dissolve process to obtain acres burned by ownership. To run, users must provide the following inputs to the tool:
 1. Path to ownership feature class
 2. Ownership feature class field that defines ownership
-3. Path to fire perimeter
+3. Path to fire perimeter feature class
 4. Coordinate system to perform geometry calculations
 5. Scratch directory
 
