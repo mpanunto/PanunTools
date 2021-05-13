@@ -12,9 +12,9 @@ Users must specify the following inputs to the tool:
 The tool selects 'Wildfire Daily Fire Perimeter', and 'Contained Line' features that match the user specified incident name, and copies them to an output GDB. Once copied over, the fire perimeter is converted to a polyline. Then, the copied 'Contained Line' features are erased from the fire perimeter polyline. The output of this erase provides updated Fire Edge features that conform to the new fire perimter, and existing Contained Line. This tool generates two output feature classes:
 
 - "UpdateFireEdge_dissolve"
-      - Has a single dissolved feature of all updated Fire Edge
+    - Has a single dissolved feature of all updated Fire Edge
 - "UpdateFireEdge_explode"
-      - Explodes the dissolved Fire Edge feature, in case users need singlepart Fire Edge features
+    - Explodes the dissolved Fire Edge feature, in case users need singlepart Fire Edge features
 
 ### The general workflow is:
 1. Download Map (aka create local copy) or Sync
