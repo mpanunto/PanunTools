@@ -6,7 +6,7 @@ Don't you hate having to meticulously split, delete, and swap the feature catego
 
 ### The general workflow is:
 1. Download Map (aka create local copy) or Sync
-2. Perform edits to the Wildfire Daily Fire Perimeter as normal
+2. Perform edits to the Wildfire Daily Fire Perimeter
 3. Save edits
 4. Run this tool to generate the new "Fire Edge" features
 6. Delete the old "Fire Edge" feature(s) from the EventLine feature class
