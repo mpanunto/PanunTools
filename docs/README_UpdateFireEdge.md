@@ -4,11 +4,16 @@ Don't you hate having to meticulously split, delete, and swap the feature catego
 
 ### How does it work?
 
-First, the new fire perimeter is converted to a polyline. Then, the existing 'Contained Line' features are erased from the fire perimeter polyline. The output of this erase provides updated Fire Edge features that conform to the new fire perimter, and existing Contained Line. This tool generates two output feature classes:
+Users must specify the following inputs to the tool:
+1. Incident Name
+2. Path to the Mobile GDB (aka local copy)
+3. Output Directory
 
-1. "UpdateFireEdge_dissolve"
+The tool selects 'Wildfire Daily Fire Perimeter', and 'Contained Line' features that match the user specified incident name, and copies them to an output GDB. Once copied over, the fire perimeter is converted to a polyline. Then, the copied 'Contained Line' features are erased from the fire perimeter polyline. The output of this erase provides updated Fire Edge features that conform to the new fire perimter, and existing Contained Line. This tool generates two output feature classes:
+
+- "UpdateFireEdge_dissolve"
       - Has a single dissolved feature of all updated Fire Edge
-2. "UpdateFireEdge_explode"
+- "UpdateFireEdge_explode"
       - Explodes the dissolved Fire Edge feature, in case users need singlepart Fire Edge features
 
 ### The general workflow is:
