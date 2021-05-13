@@ -14,7 +14,7 @@ The tool selects 'Wildfire Daily Fire Perimeter', and 'Contained Line' features 
 - "UpdateFireEdge_dissolve"
     - Has a single dissolved feature of all updated Fire Edge
 - "UpdateFireEdge_explode"
-    - Explodes the dissolved Fire Edge feature, in case users need singlepart Fire Edge features
+    - Explodes the dissolved Fire Edge feature, in case users need singlepart features
 
 ### The general workflow is:
 1. Download Map (aka create local copy) or Sync
