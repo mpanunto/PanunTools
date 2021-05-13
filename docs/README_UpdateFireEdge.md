@@ -28,7 +28,7 @@ The tool selects 'Wildfire Daily Fire Perimeter', and 'Contained Line' features 
 7. Paste in the new Fire Edge feature(s) to the Event_Line feature class
 8. Save edits
 
-At this point the incident's "Fire Edge" is now up to date. If all edits are complete, I would recommend users proceed by running the [GISS Workflow Assistant tool](/docs/README_GISSWorkflowAssistant.md) prior to syncing.
+At this point the incident's "Fire Edge" is now up to date. If all edits are complete, I would recommend users proceed by running the [GISS Workflow Assistant tool](/docs/README_GISSWorkflowAssistant.md) prior to syncing. To speed things up, I would also recommend setting your incident's default input values in the script tool parameters, that way you can just open the tool and run.
 
 ### Bonus Use
 Due to the nature of how this tool works, it can also be used to identify segments of Contained Line that do not match the fire perimeter. If there are segments of Contained Line that appear to be overlapping with updated Fire Edge features pasted in, chances are these segments of Contained Line need to be cleaned up to match the fire perimeter.
