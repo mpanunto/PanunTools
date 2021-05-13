@@ -4,7 +4,7 @@ Don't you hate having to meticulously split, delete, and swap the feature catego
 
 ### How does it work?
 
-First, the new fire perimeter is converted to a polyline. Then, the existing 'Contained Line' features are erased from the fire perimeter polyline. The output of this erase provides updated Fire Edge features that conform to the new fire perimter, and existing Contained Line. This tool provides users with two output feature classes:
+First, the new fire perimeter is converted to a polyline. Then, the existing 'Contained Line' features are erased from the fire perimeter polyline. The output of this erase provides updated Fire Edge features that conform to the new fire perimter, and existing Contained Line. This tool generates two output feature classes:
 
 1. "UpdateFireEdge_dissolve"
       - Has a single dissolved feature of all Fire Edge
