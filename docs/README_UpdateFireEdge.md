@@ -9,7 +9,7 @@ Users must specify the following inputs to the tool:
 2. Path to the Mobile GDB (aka local copy)
 3. Output Directory
 
-![screenshot_UpdateFireEdge_1.png](/docs/screenshot_UpdateFireEdge_1.png)
+![screenshot_UpdateFireEdge_1.png](/docs/screenshot_UpdateFireEdge_1.png?raw=true)
 
 
 The tool selects 'Wildfire Daily Fire Perimeter', and 'Contained Line' features that match the user specified incident name, and copies them to an output GDB. Once copied over, the fire perimeter is converted to a polyline. Then, the copied 'Contained Line' features are erased from the fire perimeter polyline. The output of this erase provides updated Fire Edge features that conform to the new fire perimeter, and existing Contained Line. This tool generates two output feature classes:
