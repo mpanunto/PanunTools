@@ -19,5 +19,5 @@ This tool provides users with two output feature classes:
 
 At this point the incident's "Fire Edge" is now up to date. If all edits are complete, I would recommend users proceed by running the [GISS Workflow Assistant tool](/docs/README_GISSWorkflowAssistant.md) prior to syncing.
 
-### Bonus Feature
+### Bonus Use
 Due to the nature of how this tool works, it can also be used to identify segments of Contained Line that do not match the fire perimeter. If there are segments of Contained Line that appear to be overlapping the new Fire Edge features that were pasted in, chances are these segments of Contained Line need to be cleaned up to match the fire perimeter.
