@@ -8,9 +8,9 @@ Don't you hate having to meticulously split, delete, and swap the feature catego
 1. Download Map (aka create local copy) or Sync
 2. Perform edits to the Wildfire Daily Fire Perimeter
 3. Save edits
-4. Run this tool to generate the new "Fire Edge" features
-6. Delete the old "Fire Edge" feature(s) from the EventLine feature class
-7. Paste in the new "Fire Edge" feature(s) to the EventLine feature class
+4. Run this tool to generate the new Fire Edge features
+6. Delete the old Fire Edge feature(s) from the EventLine feature class
+7. Paste in the new Fire Edge feature(s) to the EventLine feature class
 8. Save edits
 
 At this point the incident's "Fire Edge" is now up to date. If all morning edits are complete, I would recommend users proceed by running the [GISS Workflow Assistant tool](/docs/README_GISSWorkflowAssistant.md)
