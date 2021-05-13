@@ -12,7 +12,7 @@ Users must specify the following inputs to the tool:
 ![screenshot_UpdateFireEdge_1.png](/docs/screenshot_UpdateFireEdge_1.png?raw=true)
 
 
-The tool selects 'Wildfire Daily Fire Perimeter', and 'Contained Line' features that match the user specified incident name, and copies them to an output GDB. Once copied over, the fire perimeter is converted to a polyline. Then, the 'Contained Line' features are erased from the fire perimeter polyline. The result of this erase provides updated Fire Edge features that conform to the new fire perimeter, and existing Contained Line. This tool generates two output feature classes:
+The tool selects 'Wildfire Daily Fire Perimeter', and 'Contained Line' features that match the user specified incident name, and copies them to an output GDB. Once copied over, the fire perimeter is converted to a polyline. Then, the 'Contained Line' features are erased from the fire perimeter polyline. The result of this erase provides updated Fire Edge features that conform to the new fire perimeter, and existing Contained Line. The tool assumes the incident's Contained Line features are correct, and that Fire Edge should match the perimeter everywhere else. This tool generates two output feature classes:
 
 - "UpdateFireEdge_dissolve"
     - Has a single dissolved feature of all updated Fire Edge
