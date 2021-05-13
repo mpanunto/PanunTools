@@ -6,7 +6,7 @@ This tool provides users with two output feature classes:
 1. "UpdateFireEdge_dissolve"
       - Has a single dissolved feature of all Fire Edge
 2. "UpdateFireEdge_explode"
-      - Explodes the dissolved Fire Edge feature, should users need singlepart features
+      - Explodes the dissolved Fire Edge feature, in case users need singlepart Fire Edge features
 
 ### The general workflow is:
 1. Download Map (aka create local copy) or Sync
