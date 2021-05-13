@@ -1,6 +1,6 @@
 # Update Fire Edge
 
-Don't you hate having to meticulously split, delete, and swap between feature categories of Fire Edge and Contained Line during the early morning perimeter update? Well with this tool, you can simply dump all the old Fire Edge features, and quickly paste in an updated Fire Edge feature that conforms to the new fire perimeter and existing Contained Line.
+Don't you hate having to meticulously split, delete, and swap between feature categories of Fire Edge and Contained Line during the early morning perimeter update? Well with this tool, you can simply dump all the old Fire Edge features, and quickly paste in an updated Fire Edge that conforms to the new fire perimeter and existing Contained Line. The GISS should be the only position on the incident editing the Fire Edge/Contained Line features, so there are minimal concerns with "Last in Wins" issues.
 
 ### How does it work?
 
