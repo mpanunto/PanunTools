@@ -13,7 +13,6 @@ The tool selects 'Wildfire Daily Fire Perimeter', and 'Contained Line' features 
 
 ### User Inputs
 
-Users must specify the following inputs to the tool:
 1. Incident Name
 2. Path to the Mobile GDB (aka local copy)
 3. Output Directory
