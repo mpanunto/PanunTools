@@ -23,7 +23,7 @@ Here is a sample of what the spreadsheet looks like:
     - Incident ID
     - Products directory
     - Path to the MultiExportPDF.xlsx spreadsheet.
-5. Run
+5. Run tool
 
 ![screenshot_MultiExportPDF_2.png](/docs/screenshot_MultiExportPDF_2.png?raw=true)
 
