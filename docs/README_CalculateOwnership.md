@@ -23,3 +23,5 @@ Pretty basic tool that automates the Intersect & Dissolve process to obtain acre
 
 This tool doesn't generate any outputs. The calculations are provided to the user in the Geoprocessing Messages:  
 ![screenshot_CalculateOwnership_2.png](/docs/screenshot_CalculateOwnership_2.png?raw=true)
+
+To speed things up, I would also recommend setting your incident's default input values in the script tool parameters, that way you can just open the tool and run.
