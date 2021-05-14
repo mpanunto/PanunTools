@@ -14,15 +14,14 @@ Here is a sample of what the spreadsheet looks like:
 
 ### To run the tool, users must:
 1. Extract Panuntools.tbx, MultiExportPDF.py, and MultiExportPDF.xlsx to the incident's tools folder
-2. Ensure that MultiExportPDF.py is in the same directory as Panuntools.tbx
-3. Edit the spreadsheet so the information corresponds to the incident
-4. Set the path to the script in the script tool properties
-5. Specify tool inputs:
+2. Ensure that the script path is properly set in the script tool properties
+3. Edit the spreadsheet so the information corresponds to the incident  
+4. Specify tool inputs:
     - Incident Name
     - Incident ID
     - Products directory
     - Path to the MultiExportPDF.xlsx spreadsheet.
-6. Run
+5. Run
 
 ![screenshot_MultiExportPDF_2.png](/docs/screenshot_MultiExportPDF_2.png?raw=true)
 
