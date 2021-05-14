@@ -4,20 +4,21 @@ Don't you hate having to meticulously split, and delete Fire Edge features durin
 
 ### How does it work?
 
-Users must specify the following inputs to the tool:
-1. Incident Name
-2. Path to the Mobile GDB (aka local copy)
-3. Output Directory
-
-![screenshot_UpdateFireEdge_1.png](/docs/screenshot_UpdateFireEdge_1.png?raw=true)
-
-
 The tool selects 'Wildfire Daily Fire Perimeter', and 'Contained Line' features that match the user specified incident name, and copies them to an output GDB. Once copied over, the fire perimeter is converted to a polyline. Then, the Contained Line features are erased from the fire perimeter polyline. The result of this erase provides updated Fire Edge features that conform to the new fire perimeter, and existing Contained Line. The tool assumes the incident's Contained Line features are correct, and that Fire Edge should match the perimeter everywhere else. This tool generates two output feature classes:
 
 - "UpdateFireEdge_dissolve"
     - Has a single dissolved feature of all updated Fire Edge
 - "UpdateFireEdge_explode"
     - Explodes the dissolved Fire Edge, in case users need singlepart features
+
+### User Inputs
+
+Users must specify the following inputs to the tool:
+1. Incident Name
+2. Path to the Mobile GDB (aka local copy)
+3. Output Directory
+
+![screenshot_UpdateFireEdge_1.png](/docs/screenshot_UpdateFireEdge_1.png?raw=true)
 
 ### When using this tool, the general workflow is:
 1. Download Map (aka create local copy) or Sync
