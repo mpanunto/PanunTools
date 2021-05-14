@@ -1,6 +1,9 @@
 # Calculate Ownership
 
-Pretty basic tool that automates the Intersect & Dissolve process to obtain acres burned by ownership. To run, users must provide the following inputs to the tool:
+Basic tool that automates the Intersect & Dissolve process to obtain acres burned by ownership.
+
+### User Inputs
+
 1. Path to ownership feature class
 2. Field that defines ownership
 3. Path to fire perimeter feature class
