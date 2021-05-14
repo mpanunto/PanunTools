@@ -13,7 +13,7 @@ Here is a sample of what the spreadsheet looks like:
 ![screenshot_MultiExportPDF_1.png](/docs/screenshot_MultiExportPDF_1.png?raw=true)
 
 ### To run the tool, users must:
-1. Extract the toolbox, script, and spreadsheet
+1. Extract Panuntools.tbx, MultiExportPDF.py, and MultiExportPDF.xlsx to the incident's tools folder
 2. Edit the spreadsheet so the information corresponds to the incident
 3. Keep the script in the same directory as the toolbox
 4. Set the path to the script in the script tool properties
