@@ -14,8 +14,9 @@ The tool selects 'Wildfire Daily Fire Perimeter', and 'Contained Line' features 
 ### User Inputs
 
 1. Incident Name
-2. Path to the Mobile GDB (aka local copy)
-3. Output Directory
+2. Incident IrwinID
+3. Path to the Mobile GDB (aka local copy)
+4. Output Directory
 
 ![screenshot_UpdateFireEdge_1.png](/docs/screenshot_UpdateFireEdge_1.png?raw=true)
 
