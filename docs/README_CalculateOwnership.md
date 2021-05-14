@@ -14,4 +14,4 @@ This tool doesn't generate any outputs. The calculations are provided to the use
 \
 ![screenshot_CalculateOwnership_2.png](/docs/screenshot_CalculateOwnership_2.png?raw=true)
 
-To speed things up, I would recommend setting your incident's default input values in the script tool parameters, that way you can just open the tool and run after specifying the latest fire perimter feature class.
+To speed things up, I would recommend setting your incident's default input values in the script tool parameters, that way you can just open the tool and run after specifying the fire perimeter feature class.
