@@ -4,7 +4,7 @@ Pretty basic tool that automates the Intersect & Dissolve process to obtain acre
 1. Path to ownership feature class
 2. Field that defines ownership
 3. Path to fire perimeter feature class
-4. Coordinate system to perform geometry calculations
+4. Coordinate system to perform acreage calculations
 5. Scratch directory
 
 
