@@ -1,6 +1,6 @@
 # Multi Export PDF
 
-Like several others have reported, I too have had issues plotting many of my PDFs exported from ArcGIS Pro. Again, like many others, I’ve often had to export two PDFs per map product: one as an image for printing purposes, and one dedicated to Avenza use. I became frustrated enough by this cumbersome process that I’ve attempted to automate it to some degree with a script tool.
+Like several others have reported, I too have had issues plotting many of my PDFs exported from ArcGIS Pro. Again, like many others, I’ve often had to export two PDFs per map product: one as an *image* for printing purposes, and one dedicated to Avenza use. I became frustrated enough by this cumbersome process that I’ve attempted to automate it to some degree with a script tool.
 
 This tool harnesses the Python multiprocessing module to run several instances of Python simultaneously. It is similar to opening numerous ArcGIS Pro project files at once in order to export multiple PDFs at the same time. When running, you will see several command prompt windows appear on your screen (it’s not a virus, I promise :wink:). Just leave them be, as they should disappear once all exports have completed. However, if you run into an error, you may have to terminate ArcGIS Pro in order to manually close them.
 
