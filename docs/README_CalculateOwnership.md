@@ -8,7 +8,8 @@ Pretty basic tool that automates the Intersect & Dissolve process to obtain acre
 5. Scratch directory
 
 ![screenshot_CalculateOwnership_1.png](/docs/screenshot_CalculateOwnership_1.png?raw=true)
-
+\
+\
 This tool doesn't generate any outputs. The calculations are provided to the user in the Geoprocessing Messages:
 \
 \
