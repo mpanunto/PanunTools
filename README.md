@@ -1,6 +1,6 @@
 ## About
 
-Panuntools is a ***very*** cleverly named toolbox created for GISS on wildfire incidents. This toolbox currently contains the following tools:
+Panuntools is a ***very*** cleverly named toolbox created for GISS on wildfire incidents, and currently contains the following tools:
 
 1. [Calculate Ownership](docs/README_CalculateOwnership.md)
 2. [Create Fire Progression](docs/README_CreateFireProgression.md)
