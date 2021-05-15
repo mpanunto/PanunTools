@@ -27,4 +27,4 @@ Here is a sample of what the spreadsheet looks like:
 
 ![screenshot_MultiExportPDF_2.png](/docs/screenshot_MultiExportPDF_2.png?raw=true)
 
-To speed things up, I would recommend setting your incident's default input values in the script tool parameters, that way you can just open the tool and run. I have found this tool to be particularly useful when fresh exports are needed and the map extents have not changed. Or if I simply want to quickly update all the map dates. It has saved me a lot of time not having to open several projects, or fiddle around with different export settings.
+I have found this tool to be particularly useful when fresh exports are needed and the map extents have not changed. Or if I simply want to quickly update all the map dates. It has saved me a lot of time not having to open several projects, or fiddle around with different export settings.
