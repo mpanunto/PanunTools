@@ -23,4 +23,4 @@ To use this toolbox:
 Where possible, I would recommend setting your incident's default input values in the script tool parameters. Doing so will speed up the process of running these tools throughout the duration of the incident.
 
 ## Contact
-Feel free to contact me at mpanunto@blm.gov with any comments, questions, or error reports.
+Feel free to contact me (Matt Panunto) at mpanunto@blm.gov with any comments, questions, or error reports.
