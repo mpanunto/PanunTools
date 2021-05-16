@@ -20,7 +20,7 @@ To use this toolbox:
 3. Keep Python scripts in the same directory as the extracted toolbox
 4. Run tools using ArcGIS Pro
 
-Where possible, I would recommend setting your incident's default input values in the script tool parameters. Doing that will speed up the process of running these tools throughout the duration of the incident.
+Where possible, I would recommend setting your incident's default input values in the script tool parameters. Doing so will speed up the process of running these tools throughout the duration of the incident.
 
 ## Contact
 Feel free to contact me at mpanunto@blm.gov with any comments, questions, or error reports.
