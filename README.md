@@ -1,6 +1,6 @@
 ## About
 
-Panuntools is a ***very*** cleverly named toolbox created for GISS on wildfire incidents, and currently contains the following tools:
+PanunTools is a ***very*** cleverly named toolbox created for GISS on wildfire incidents, and currently contains the following tools:
 
 1. [Calculate Ownership](docs/README_CalculateOwnership.md)
 2. [Create Fire Progression](docs/README_CreateFireProgression.md)
@@ -13,8 +13,8 @@ These tools have only been tested for use in ArcGIS Pro 2.7. In the future, some
 ## Usage
 
 To use this toolbox:
-1. [Download the repository](https://github.com/mpanunto/Panuntools/archive/refs/heads/main.zip)
-2. Extract Panuntools.tbx, and the following Python scripts & files to the incident's tools directory:
+1. [Download the repository](https://github.com/mpanunto/PanunTools/archive/refs/heads/main.zip)
+2. Extract PanunTools.tbx, and the following Python scripts & files to the incident's tools directory:
     - MultiExportPDF.py
     - MultiExportPDF.xlsx
 3. Keep Python scripts in the same directory as the extracted toolbox
