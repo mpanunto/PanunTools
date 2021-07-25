@@ -2,7 +2,7 @@
 
 This tool automates the Perimeter/IR update process. It allows users to quickly import new perimeters and IR data into their Mobile GDB, and properly attribute these data. It also has several toggles that provide additional functionality, including the ability to delete old features in the Mobile GDB, and also create an updated 'Fire Edge' feature, which will conform to the new perimeter and existing 'Contained Line' (just like the [Update Fire Edge](/docs/README_UpdateFireEdge.md) tool).
 
-***This tool is most useful when the Perimeter and IR products are incorporated 'as is'. That is, the GISS simply  needs to perform a clean swap of the old data with the new. Additionally, it is highly recommended to always perform a visual assessment of the new data prior to running this tool.***
+***This tool is most useful when the Perimeter and IR products are incorporated 'as is'. That is, the GISS simply  needs to perform a clean swap of the old data with the new. It may not be appropriate to use when manual edits to the new perimeter are needed. It is highly recommended to always perform a visual assessment of the new data prior to running this tool.***
 
 ### How does it work?
 
