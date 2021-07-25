@@ -16,7 +16,7 @@ Deletion of old features, and the creation of an updated 'Fire Edge' is made pos
 - IR Scattered Heat
 
 
-Additionally, for the updated 'Fire Edge' feature to actually be correct, the 'Contained Line' ***MUST*** match the fire perimeter's edge. If the newly generated 'Fire Edge' feature appears to be overlapping any 'Contained Line', this is a good indication that the 'Contained Line' does not match the fire perimeter's edge at these locations, and needs to be cleaned up.
+Additionally, for the updated 'Fire Edge' feature to actually be correct, the 'Contained Line' ***MUST*** match the fire perimeter's edge. If the newly generated 'Fire Edge' feature appears to be overlapping any 'Contained Line', this is a good indication that the incident's 'Contained Line' does not match the fire perimeter's edge at these locations, and needs to be cleaned up.
 
 
 
