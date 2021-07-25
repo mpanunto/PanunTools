@@ -15,10 +15,6 @@ Deletion of old features, and the creation of an updated 'Fire Edge' is made pos
 - IR Intense Heat
 - IR Scattered Heat
 
-#If these features are not properly attributed with IRWIN ID, the code will not
-#be able perform proper selections of the data already in the geodatabase,
-#which is necessary in order to delete old features, and create an updated
-#Fire Edge feature.
 
 Additionally, for the updated Fire Edge feature to be correct, the 'Contained Line' ***MUST*** match the fire perimeter's edge. If the newly generated 'Fire Edge' feature is overlapping any 'Contained Line', this is a good indication that the 'Contained Line' does not match the fire perimeter's edge at these locations, and needs to be cleaned up.
 
