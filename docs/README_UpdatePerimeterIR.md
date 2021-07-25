@@ -30,4 +30,4 @@
 ![screenshot_UpdatePerimeterIR_1.png](/docs/screenshot_UpdatePerimeterIR_1.png?raw=true)
 
 
-
+If all edits are complete after running this tool, I would recommend users proceed by running the [GISS Workflow Assistant tool](/docs/README_GISSWorkflowAssistant.md) prior to syncing, which will calculate all Point/Line/Polygon geometry for you. Otherwise, the features will need to be calculated manually before syncing.
