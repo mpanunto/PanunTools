@@ -1,6 +1,6 @@
 # Update Perimeter IR
 
-This tool is used to automate the Perimeter/IR update process. It allows users to quickly import new perimeters and IR data into their Mobile GDB. This tool also has several toggles that provide additional functionality, including the ability to delete old features in the Mobile GDB, and also the ability to automate the creation of an updated 'Fire Edge' feature, which will conform to the new perimeter and existing 'Contained Line' (just like the [Update Fire Edge tool](/docs/README_UpdateFireEdge.md?raw=true).
+This tool is used to automate the Perimeter/IR update process. It allows users to quickly import new perimeters and IR data into their Mobile GDB. This tool also has several toggles that provide additional functionality, including the ability to delete old features in the Mobile GDB, and also the ability to automate the creation of an updated 'Fire Edge' feature, which will conform to the new perimeter and existing 'Contained Line' (just like the [Update Fire Edge tool](/docs/README_UpdateFireEdge.md?raw=true)).
 
 ### How does it work?
 
