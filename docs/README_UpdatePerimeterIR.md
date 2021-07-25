@@ -20,7 +20,7 @@ Deletion of old features, and the creation of an updated 'Fire Edge' is made pos
 
 Additionally, for the updated 'Fire Edge' feature to actually be correct, the 'Contained Line' ***MUST*** match the fire perimeter's edge. If the newly generated 'Fire Edge' feature appears to be overlapping any 'Contained Line', this is a good indication that the incident's 'Contained Line' does not match the fire perimeter's edge at these locations, and needs to be cleaned up.
 
-If all edits are complete after running this tool, I would recommend users proceed by running the [GISS Workflow Assistant tool](/docs/README_GISSWorkflowAssistant.md) prior to syncing, which will calculate all Point/Line/Polygon geometry for you. Otherwise, feature geometries will need to be calculated manually before syncing.
+If all edits are complete after running this tool, I would recommend users proceed by running the [GISS Workflow Assistant](/docs/README_GISSWorkflowAssistant.md) tool prior to syncing, which will calculate all Point/Line/Polygon geometry for you. Otherwise, feature geometries will need to be calculated manually before syncing.
 
 
 ### User Inputs
