@@ -8,7 +8,7 @@
 
 ### User Inputs
 
-1. Paht to Mobile GDB
+1. Path to Mobile GDB
 2. Incident Name
 3. Incident IRWIN ID
 4. Map Method
