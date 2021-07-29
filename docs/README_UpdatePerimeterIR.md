@@ -1,6 +1,6 @@
 # Update Perimeter IR
 
-This tool automates the Perimeter/IR update process. It allows users to quickly import new perimeters and IR data into their Mobile GDB, and properly attribute these data. It also has several toggles that provide additional functionality, including the ability to delete old features in the Mobile GDB, and also create an updated 'Fire Edge' feature, which will conform to the new perimeter and existing 'Contained Line' (just like the [Update Fire Edge](/docs/README_UpdateFireEdge.md) tool).
+This tool automates the Perimeter/IR update process. It allows users to quickly import new perimeters and IR data into their Mobile GDB, and properly attribute these data, including the calculation of geometry. It also has several toggles that provide additional functionality, including the ability to delete old features in the Mobile GDB, and also create an updated 'Fire Edge' feature, which will conform to the new perimeter and existing 'Contained Line' (just like the [Update Fire Edge](/docs/README_UpdateFireEdge.md) tool).
 
 ***This tool is most useful when the Perimeter and IR products are incorporated 'as is'. That is, the GISS simply  needs to perform a clean swap of the old data with the new. It may not be appropriate to use when several manual edits to the new perimeter are needed. It is highly recommended to always perform a visual assessment of the new data prior to running this tool.***
 
@@ -19,9 +19,6 @@ Deletion of old features, and the creation of an updated 'Fire Edge' is made pos
 
 
 Additionally, for the updated 'Fire Edge' feature to be correct, the 'Contained Line' ***MUST*** match the fire perimeter's edge. If the newly generated 'Fire Edge' feature appears to be overlapping any 'Contained Line', this is a good indication that the incident's 'Contained Line' does not match the fire perimeter's edge at these locations, and needs to be cleaned up.
-
-If all edits are complete after running this tool, I would recommend users proceed by running the [GISS Workflow Assistant](/docs/README_GISSWorkflowAssistant.md) tool prior to syncing, which will calculate all Point/Line/Polygon geometry for you. Otherwise, feature geometries will need to be calculated manually before syncing.
-
 
 ### User Inputs
 
