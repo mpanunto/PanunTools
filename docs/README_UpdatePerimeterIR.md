@@ -8,7 +8,7 @@ This tool automates the Perimeter/IR update process. It allows users to quickly 
 
 To complete these processes, the tool performs a series of feature appends to the user's Mobile GDB from the specified Perimeter/IR feature classes. Once new data is appended to the Mobile GDB, attributes for these new features are filled with the user specified input values. 
 
-Deletion of old features, and the creation of an updated 'Fire Edge' is made possible by a series of feature selections that query the IRWIN ID and FeatureCategory fields. As such, for things to work correctly, users ***MUST*** properly attribute their data with the correct IRWIN ID and FeatureCategory. All features of the following FeatureCategory types must have IRWIN IDs.
+Deletion of old features, and the creation of an updated 'Fire Edge' is made possible by a series of feature selections that query the IRWIN ID and FeatureCategory fields. As such, for things to work correctly, users ***MUST*** properly attribute their data with the correct IRWIN ID and FeatureCategory. All features of the following FeatureCategory types must have correct IRWIN IDs.
 
 - Wildfire Daily Fire Perimeter
 - Fire Edge
@@ -18,7 +18,7 @@ Deletion of old features, and the creation of an updated 'Fire Edge' is made pos
 - IR Scattered Heat
 
 
-Additionally, for the updated 'Fire Edge' feature to actually be correct, the 'Contained Line' ***MUST*** match the fire perimeter's edge. If the newly generated 'Fire Edge' feature appears to be overlapping any 'Contained Line', this is a good indication that the incident's 'Contained Line' does not match the fire perimeter's edge at these locations, and needs to be cleaned up.
+Additionally, for the updated 'Fire Edge' feature to be correct, the 'Contained Line' ***MUST*** match the fire perimeter's edge. If the newly generated 'Fire Edge' feature appears to be overlapping any 'Contained Line', this is a good indication that the incident's 'Contained Line' does not match the fire perimeter's edge at these locations, and needs to be cleaned up.
 
 If all edits are complete after running this tool, I would recommend users proceed by running the [GISS Workflow Assistant](/docs/README_GISSWorkflowAssistant.md) tool prior to syncing, which will calculate all Point/Line/Polygon geometry for you. Otherwise, feature geometries will need to be calculated manually before syncing.
 
