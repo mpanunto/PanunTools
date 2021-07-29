@@ -1,14 +1,14 @@
 # Update Perimeter IR
 
-This tool automates the Perimeter/IR update process. It allows users to quickly import new perimeters and IR data into their Mobile GDB, and properly attribute these data, including the calculation of geometry. It also has several toggles that provide additional functionality, including the ability to delete old features in the Mobile GDB, and also create an updated 'Fire Edge' feature, which will conform to the new perimeter and existing 'Contained Line' (just like the [Update Fire Edge](/docs/README_UpdateFireEdge.md) tool).
+This tool automates the Perimeter/IR update process. It allows users to quickly import new perimeters and IR data into their Mobile GDB, calculate geometry, and properly attribute their data. It also has several toggles that provide additional functionality, including the ability to delete old features in the Mobile GDB, and create an updated 'Fire Edge' feature, which will conform to the new perimeter and existing 'Contained Line'.
 
 ***This tool is most useful when the Perimeter and IR products are incorporated 'as is'. That is, the GISS simply  needs to perform a clean swap of the old data with the new. It may not be appropriate to use when several manual edits to the new perimeter are needed. It is highly recommended to always perform a visual assessment of the new data prior to running this tool.***
 
 ### How does it work?
 
-To complete these processes, the tool performs a series of feature appends to the user's Mobile GDB from the specified Perimeter/IR feature classes. Once new data is appended to the Mobile GDB, attributes for these new features are filled with the user specified input values. 
+To complete these processes, the tool performs a series of feature appends to the user's Mobile GDB from the specified Perimeter/IR feature classes. Any new data appended to the Mobile GDB will have attributes automatically filled with the user specified input values. 
 
-Deletion of old features, and the creation of an updated 'Fire Edge' is made possible by a series of feature selections that query the IRWIN ID and FeatureCategory fields. As such, for things to work correctly, users ***MUST*** properly attribute their data with the correct IRWIN ID and FeatureCategory. All features of the following FeatureCategory types must have correct IRWIN IDs.
+Deletion of old features, and the creation of an updated 'Fire Edge' is made possible by a series of feature selections that query the IRWIN ID and FeatureCategory fields. As such, users ***MUST*** properly attribute their data with the correct IRWIN ID and FeatureCategory. All features of the following FeatureCategory types must have correct IRWIN IDs.
 
 - Wildfire Daily Fire Perimeter
 - Fire Edge
@@ -18,7 +18,7 @@ Deletion of old features, and the creation of an updated 'Fire Edge' is made pos
 - IR Scattered Heat
 
 
-Additionally, for the updated 'Fire Edge' feature to be correct, the 'Contained Line' ***MUST*** match the fire perimeter's edge. If the newly generated 'Fire Edge' feature appears to be overlapping any 'Contained Line', this is a good indication that the incident's 'Contained Line' does not match the fire perimeter's edge at these locations, and needs to be cleaned up.
+Additionally, for the updated 'Fire Edge' feature to be correct, the incident's 'Contained Line' ***MUST*** match the fire perimeter's edge. If the newly generated 'Fire Edge' feature appears to be overlapping any 'Contained Line', this is a good indication that the incident's 'Contained Line' does not match the fire perimeter's edge at these locations, and needs to be cleaned up.
 
 ### User Inputs
 
