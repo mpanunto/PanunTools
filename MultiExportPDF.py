@@ -63,9 +63,13 @@ def worker_function(incidentname, unitid, incidentnumber, productdir,
                 curr_map_metadata.summary = mapdate
                 curr_map_metadata.save()
                 aprx.save()
+
+                #Have to reload the project again, because it was exporting with blank titles and dates
+                del aprx
+                aprx = arcpy.mp.ArcGISProject(aprxpath)
                 update_map_complete = True
             except:
-                arcpy.AddMessage("....PROJECT IN USE, WAITING 60s THEN TRYING AGAIN")
+                arcpy.AddMessage("....PROJECT MAY BE IN USE, WAITING 60s THEN TRYING AGAIN")
                 time.sleep(60)
 
     #If export was requested, proceed
@@ -152,18 +156,18 @@ if __name__=="__main__":
     arcpy.AddMessage("Multi Export PDF tool developed by Matt Panunto, DOI-BLM")
 
     #Specify incident name, unit id, and incident number
-    #incident_name = "Neffs"
+    #incident_name = "Vinegar"
     incident_name = arcpy.GetParameterAsText(0)
 
-    #incident_id = "UT-UWF-000982"
+    #incident_id = "ID-PAF-000433"
     incident_id = arcpy.GetParameterAsText(1)
 
     #Specify the products directory
-    #products_dir = r"C:\Workspace\MultiExportPDF\2020_Neffs\products"
+    #products_dir = r"C:\Workspace\OneDrive - FireNet\2021_Vinegar\products"
     products_dir = arcpy.GetParameterAsText(2)
 
     #Specify the path to the "ExportPDFtable.xlsx" file
-    #export_table_xlsx_path = r"C:\Workspace\MultiExportPDF\MultiExportPDFtable.xlsx"
+    #export_table_xlsx_path = r"C:\Workspace\OneDrive - FireNet\2021_Vinegar\tools\MultiExportPDF_Vinegar.xlsx"
     export_table_xlsx_path = arcpy.GetParameterAsText(3)
 
     #Convert Incident Name to CamelCase
@@ -182,7 +186,12 @@ if __name__=="__main__":
     incident_number = incident_id_split[2]
 
     #Create dataframe from spreadsheet
-    export_table_df = pandas.read_excel(export_table_xlsx_path)
+    try:
+        export_table_df = pandas.read_excel(export_table_xlsx_path)
+    except:
+        arcpy.AddError("UNABLE TO READ MULTI EXPORT PDF SPREADSHEET, CHECK TO MAKE SURE IT ISN'T CURRENTLY OPEN")
+        raise arcpy.ExecuteError
+
 
     #Create lists of EXPORT_REQUEST and UPDATE_MAP_DATE values from the spreadsheet
     exportrequest_col = list(export_table_df["EXPORT_REQUEST"])
@@ -209,6 +218,7 @@ if __name__=="__main__":
 
         arcpy.AddMessage("\u200B")
         arcpy.AddMessage("Single project export requested")
+        arcpy.AddMessage("\u200B")
 
         process_which = processing_needed_list.index(1)
 
