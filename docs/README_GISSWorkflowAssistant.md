@@ -28,10 +28,11 @@ The main idea behind this tool is that once all feature and attribute edits are 
 3. Path to Mobile GDB (aka local copy)
 4. Path to Master Incident GDB
 5. Specify Incident GDB Backup directory
-6. Specify Coordinate System to use for GISAcres and LengthFeet Calculations
+6. Toggle for creating new Master Incident and Backup GDBs
+7. Specify Coordinate System to use for GISAcres and LengthFeet Calculations
     - Point feature geometries are always calculated in WGS84
-7. Specify Scratch Directory
-8. Specify Other IncidentNames to keep in the newly created Master Incident GDB and Backup GDB
+8. Specify Scratch Directory
+9. Specify Other IncidentNames to keep in the newly created Master Incident GDB and Backup GDB
 
 ![screenshot_GISSWorkflowAssistant_1.png](/docs/screenshot_GISSWorkflowAssistant_1.png?raw=true)
 
