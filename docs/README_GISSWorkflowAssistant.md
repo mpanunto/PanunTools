@@ -23,16 +23,13 @@ To improve quality of life while performing the GISS Workflow, this tool does th
 The main idea behind this tool is that once all feature and attribute edits are made, it reduces the GISS workload down to simply ensuring that IncidentName values are clean. It's a lot easier to focus on one thing, rather than having to manually navigate through several processes.
 
 ### User inputs
-1. Specify Incident Name
-2. Specify Incident IrwinID
-3. Path to Mobile GDB (aka local copy)
-4. Path to Master Incident GDB
-5. Specify Incident GDB Backup directory
-6. Toggle for creating new Master Incident and Backup GDBs
-7. Specify Coordinate System to use for GISAcres and LengthFeet Calculations
+1. Specify Incident Name(s) and IrwinID(s)
+2. Path to Mobile GDB (aka local copy)
+3. Specify Coordinate System to use for GISAcres and LengthFeet Calculations
     - Point feature geometries are always calculated in WGS84
-8. Specify Scratch Directory
-9. Specify Other IncidentNames to keep in the newly created Master Incident GDB and Backup GDB
+4. Toggle for creating new Master Incident and Backup GDBs
+5. Path to Master Incident GDB
+6. Specify Incident GDB Backup directory
 
 ![screenshot_GISSWorkflowAssistant_1.png](/docs/screenshot_GISSWorkflowAssistant_1.png?raw=true)
 
