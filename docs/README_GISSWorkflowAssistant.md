@@ -14,13 +14,18 @@ To improve quality of life while performing the GISS Workflow, this tool does th
 ### How does it work?
 - Users must specify the IncidentName as input. Edits will only be made to those features whose IncidentName matches the user specified value. As such, the onus is on the user to ensure all their data is properly attributed with the correct IncidentName value.  The tool checks for case sensitivity issues and hidden spaces in IncidenName to aid users in keeping these fields clean.
 
-- The tool will first copy each Event feature class from the Mobile GDB (aka local copy) to a Scratch GDB. Geometries will then be calculated for all features in this Scratch GDB, and will be compared to the values in the Mobile GDB. Each feature is tested to determine if the geometry has changed. If a change is detected, the tool will insert the value from the Scratch GDB into the Mobile GDB, triggering an edit. No edit will be made if a change is not detected, thus minimizing [conflicts that might arise due to offline edits](https://www.nwcg.gov/publications/pms936-1/edit-incident-data/securing-incident-information#collapseX)
+- Each feature is tested to determine if the geometry has changed since it was last calculated. If a change is detected, the tool will insert the new geometry value, triggering an edit. No edit will be made if a change is not detected, thus minimizing [conflicts that might arise due to offline edits](https://www.nwcg.gov/publications/pms936-1/edit-incident-data/securing-incident-information#collapseX)
 
-- After geometries have been calculated, the tool will convert the Mobile GDB to a new Master Incident GDB, and place it in the same directory as the original. It will also place a new Master Incident Backup GDB in the backups folder with an appropriate date/time stamp. 
+- If the user specifies multiple IncidentNames and IrwinIDs, the tool will iterate through each incident one at a time and perform these tasks.
 
-- Lastly, any features in the new Master Incident GDB and new Backup GDB whose IncidentName does not match the user specified value will be deleted. However, users may specify additional incident names that they want to keep in these new GDBs. This is simply to maintain clean datasets that are relevant to only the fire(s) of interest.
+- If requested, after geometries have been calculated, the tool will then convert the Mobile GDB to a new Master Incident GDB, and place it in the same directory as the original. It will also place a new Master Incident Backup GDB in the backups folder with an appropriate date/time stamp. 
 
-The main idea behind this tool is that once all feature and attribute edits are made, it reduces the GISS workload down to simply ensuring that IncidentName values are clean. It's a lot easier to focus on one thing, rather than having to manually navigate through several processes.
+- Lastly, any features in the new Master Incident GDB and new Backup GDB whose IncidentName does not match any of the user specified values will be deleted. This is simply to maintain clean datasets that are relevant to only the fire(s) of interest.
+
+The main idea behind this tool is that once all manual feature and attribute edits are made, it reduces the GISS workload down to simply ensuring that IncidentName values are clean. The IncidentName field is used because:
+- Field users (Collector/Field Maps/Survey123) can enter this information. Sometimes correctly!
+- It would be extremely rare for neighboring incidents to have the same IncidentName
+- It's a lot easier for the GISS to visually determine if an IncidentName is incorrect vs an IrwinID
 
 ### User inputs
 1. Specify Incident Name(s) and IrwinID(s)
