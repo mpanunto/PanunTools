@@ -27,9 +27,10 @@ The main idea behind this tool is that once all feature and attribute edits are 
 2. Path to Mobile GDB (aka local copy)
 3. Specify Coordinate System to use for GISAcres and LengthFeet Calculations
     - Point feature geometries are always calculated in WGS84
-4. Toggle for creating new Master Incident and Backup GDBs
-5. Path to Master Incident GDB
-6. Specify Incident GDB Backup directory
+4. Specify desired geometry measurement type
+5. Toggle for creating new Master Incident and Backup GDBs
+6. Path to Master Incident GDB
+7. Specify Incident GDB Backup directory
 
 ![screenshot_GISSWorkflowAssistant_1.png](/docs/screenshot_GISSWorkflowAssistant_1.png?raw=true)
 
