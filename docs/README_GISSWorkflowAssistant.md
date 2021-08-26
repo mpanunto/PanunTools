@@ -15,9 +15,9 @@ To improve quality of life while performing the GISS Workflow, this tool does th
 
 - Each feature is tested to determine if the geometry has changed since it was last calculated. If a change is detected, the tool will insert the new geometry value, triggering an edit. No edit will be made if a change is not detected, thus minimizing [conflicts that might arise due to offline edits](https://www.nwcg.gov/publications/pms936-1/edit-incident-data/securing-incident-information#collapseX)
 
-- If the user specifies multiple IncidentNames and IrwinIDs, the tool will iterate through each incident one at a time, calculate geometries, insert IrwinIDs, check for IncidentName case sensitivity/hidden space issues, and check for missing Drop Point and Helispot labels.
+- If the user specifies multiple IncidentNames and IrwinIDs, the tool will iterate through each incident one at a time, and perform the various geospatial and QA/QC processes for each.
 
-- If requested, the tool will then convert the Mobile GDB to a new Master Incident GDB, and place it in the same directory as the original. It will also place a new Master Incident Backup GDB in the backups folder with an appropriate date/time stamp. 
+- If requested, the tool will then convert the Mobile GDB to a new Master Incident GDB, and place it in the same directory as the original. It will also place a new Master Incident Backup GDB in the backups folder with an appropriate date/time stamp. If the user specified multiple IncidentNames and IrwinIDs, the data from all incidents will be exported to a single Master Incident GDB.
 
 - Lastly, any features in the new Master Incident GDB and new Backup GDB whose IncidentName does not match any of the user specified values will be deleted. This is simply to maintain clean datasets that are relevant to only the fire(s) of interest.
 
