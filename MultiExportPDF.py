@@ -15,12 +15,38 @@ from multiprocessing import Pool, freeze_support
 
 
 #Define function to export PDFs
-def worker_function(incidentname, unitid, incidentnumber, productdir,
-                exportrequest, update_mapdate, mapdate, proddate, shift, maptype, pagesize, orientation,
-                image_clipgraphics, image_compress, image_compressquality, image_compressvecgraphics, image_vectorresolution, image_rasterresample,
-                avenza_clipgraphics, avenza_compress, avenza_compressquality, avenza_compressvecgraphics, avenza_vectorresolution, avenza_rasterresample, avenza_embedfonts, avenza_georefinfo, avenza_layersattributes,
-                layoutname, mapname, aprxpath):
+def worker_function(in_inputs_list):
 
+    incidentname = in_inputs_list[0]
+    unitid = in_inputs_list[1]
+    incidentnumber = in_inputs_list[2]
+    productdir = in_inputs_list[3]
+    exportrequest = in_inputs_list[4]
+    update_mapdate = in_inputs_list[5]
+    mapdate = in_inputs_list[6]
+    proddate = in_inputs_list[7]
+    shift = in_inputs_list[8]
+    maptype = in_inputs_list[9]
+    pagesize = in_inputs_list[10]
+    orientation = in_inputs_list[11]
+    image_clipgraphics = in_inputs_list[12]
+    image_compress = in_inputs_list[13]
+    image_compressquality = in_inputs_list[14]
+    image_compressvecgraphics = in_inputs_list[15]
+    image_vectorresolution = in_inputs_list[16]
+    image_rasterresample = in_inputs_list[17]
+    avenza_clipgraphics = in_inputs_list[18]
+    avenza_compress = in_inputs_list[19]
+    avenza_compressquality = in_inputs_list[20]
+    avenza_compressvecgraphics = in_inputs_list[21]
+    avenza_vectorresolution = in_inputs_list[22]
+    avenza_rasterresample = in_inputs_list[23]
+    avenza_embedfonts = in_inputs_list[24]
+    avenza_georefinfo = in_inputs_list[25]
+    avenza_layersattributes = in_inputs_list[26]
+    layoutname = in_inputs_list[27]
+    mapname = in_inputs_list[28]
+    aprxpath = in_inputs_list[29]
 
     arcpy.AddMessage(" ")
     arcpy.AddMessage("PROCESSING: " + maptype + " " + pagesize + " " + orientation)
@@ -54,8 +80,9 @@ def worker_function(incidentname, unitid, incidentnumber, productdir,
 
     #If UPDATE_MAP_DATE == Yes, first update the map date before any exporting
     if update_mapdate == "Yes":
-        update_map_complete = False
-        while(update_map_complete == False):
+        update_mapdate_complete = False
+        update_mapdate_attempt = 0
+        while(update_mapdate_complete == False):
             try:
                 arcpy.AddMessage("..UPDATING MAP DATE")
                 curr_map = aprx.listMaps(mapname)[0]
@@ -67,10 +94,20 @@ def worker_function(incidentname, unitid, incidentnumber, productdir,
                 #Have to reload the project again, because it was exporting with blank titles and dates
                 del aprx
                 aprx = arcpy.mp.ArcGISProject(aprxpath)
-                update_map_complete = True
+                update_mapdate_complete = True
             except:
-                arcpy.AddMessage("....PROJECT MAY BE IN USE, WAITING 60s THEN TRYING AGAIN")
-                time.sleep(60)
+                update_mapdate_attempt = update_mapdate_attempt + 1
+
+                if(update_mapdate_attempt < 5):
+                    arcpy.AddMessage("....FAILED TO UPDATE MAP DATE, PROJECT MAY BE IN USE, WAITING 60s THEN TRYING AGAIN")
+                    time.sleep(60)
+
+                if(update_mapdate_attempt >= 5):
+                    arcpy.AddMessage("....FAILED TO UPDATE MAP DATE 5 TIMES, SKIPPING")
+                    update_mapdate_complete = True
+
+
+
 
     #If export was requested, proceed
     if exportrequest in ["IMAGE", "AVENZA", "BOTH"]:
@@ -81,27 +118,37 @@ def worker_function(incidentname, unitid, incidentnumber, productdir,
         avenza_dir = product_date_dir + "/avenza"
 
         #Create daily product folder, if it doesn't exist
-        if( not os.path.isdir(product_date_dir) ):
-            os.mkdir(product_date_dir)
+        try:
+            if( not os.path.isdir(product_date_dir) ):
+                os.mkdir(product_date_dir)
+        except:
+            arcpy.AddMessage("..FAILED TO CREATE DAILY PRODUCTS FOLDER")
+
 
         #Create image folder, if it doesn't exist
-        if( not os.path.isdir(image_dir) ):
-            os.mkdir(image_dir)
+        try:
+            if( not os.path.isdir(image_dir) ):
+                os.mkdir(image_dir)
+        except:
+            arcpy.AddMessage("..FAILED TO CREATE IMAGE FOLDER")
 
         #Create avenza folder, if it doesn't exist
-        if( not os.path.isdir(avenza_dir) ):
-            os.mkdir(avenza_dir)
+        try:
+            if( not os.path.isdir(avenza_dir) ):
+                os.mkdir(avenza_dir)
+        except:
+            arcpy.AddMessage("..FAILED TO CREATE AVENZA FOLDER")
 
         lyt = aprx.listLayouts(layoutname)[0]
         pdf_image_outpath = image_dir + "/IMAGE_" + maptype + "_" + pagesize + "_" + orientation + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_" + shift + ".pdf"
         pdf_avenza_outpath = avenza_dir + "/AVENZA_" + maptype + "_" + pagesize + "_" + orientation + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_" + shift + ".pdf"
 
-        if exportrequest in ["IMAGE", "AVENZA", "BOTH"]:
-            arcpy.AddMessage("..EXPORTING")
+        arcpy.AddMessage("..EXPORTING")
 
         #If IMAGE or BOTH was requested, export PDF for printing (export as image)
         if exportrequest in ["IMAGE", "BOTH"]:
             image_export_complete = False
+            image_export_attempt = 0
             while(image_export_complete == False):
                 try:
                     arcpy.AddMessage("....IMAGE EXPORT")
@@ -110,12 +157,21 @@ def worker_function(incidentname, unitid, incidentnumber, productdir,
                     arcpy.AddMessage("......EXPORT COMPLETE")
                     image_export_complete = True
                 except:
-                    arcpy.AddMessage("......PROJECT IN USE, WAITING 60s THEN TRYING AGAIN")
-                    time.sleep(60)
+                    image_export_attempt = image_export_attempt + 1
+
+                    if(image_export_attempt < 5):
+                        arcpy.AddMessage("....FAILED TO PERFORM IMAGE EXPORT, PROJECT MAY BE IN USE, WAITING 60s THEN TRYING AGAIN")
+                        time.sleep(60)
+
+                    if(image_export_attempt >= 5):
+                        arcpy.AddMessage("....FAILED TO PERFORM IMAGE EXPORT 5 TIMES, SKIPPING")
+                        image_export_complete = True
+
 
         #If AVENZA or BOTH was requested, export PDF for Avenza use
         if exportrequest in ["AVENZA", "BOTH"]:
             avenza_export_complete = False
+            avenza_export_attempt = 0
             while(avenza_export_complete == False):
                 try:
                     arcpy.AddMessage("....AVENZA EXPORT")
@@ -125,8 +181,16 @@ def worker_function(incidentname, unitid, incidentnumber, productdir,
                     arcpy.AddMessage("......EXPORT COMPLETE")
                     avenza_export_complete = True
                 except:
-                    arcpy.AddMessage("......PROJECT IN USE, WAITING 60s THEN TRYING AGAIN")
-                    time.sleep(60)
+                    avenza_export_attempt = avenza_export_attempt + 1
+
+                    if(avenza_export_attempt < 5):
+                        arcpy.AddMessage("....FAILED TO PERFORM AVENZA EXPORT, PROJECT MAY BE IN USE, WAITING 60s THEN TRYING AGAIN")
+                        time.sleep(60)
+
+                    if(avenza_export_attempt >= 5):
+                        arcpy.AddMessage("....FAILED TO PERFORM AVENZA EXPORT 5 TIMES, SKIPPING")
+                        avenza_export_complete = True
+
 
 
 #Define function to create pool of processes
@@ -135,11 +199,15 @@ def execute(inputs):
     #Set multiprocessing python exe path
     multiprocessing.set_executable(os.path.join(sys.exec_prefix, 'python.exe'))
 
-    #Create a pool of workers
+    #Get cpu count
+    #cpucount = multiprocessing.cpu_count() - 1
+
+    #Create pool of workers
     pool = multiprocessing.Pool()
 
-    #Apply "worker_function" to the list of inputs
-    pool.starmap(worker_function, inputs)
+    #Submit jobs to workers
+    for curr_input in inputs:
+        pool.imap_unordered(worker_function, [curr_input]) # args are passed as a list
 
     pool.close()
     pool.join()
@@ -156,18 +224,18 @@ if __name__=="__main__":
     arcpy.AddMessage("Multi Export PDF tool developed by Matt Panunto, DOI-BLM")
 
     #Specify incident name, unit id, and incident number
-    #incident_name = "Vinegar"
+    #incident_name = "Parleys Canyon"
     incident_name = arcpy.GetParameterAsText(0)
 
-    #incident_id = "ID-PAF-000433"
+    #incident_id = "UT-NWS-000763"
     incident_id = arcpy.GetParameterAsText(1)
 
     #Specify the products directory
-    #products_dir = r"C:\Workspace\OneDrive - FireNet\2021_Vinegar\products"
+    #products_dir = r"C:\Workspace\FireNet\2021_UTNWS_ParleysCanyon - GIS\2021_ParleysCanyon\products"
     products_dir = arcpy.GetParameterAsText(2)
 
     #Specify the path to the "ExportPDFtable.xlsx" file
-    #export_table_xlsx_path = r"C:\Workspace\OneDrive - FireNet\2021_Vinegar\tools\MultiExportPDF_Vinegar.xlsx"
+    #export_table_xlsx_path = r"C:\Workspace\FireNet\2021_UTNWS_ParleysCanyon - GIS\2021_ParleysCanyon\tools\MultiExportPDF.xlsx"
     export_table_xlsx_path = arcpy.GetParameterAsText(3)
 
     #Convert Incident Name to CamelCase
@@ -212,128 +280,68 @@ if __name__=="__main__":
             processing_needed_list.append(0)
     processing_count = len(processing_needed_which_list)
 
+    arcpy.AddMessage("\u200B")
+    arcpy.AddMessage("Mulitple project exports requested")
 
-    #Create variables from spreadsheets when there is only 1 item in the sheet
-    if(processing_count == 1):
+    #Create lists for export request and filename information
+    exportrequest_list = [list(map(str, export_table_df["EXPORT_REQUEST"]))[i] for i in processing_needed_which_list]
+    update_mapdate_list = [list(map(str, export_table_df["UPDATE_MAP_DATE"]))[i] for i in processing_needed_which_list]
+    mapdate_list = [list(map(str, export_table_df["MAP_DATE"]))[i] for i in processing_needed_which_list]
+    proddate_list = [list(map(str, export_table_df["PRODUCTS_DATE"]))[i] for i in processing_needed_which_list]
+    shift_list = [list(map(str, export_table_df["SHIFT"]))[i] for i in processing_needed_which_list]
+    maptype_list = [list(map(str, export_table_df["MAP_TYPE"]))[i] for i in processing_needed_which_list]
+    pagesize_list = [list(map(str, export_table_df["PAGE_SIZE"]))[i] for i in processing_needed_which_list]
+    orientation_list = [list(map(str, export_table_df["ORIENTATION"]))[i] for i in processing_needed_which_list]
 
-        arcpy.AddMessage("\u200B")
-        arcpy.AddMessage("Single project export requested")
-        arcpy.AddMessage("\u200B")
+    #Create lists for the IMAGE export settings
+    image_clipgraphics_list = [list(export_table_df["IMAGE_CLIP_GRAPHICS"])[i] for i in processing_needed_which_list]
+    image_compress_list = [list(map(str, export_table_df["IMAGE_COMPRESSION"]))[i] for i in processing_needed_which_list]
+    image_compressquality_list = [list(map(int, export_table_df["IMAGE_COMPRESSION_QUALITY"]))[i] for i in processing_needed_which_list]
+    image_compressvecgraphics_list = [list(export_table_df["IMAGE_COMPRESS_VECTOR_GRAPHICS"])[i] for i in processing_needed_which_list]
+    image_vectorresolution_list = [list(map(int, export_table_df["IMAGE_VECTOR_RESOLUTION"]))[i] for i in processing_needed_which_list]
+    image_rasterresample_list = [list(map(str, export_table_df["IMAGE_RASTER_RESAMPLE"]))[i] for i in processing_needed_which_list]
 
-        process_which = processing_needed_list.index(1)
+    #Create lists for the AVENZA export settings
+    avenza_clipgraphics_list = [list(export_table_df["AVENZA_CLIP_GRAPHICS"])[i] for i in processing_needed_which_list]
+    avenza_compress_list = [list(map(str, export_table_df["AVENZA_COMPRESSION"]))[i] for i in processing_needed_which_list]
+    avenza_compressquality_list = [list(map(int, export_table_df["AVENZA_COMPRESSION_QUALITY"]))[i] for i in processing_needed_which_list]
+    avenza_compressvecgraphics_list = [list(export_table_df["AVENZA_COMPRESS_VECTOR_GRAPHICS"])[i] for i in processing_needed_which_list]
+    avenza_vectorresolution_list = [list(map(int, export_table_df["AVENZA_VECTOR_RESOLUTION"]))[i] for i in processing_needed_which_list]
+    avenza_rasterresample_list = [list(map(str, export_table_df["AVENZA_RASTER_RESAMPLE"]))[i] for i in processing_needed_which_list]
+    avenza_embedfonts_list = [list(export_table_df["AVENZA_EMBED_FONTS"])[i] for i in processing_needed_which_list]
+    avenza_georefinfo_list = [list(export_table_df["AVENZA_GEOREF_INFO"])[i] for i in processing_needed_which_list]
+    avenza_layersattributes_list = [list(map(str, export_table_df["AVENZA_LAYERS_ATTRIBUTES"]))[i] for i in processing_needed_which_list]
 
+    #Create lists for the Layout name and APRX Path
+    layoutname_list = [list(map(str, export_table_df["LAYOUT_NAME"]))[i] for i in processing_needed_which_list]
+    mapname_list = [list(map(str, export_table_df["MAP_NAME"]))[i] for i in processing_needed_which_list]
+    aprxpath_list = [list(map(str, export_table_df["APRX_PATH"]))[i] for i in processing_needed_which_list]
 
+    #Create lists of user specified inputs
+    incidentname_list = [incident_name] * processing_count
+    unitid_list = [unit_id] * processing_count
+    incidentnumber_list = [incident_number] * processing_count
+    productdir_list = [products_dir] * processing_count
 
-        #Create lists for export request and filename information
-        exportrequest_list = str(export_table_df["EXPORT_REQUEST"][process_which])
-        update_mapdate_list = str(export_table_df["UPDATE_MAP_DATE"][process_which])
-        mapdate_list = str(export_table_df["MAP_DATE"][process_which])
-        proddate_list = str(export_table_df["PRODUCTS_DATE"][process_which])
-        shift_list = str(export_table_df["SHIFT"][process_which])
-        maptype_list = str(export_table_df["MAP_TYPE"][process_which])
-        pagesize_list = str(export_table_df["PAGE_SIZE"][process_which])
-        orientation_list = str(export_table_df["ORIENTATION"][process_which])
-
-        #Create lists for the IMAGE export settings
-        image_clipgraphics_list = export_table_df["IMAGE_CLIP_GRAPHICS"][process_which]
-        image_compress_list = str(export_table_df["IMAGE_COMPRESSION"][process_which])
-        image_compressquality_list = int(export_table_df["IMAGE_COMPRESSION_QUALITY"][process_which])
-        image_compressvecgraphics_list = export_table_df["IMAGE_COMPRESS_VECTOR_GRAPHICS"][process_which]
-        image_vectorresolution_list = int(export_table_df["IMAGE_VECTOR_RESOLUTION"][process_which])
-        image_rasterresample_list = str(export_table_df["IMAGE_RASTER_RESAMPLE"][process_which])
-
-        #Create lists for the AVENZA export settings
-        avenza_clipgraphics_list = export_table_df["AVENZA_CLIP_GRAPHICS"][process_which]
-        avenza_compress_list = str(export_table_df["AVENZA_COMPRESSION"][process_which])
-        avenza_compressquality_list = int(export_table_df["AVENZA_COMPRESSION_QUALITY"][process_which])
-        avenza_compressvecgraphics_list = export_table_df["AVENZA_COMPRESS_VECTOR_GRAPHICS"][process_which]
-        avenza_vectorresolution_list = int(export_table_df["AVENZA_VECTOR_RESOLUTION"][process_which])
-        avenza_rasterresample_list = str(export_table_df["AVENZA_RASTER_RESAMPLE"][process_which])
-        avenza_embedfonts_list = export_table_df["AVENZA_EMBED_FONTS"][process_which]
-        avenza_georefinfo_list = export_table_df["AVENZA_GEOREF_INFO"][process_which]
-        avenza_layersattributes_list = str(export_table_df["AVENZA_LAYERS_ATTRIBUTES"][process_which])
-
-        #Create lists for the Layout name and APRX Path
-        layoutname_list = str(export_table_df["LAYOUT_NAME"][process_which])
-        mapname_list = str(export_table_df["MAP_NAME"][process_which])
-        aprxpath_list = str(export_table_df["APRX_PATH"][process_which])
-
-        #Create lists of user specified inputs
-        incidentname_list = incident_name
-        unitid_list = unit_id
-        incidentnumber_list = incident_number
-        productdir_list = products_dir
-
-        #If only 1 row in xlsx, run worker_function() function
-        worker_function(incidentname_list, unitid_list, incidentnumber_list, productdir_list,
-                    exportrequest_list, update_mapdate_list, mapdate_list, proddate_list, shift_list, maptype_list, pagesize_list, orientation_list,
-                    image_clipgraphics_list, image_compress_list, image_compressquality_list, image_compressvecgraphics_list, image_vectorresolution_list, image_rasterresample_list,
-                    avenza_clipgraphics_list, avenza_compress_list, avenza_compressquality_list, avenza_compressvecgraphics_list, avenza_vectorresolution_list, avenza_rasterresample_list, avenza_embedfonts_list, avenza_georefinfo_list, avenza_layersattributes_list,
-                    layoutname_list, mapname_list, aprxpath_list)
+    inputs_list = list(map(list, zip(incidentname_list, unitid_list, incidentnumber_list, productdir_list,
+                exportrequest_list, update_mapdate_list, mapdate_list, proddate_list, shift_list, maptype_list, pagesize_list, orientation_list,
+                image_clipgraphics_list, image_compress_list, image_compressquality_list, image_compressvecgraphics_list, image_vectorresolution_list, image_rasterresample_list,
+                avenza_clipgraphics_list, avenza_compress_list, avenza_compressquality_list, avenza_compressvecgraphics_list, avenza_vectorresolution_list, avenza_rasterresample_list, avenza_embedfonts_list, avenza_georefinfo_list, avenza_layersattributes_list,
+                layoutname_list, mapname_list, aprxpath_list)))
 
 
-    #Create variables from spreadsheets when there are multiple items in the sheet
-    if(processing_count > 1):
+    ############################################################################
+    ## BEGIN MULTIPROCESSOR
+    ############################################################################
+    arcpy.AddMessage("\u200B")
+    arcpy.AddMessage("Begin multiprocessing")
+    MultiExportPDF.execute(inputs_list)
+    arcpy.AddMessage("..Finished multiprocessing")
+    ############################################################################
+    ## END MULTIPROCESSOR
+    ############################################################################
 
-        arcpy.AddMessage("\u200B")
-        arcpy.AddMessage("Mulitple project exports requested")
 
-        #Create lists for export request and filename information
-        exportrequest_list = [list(map(str, export_table_df["EXPORT_REQUEST"]))[i] for i in processing_needed_which_list]
-        update_mapdate_list = [list(map(str, export_table_df["UPDATE_MAP_DATE"]))[i] for i in processing_needed_which_list]
-        mapdate_list = [list(map(str, export_table_df["MAP_DATE"]))[i] for i in processing_needed_which_list]
-        proddate_list = [list(map(str, export_table_df["PRODUCTS_DATE"]))[i] for i in processing_needed_which_list]
-        shift_list = [list(map(str, export_table_df["SHIFT"]))[i] for i in processing_needed_which_list]
-        maptype_list = [list(map(str, export_table_df["MAP_TYPE"]))[i] for i in processing_needed_which_list]
-        pagesize_list = [list(map(str, export_table_df["PAGE_SIZE"]))[i] for i in processing_needed_which_list]
-        orientation_list = [list(map(str, export_table_df["ORIENTATION"]))[i] for i in processing_needed_which_list]
-
-        #Create lists for the IMAGE export settings
-        image_clipgraphics_list = [list(export_table_df["IMAGE_CLIP_GRAPHICS"])[i] for i in processing_needed_which_list]
-        image_compress_list = [list(map(str, export_table_df["IMAGE_COMPRESSION"]))[i] for i in processing_needed_which_list]
-        image_compressquality_list = [list(map(int, export_table_df["IMAGE_COMPRESSION_QUALITY"]))[i] for i in processing_needed_which_list]
-        image_compressvecgraphics_list = [list(export_table_df["IMAGE_COMPRESS_VECTOR_GRAPHICS"])[i] for i in processing_needed_which_list]
-        image_vectorresolution_list = [list(map(int, export_table_df["IMAGE_VECTOR_RESOLUTION"]))[i] for i in processing_needed_which_list]
-        image_rasterresample_list = [list(map(str, export_table_df["IMAGE_RASTER_RESAMPLE"]))[i] for i in processing_needed_which_list]
-
-        #Create lists for the AVENZA export settings
-        avenza_clipgraphics_list = [list(export_table_df["AVENZA_CLIP_GRAPHICS"])[i] for i in processing_needed_which_list]
-        avenza_compress_list = [list(map(str, export_table_df["AVENZA_COMPRESSION"]))[i] for i in processing_needed_which_list]
-        avenza_compressquality_list = [list(map(int, export_table_df["AVENZA_COMPRESSION_QUALITY"]))[i] for i in processing_needed_which_list]
-        avenza_compressvecgraphics_list = [list(export_table_df["AVENZA_COMPRESS_VECTOR_GRAPHICS"])[i] for i in processing_needed_which_list]
-        avenza_vectorresolution_list = [list(map(int, export_table_df["AVENZA_VECTOR_RESOLUTION"]))[i] for i in processing_needed_which_list]
-        avenza_rasterresample_list = [list(map(str, export_table_df["AVENZA_RASTER_RESAMPLE"]))[i] for i in processing_needed_which_list]
-        avenza_embedfonts_list = [list(export_table_df["AVENZA_EMBED_FONTS"])[i] for i in processing_needed_which_list]
-        avenza_georefinfo_list = [list(export_table_df["AVENZA_GEOREF_INFO"])[i] for i in processing_needed_which_list]
-        avenza_layersattributes_list = [list(map(str, export_table_df["AVENZA_LAYERS_ATTRIBUTES"]))[i] for i in processing_needed_which_list]
-
-        #Create lists for the Layout name and APRX Path
-        layoutname_list = [list(map(str, export_table_df["LAYOUT_NAME"]))[i] for i in processing_needed_which_list]
-        mapname_list = [list(map(str, export_table_df["MAP_NAME"]))[i] for i in processing_needed_which_list]
-        aprxpath_list = [list(map(str, export_table_df["APRX_PATH"]))[i] for i in processing_needed_which_list]
-
-        #Create lists of user specified inputs
-        incidentname_list = [incident_name] * processing_count
-        unitid_list = [unit_id] * processing_count
-        incidentnumber_list = [incident_number] * processing_count
-        productdir_list = [products_dir] * processing_count
-
-        inputs_list = list(zip(incidentname_list, unitid_list, incidentnumber_list, productdir_list,
-                    exportrequest_list, update_mapdate_list, mapdate_list, proddate_list, shift_list, maptype_list, pagesize_list, orientation_list,
-                    image_clipgraphics_list, image_compress_list, image_compressquality_list, image_compressvecgraphics_list, image_vectorresolution_list, image_rasterresample_list,
-                    avenza_clipgraphics_list, avenza_compress_list, avenza_compressquality_list, avenza_compressvecgraphics_list, avenza_vectorresolution_list, avenza_rasterresample_list, avenza_embedfonts_list, avenza_georefinfo_list, avenza_layersattributes_list,
-                    layoutname_list, mapname_list, aprxpath_list))
-
-        ############################################################################
-        ## BEGIN MULTIPROCESSOR
-        ############################################################################
-        arcpy.AddMessage("\u200B")
-        arcpy.AddMessage("Begin multiprocessing")
-        MultiExportPDF.execute(inputs_list)
-        arcpy.AddMessage("..Finished multiprocessing")
-        ############################################################################
-        ## END MULTIPROCESSOR
-        ############################################################################
-        arcpy.AddMessage("\u200B")
-        arcpy.AddMessage("Done!")
+    arcpy.AddMessage("\u200B")
+    arcpy.AddMessage("Done!")
 
