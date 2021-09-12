@@ -12,12 +12,11 @@ A Union is first performed on the incident's "Wildfire Daily Fire Perimeter" in 
 
 ### User Inputs
 
-1. Path to ownership feature class
-2. Field that defines ownership
-3. Path to fire perimeter feature class
+1. List of Incident Names
+2. Path to Event_Polygon feature class
+3. Path to Event_Line feature class
 4. Coordinate system to perform acreage calculations
 5. Geometry measurement type
-6. Scratch directory
 
 ![screenshot_CalculateContainment_1.png](/docs/screenshot_CalculateContainment_1.png?raw=true)
 \
