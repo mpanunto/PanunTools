@@ -30,4 +30,4 @@ This tool doesn't generate any outputs. The calculations are provided to the use
 \
 ### Acknowledgements
 
-Many thanks to [SW - Carl Beyerhelm (GISS)](https://community.esri.com/migrated-users/371529) for developing the original tool
+Many thanks to [SW - Carl Beyerhelm (GISS)](https://community.esri.com/migrated-users/371529) for developing the original tool.
