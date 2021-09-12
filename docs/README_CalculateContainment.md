@@ -27,3 +27,7 @@ This tool doesn't generate any outputs. The calculations are provided to the use
 \
 \
 ![screenshot_CalculateContainment_2.png](/docs/screenshot_CalculateContainment_2.png?raw=true)
+\
+### Acknowledgements
+
+Many thanks to Carl Beyerhelm for developing the original tool
