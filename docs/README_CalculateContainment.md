@@ -8,8 +8,7 @@ The tool will iterate through the user specified list of IncidentName values, an
 
 A Union is first performed on the incident's "Wildfire Daily Fire Perimeter" in order to remove any interior gaps. It is then converted to a line, and dissolved. The "Contained Line" is also dissolved. Lastly, features are then projected to the user specified coordinate system prior to calculating geometry, and containment.
 
-If containment is calculated for more than one incident, an aggregate containment will also be calculated accross all incidents.
-
+If containment is calculated for more than one incident, a combined total containment will also be calculated accross all incidents.
 
 
 ### User Inputs
