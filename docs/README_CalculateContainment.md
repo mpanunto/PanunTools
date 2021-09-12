@@ -1,6 +1,10 @@
-# Calculate Ownership
+# Calculate Containment
 
-Basic tool that automates the Intersect & Dissolve process to obtain acres burned by ownership.
+Tool that calculates the containment of one or more user specified incidents
+
+### How does it work?
+
+
 
 ### User Inputs
 
@@ -11,11 +15,11 @@ Basic tool that automates the Intersect & Dissolve process to obtain acres burne
 5. Geometry measurement type
 6. Scratch directory
 
-![screenshot_CalculateOwnership_1.png](/docs/screenshot_CalculateOwnership_1.png?raw=true)
+![screenshot_CalculateContainment_1.png](/docs/screenshot_CalculateContainment_1.png?raw=true)
 \
 \
 \
 This tool doesn't generate any outputs. The calculations are provided to the user in the Geoprocessing Messages:
 \
 \
-![screenshot_CalculateOwnership_2.png](/docs/screenshot_CalculateOwnership_2.png?raw=true)
+![screenshot_CalculateContainment_2.png](/docs/screenshot_CalculateContainment_2.png?raw=true)
