@@ -1,6 +1,6 @@
 # Calculate Containment
 
-Tool that calculates the containment for one or more user specified incidents
+Tool that calculates the containment for one or more user specified incidents.
 
 ### How does it work?
 
