@@ -1,12 +1,12 @@
 # Calculate Containment
 
-Tool that calculates the containment of one or more user specified incidents
+Tool that calculates the containment for one or more user specified incidents
 
 ### How does it work?
 
-The tool will iterate through the user specified list of IncidentNames value, querying the user defined Event_Polygon and Event_Line feature classes for features of "Wildfire Daily Fire Perimeter" and "Contained Line". 
+The tool will iterate through the user specified list of IncidentName values, and will select corresponding features of "Wildfire Daily Fire Perimeter" and "Contained Line" from the user specified Event_Polygon and Event_Line feature classes. It uses these features to calculate containment.
 
-A Union is first performed on the incident's "Wildfire Daily Fire Perimeter" in order to remove any interior gaps. It is then converted to a line, and dissolved prior to calculating it's length. The "Contained Line" is also dissolved prior to calculating it's length
+A Union is first performed on the incident's "Wildfire Daily Fire Perimeter" in order to remove any interior gaps. It is then converted to a line, and dissolved. The "Contained Line" is also dissolved. Lastly, features are then projected to the user specified coordinate system prior to calculating geometry, and containment.
 
 
 
