@@ -3,11 +3,11 @@
 To improve quality of life while performing the GISS Workflow, this tool does the following:
 1. Calculates geometry for all Event feature classes (only if geometries have changed)
 2. Inserts missing IrwinIDs, or replaces if incorrect
-3. Checks for case sensitivity issues and hidden spaces in IncidentName fields
-4. Checks for missing Drop Point and Helispot labels
-5. Creates a new Master Incident GDB
-6. Creates a new Master Incident Backup GDB
-7. Deletes all features in the newly created GDBs that do not match the user specified IncidentName(s)  
+3. Checks for case sensitivity issues and hidden spaces in IncidentName fields (optional)
+4. Checks for missing Drop Point and Helispot labels (optional)
+5. Creates a new Master Incident GDB (optional)
+6. Creates a new Master Incident Backup GDB (optional)
+7. Deletes all features in the newly created GDBs that do not match the user specified IncidentName(s) (optional)
   
   
 ### How does it work?
@@ -19,10 +19,10 @@ To improve quality of life while performing the GISS Workflow, this tool does th
 
 - If requested, the tool will then convert the Mobile GDB to a new Master Incident GDB, and place it in the same directory as the original. It will also place a new Master Incident Backup GDB in the backups folder with an appropriate date/time stamp. If the user specified multiple IncidentNames and IrwinIDs, the data from all incidents will be exported to a single Master Incident GDB.
 
-- Lastly, any features in the new Master Incident GDB and new Backup GDB whose IncidentName does not match any of the user specified values will be deleted. This is simply to maintain clean datasets that are relevant to only the fire(s) of interest.
+- Lastly, any features in the new Master Incident GDB and new Backup GDB whose IncidentName does not match any of the user specified values can be deleted. This option provides users a simple way to maintain clean datasets relevant to only the fire(s) of interest.
 
 The main idea behind this tool is that once all manual feature and attribute edits are made, it reduces the GISS workload down to simply ensuring that IncidentName values are clean. The IncidentName field is used because:
-- Field users (Collector/Field Maps/Survey123) can enter this information. Sometimes correctly!
+- Field users (Collector/Field Maps/Survey123) can enter this information. Sometimes even correctly!
 - It would be extremely rare for neighboring incidents to have the same IncidentName
 - It's a lot easier for the GISS to visually determine if an IncidentName is incorrect vs an IrwinID
 
@@ -32,9 +32,13 @@ The main idea behind this tool is that once all manual feature and attribute edi
 3. Specify Coordinate System to use for GISAcres and LengthFeet Calculations
     - Point feature geometries are always calculated in WGS84
 4. Specify desired geometry measurement type
-5. Toggle for creating new Master Incident and Backup GDBs
-6. Path to Master Incident GDB
-7. Specify Incident GDB Backup directory
+5. Toggle to check for missing Drop Point and Helispot Labels
+6. Toggle to check for Proposed features
+7. Toggle for creating new Master Incident and Backup GDBs
+8. Path to Master Incident GDB
+9. Specify Incident GDB Backup directory
+10. Toggle to only keep features with user specified IncidentNames(s)
+    - All other features will be deleted from the new Master Incident GDB
 
 ![screenshot_GISSWorkflowAssistant_1.png](/docs/screenshot_GISSWorkflowAssistant_1.png?raw=true)
 
