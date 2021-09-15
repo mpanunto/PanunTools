@@ -15,7 +15,7 @@ To improve quality of life while performing the GISS Workflow, this tool does th
   
   
 ### How does it work?
-- Users must specify the IncidentName as input. Edits will only be made to those features whose IncidentName matches the user specified value. As such, the onus is on the user to ensure all their data is properly attributed with the correct IncidentName value.  The tool can check for case sensitivity issues and hidden spaces in IncidentName to aid users in keeping these fields clean. With a clean incident name, the tool is also able to perform a variety of other optional data checks.
+- Users must specify the IncidentName and IrwinID as input. Edits will only be made to those features whose IncidentName matches the user specified value. As such, the onus is on the user to ensure all their data is properly attributed with the correct IncidentName value.  The tool can check for case sensitivity issues and hidden spaces in IncidentName to aid users in keeping these fields clean. With a clean incident name, the tool is also able to perform a variety of other optional data checks.
 
 - Each feature is tested to determine if the geometry has changed since it was last calculated. If a change is detected, the tool will insert the new geometry value, triggering an edit. No edit will be made if a change is not detected, thus minimizing [conflicts that might arise due to offline edits](https://www.nwcg.gov/publications/pms936-1/edit-incident-data/securing-incident-information#collapseX)
 
