@@ -4,14 +4,18 @@ To improve quality of life while performing the GISS Workflow, this tool does th
 1. Calculates geometry for all Event feature classes (only if geometries have changed)
 2. Inserts missing IrwinIDs, or replaces if incorrect
 3. Checks for case sensitivity issues and hidden spaces in IncidentName fields (optional)
-4. Checks for missing Drop Point and Helispot labels (optional)
-5. Creates a new Master Incident GDB (optional)
-6. Creates a new Master Incident Backup GDB (optional)
-7. Deletes all features in the newly created GDBs that do not match the user specified IncidentName(s) (optional)
+4. Checks for proper attribution so that Wildfire Daily Fire Perimeters are accessible to public (optional)
+5. Checks for features with values of DeleteThis = Yes (optional) 
+6. Checks for missing Drop Point and Helispot labels (optional)
+7. Checks for features with FeatureStatus = Proposed (optional)
+8. Checks for features with FeatureStatus = In Review (optional)
+9. Creates a new Master Incident GDB (optional)
+10. Creates a new Master Incident Backup GDB (optional)
+11. Deletes all features in the newly created GDBs that do not match the user specified IncidentName(s) (optional)
   
   
 ### How does it work?
-- Users must specify the IncidentName as input. Edits will only be made to those features whose IncidentName matches the user specified value. As such, the onus is on the user to ensure all their data is properly attributed with the correct IncidentName value.  The tool checks for case sensitivity issues and hidden spaces in IncidentName to aid users in keeping these fields clean.
+- Users must specify the IncidentName as input. Edits will only be made to those features whose IncidentName matches the user specified value. As such, the onus is on the user to ensure all their data is properly attributed with the correct IncidentName value.  The tool can check for case sensitivity issues and hidden spaces in IncidentName to aid users in keeping these fields clean. With a clean incident name, the tool is also able to perform a variety of other optional data checks.
 
 - Each feature is tested to determine if the geometry has changed since it was last calculated. If a change is detected, the tool will insert the new geometry value, triggering an edit. No edit will be made if a change is not detected, thus minimizing [conflicts that might arise due to offline edits](https://www.nwcg.gov/publications/pms936-1/edit-incident-data/securing-incident-information#collapseX)
 
@@ -32,12 +36,16 @@ The main idea behind this tool is that once all manual feature and attribute edi
 3. Specify Coordinate System to use for GISAcres and LengthFeet Calculations
     - Point feature geometries are always calculated in WGS84
 4. Specify desired geometry measurement type
-5. Toggle to check for missing Drop Point and Helispot Labels
-6. Toggle to check for Proposed features
-7. Toggle for creating new Master Incident and Backup GDBs
-8. Path to Master Incident GDB
-9. Specify Incident GDB Backup directory
-10. Toggle to only keep features with user specified IncidentNames(s)
+5. Toggle to check for IncidentName issues (case sensitivity and hidden spaces)
+6. Toggle to check for public access to Wildfire Daily Fire Perimeters
+7. Toggle to check for features with values of DeleteThis = Yes
+8. Toggle to check for missing Drop Point and Helispot Labels
+9. Toggle to check for Proposed features
+10. Toggle to check for In Review features
+11. Toggle for creating new Master Incident and Backup GDBs
+12. Path to Master Incident GDB
+13. Specify Incident GDB Backup directory
+14. Toggle to only keep features with user specified IncidentNames(s)
     - All other features will be deleted from the new Master Incident GDB
 
 ![screenshot_GISSWorkflowAssistant_1.png](/docs/screenshot_GISSWorkflowAssistant_1.png?raw=true)
