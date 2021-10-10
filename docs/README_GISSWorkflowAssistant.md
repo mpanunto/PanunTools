@@ -1,17 +1,18 @@
 # GISS Workflow Assistant
 
 To improve quality of life while performing the GISS Workflow, this tool does the following:
-1. Calculates geometry for all Event feature classes (only if geometries have changed)
-2. Inserts missing IrwinIDs, or replaces if incorrect
+1. Calculates geometry for all Event feature classes (optional, and only if geometries have changed)
+2. Inserts missing IrwinIDs, or replaces if incorrect (optional)
 3. Checks for case sensitivity issues and hidden spaces in IncidentName fields (optional)
 4. Checks for proper attribution so that Wildfire Daily Fire Perimeters are accessible to public (optional)
 5. Checks for features with values of DeleteThis = Yes (optional) 
 6. Checks for missing Drop Point and Helispot labels (optional)
 7. Checks for features with FeatureStatus = Proposed (optional)
 8. Checks for features with FeatureStatus = In Review (optional)
-9. Creates a new Master Incident GDB (optional)
-10. Creates a new Master Incident Backup GDB (optional)
-11. Deletes all features in the newly created GDBs that do not match the user specified IncidentName(s) (optional)
+9. Checks for features with Duplicate Geometry (optional)
+10. Creates a new Master Incident GDB (optional)
+11. Creates a new Master Incident Backup GDB (optional)
+12. Deletes all features in the newly created GDBs that do not match the user specified IncidentName(s) (optional)
   
   
 ### How does it work?
@@ -42,10 +43,11 @@ The main idea behind this tool is that once all manual feature and attribute edi
 8. Toggle to check for missing Drop Point and Helispot Labels
 9. Toggle to check for Proposed features
 10. Toggle to check for In Review features
-11. Toggle for creating new Master Incident and Backup GDBs
-12. Path to Master Incident GDB
-13. Specify Incident GDB Backup directory
-14. Toggle to only keep features with user specified IncidentNames(s)
+11. Toggle for Duplicate Geometries (Advanced License Only)
+12. Toggle for creating new Master Incident and Backup GDBs
+13. Path to Master Incident GDB
+14. Specify Incident GDB Backup directory
+15. Toggle to only keep features with user specified IncidentNames(s)
     - All other features will be deleted from the new Master Incident GDB
 
 ![screenshot_GISSWorkflowAssistant_1.png](/docs/screenshot_GISSWorkflowAssistant_1.png?raw=true)
