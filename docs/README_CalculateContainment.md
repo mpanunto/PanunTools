@@ -16,6 +16,10 @@ If containment is calculated for more than one incident, a combined total contai
 3. Path to Event_Line feature class
 4. Coordinate system to perform acreage calculations
 5. Geometry measurement type
+6. Toggle to force inclusion of all Contained Line features in calculation
+7. Toggle to report Contained Line features excluded from calculation
+8. Toggle to export the Contained Line features excluded from calculation
+9. Specify export directory
 
 ![screenshot_CalculateContainment_1.png](/docs/screenshot_CalculateContainment_1.png?raw=true)
 \
