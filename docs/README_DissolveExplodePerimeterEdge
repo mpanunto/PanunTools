@@ -1,10 +1,10 @@
 # Dissolve Explode Perimeter Edge
 
-Basic tool that assists the GISS in keeping their perimeter edge clean (Contained Line & Fire Edge).
+Basic tool that assists the GISS in tidying up their perimeter edge (Contained Line & Fire Edge).
 
 ### How does it work?
 
-The tool builds a fire progression by iteratively projecting, clipping, erasing, and merging the perimeters inside an incident's Progression GDB. For this tool to work, the fire perimeter feature classes within the incident's Progression GDB must follow a "IncidentName_YYYYMMDD_HHMM" naming convention, as shown in the below screenshot. The tool parses perimeter dates & times from the filenames, and uses this information to create some useful labeling/symbolization fields. It is hardcoded to assume that the datetimes are the last 13 characters of the filenames.
+The tool first performs a selection of Contained Line and Fire Edge features with the user specified IncidentName. Once selected, these features are dissolved, and then exploded (Multipart to Singlepart). The original Contained Line and Fire Edge features are then deleted, and replaced with the newly exploded features.
 
 
 ![screenshot_DissolveExplodePerimeterEdge_1.png](/docs/screenshot_CreateFireProgression_1.png?raw=true)
