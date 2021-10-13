@@ -12,6 +12,6 @@ The tool iterates through the user specified list of IncidentName values, and pe
 3. Toggle for Dissolving and Exploding Contained Line Features
 4. Toggle for Dissolving and Exploding Fire Edge Features
 
-![screenshot_DissolveExplodePerimeterEdge_1.png](/docs/screenshot_CreateFireProgression_1.png?raw=true)
+![screenshot_DissolveExplodePerimeterEdge_1.png](/docs/screenshot_DissolveExplodePerimeterEdge_1.png?raw=true)
 
-![screenshot_DissolveExplodePerimeterEdge_2.png](/docs/screenshot_CreateFireProgression_2.png?raw=true)
+![screenshot_DissolveExplodePerimeterEdge_2.png](/docs/screenshot_DissolveExplodePerimeterEdge_2.png?raw=true)
