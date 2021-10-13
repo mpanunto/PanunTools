@@ -4,15 +4,14 @@ Basic tool that assists the GISS in tidying up their perimeter edge (Contained L
 
 ### How does it work?
 
-The tool first performs a selection of Contained Line and Fire Edge features with the user specified IncidentName. Once selected, these features are dissolved, and then exploded (Multipart to Singlepart). The original Contained Line and Fire Edge features are then deleted, and replaced with the newly exploded features.
+The tool iterates through the user specified list of IncidentName values, and performs a selection of corresponding Contained Line and Fire Edge features. Once selected, these features are dissolved, and then exploded (Multipart to Singlepart). The original Contained Line and Fire Edge features are then deleted, and replaced with the newly exploded features.
 
+### Tool Inputs
+1. Specify IncidentName and IrwinID
+2. Specify Path to EventLine Feature Class
+3. Toggle for Dissolving and Exploding Contained Line Features
+4. Toggle for Dissolving and Exploding Fire Edge Features
 
 ![screenshot_DissolveExplodePerimeterEdge_1.png](/docs/screenshot_CreateFireProgression_1.png?raw=true)
-
-
-### Users have two options:
-1. Create a FireProgression feature class by processing all perimeters
-2. Create a FireProgression feature class by processing only the latest perimeter
-    - Requires a previously generated FireProgression feature class
 
 ![screenshot_DissolveExplodePerimeterEdge_2.png](/docs/screenshot_CreateFireProgression_2.png?raw=true)
