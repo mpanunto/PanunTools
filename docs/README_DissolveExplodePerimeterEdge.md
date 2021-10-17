@@ -11,6 +11,8 @@ The tool iterates through the user specified list of IncidentName values, and pe
 2. Specify Path to EventLine Feature Class
 3. Toggle for Dissolving and Exploding Contained Line Features
 4. Toggle for Dissolving and Exploding Fire Edge Features
+5. Coordinate system to perform acreage calculations
+6. Geometry measurement type
 
 ![screenshot_DissolveExplodePerimeterEdge_1.png](/docs/screenshot_DissolveExplodePerimeterEdge_1.png?raw=true)
 
