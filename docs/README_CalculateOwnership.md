@@ -9,7 +9,6 @@ Basic tool that automates the Intersect & Dissolve process to obtain acres burne
 3. Path to fire perimeter feature class
 4. Coordinate system to perform acreage calculations
 5. Geometry measurement type
-6. Scratch directory
 
 ![screenshot_CalculateOwnership_1.png](/docs/screenshot_CalculateOwnership_1.png?raw=true)
 \
