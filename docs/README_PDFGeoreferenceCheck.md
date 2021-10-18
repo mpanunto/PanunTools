@@ -4,7 +4,7 @@ Tool that searches for PDF files, and checks if they are georeferenced.
 
 ### How does it work?
 
-The tool iterates through the user specified list of IncidentName values, and performs a selection of corresponding Contained Line and Fire Edge features. Once selected, these features are dissolved, and then exploded (Multipart to Singlepart). The original Contained Line and Fire Edge features are then deleted, and replaced with the newly exploded features. The user specified IrwinIDs are inserted into the newly exploded features.
+The tool will search through a user specified directory and look for PDF files (searching recursivly if requested). If any are found, it will determine if the PDFs are georeferenced, and will list the file names in the geoprocessing messages. Users may also request a list of non-georeferenced PDF files.
 
 ### User Inputs
 1. Toggle to check for Georeferenced PDFs
