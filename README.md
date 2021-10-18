@@ -10,7 +10,8 @@ PanunTools is a ***very*** cleverly named toolbox created for GISS on wildfire i
 4. [Dissolve Explode Perimeter Edge](docs/README_DissolveExplodePerimeterEdge.md)
 5. [GISS Workflow Assistant](docs/README_GISSWorkflowAssistant.md)
 6. [Multi Export PDF](docs/README_MultiExportPDF.md)
-7. [Update Perimeter IR](docs/README_UpdatePerimeterIR.md)
+7. [PDF Georeference Check](docs/README_PDFGeoreferenceCheck.md)
+8. [Update Perimeter IR](docs/README_UpdatePerimeterIR.md)
 
 These tools have only been tested for use in ArcGIS Pro 2.7. In the future, some of these tools may be migrated to the [Community GISS Tools](https://github.com/smHooper/giss_community_tools) repository, but for now it was easier to just create my own. I also hope to eventually convert this toolbox of script tools into a Python toolbox in order to tidy up files, enhance collaboration, and improve the visibility of version changes.
 
