@@ -4,9 +4,9 @@ Basic tool that automates the Intersect & Dissolve process to obtain acres burne
 
 ### User Inputs
 
-1. Path to ownership feature class
+1. Specify Ownership layer
 2. Field that defines ownership
-3. Path to fire perimeter feature class
+3. Specify Fire Perimeter layer
 4. Coordinate system to perform acreage calculations
 5. Geometry measurement type
 
