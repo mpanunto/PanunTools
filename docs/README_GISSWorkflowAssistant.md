@@ -3,16 +3,17 @@
 To improve quality of life while performing the GISS Workflow, this tool does the following:
 1. Calculates geometry for all Event feature classes (optional, and only if geometries have changed)
 2. Inserts missing IrwinIDs, or replaces if incorrect (optional)
-3. Checks for case sensitivity issues and hidden spaces in IncidentName fields (optional)
-4. Checks for proper attribution so that Wildfire Daily Fire Perimeters are accessible to public (optional)
-5. Checks for features with values of DeleteThis = Yes (optional) 
-6. Checks for missing Drop Point and Helispot labels (optional)
-7. Checks for features with FeatureStatus = Proposed (optional)
-8. Checks for features with FeatureStatus = In Review (optional)
-9. Checks for features with Duplicate Geometry (optional)
-10. Creates a new Master Incident GDB (optional)
-11. Creates a new Master Incident Backup GDB (optional)
-12. Deletes all features in the newly created GDBs that do not match the user specified IncidentName(s) (optional)
+3. Checks for null values in IncidentName field (optional)
+4. Checks for case sensitivity issues and hidden spaces in IncidentName fields (optional)
+5. Checks for proper attribution so that Wildfire Daily Fire Perimeters are accessible to public (optional)
+6. Checks for features with values of DeleteThis = Yes (optional) 
+7. Checks for missing Drop Point and Helispot labels (optional)
+8. Checks for features with FeatureStatus = Proposed (optional)
+9. Checks for features with FeatureStatus = In Review (optional)
+10. Checks for features with Duplicate Geometry (optional)
+11. Creates a new Master Incident GDB (optional)
+12. Creates a new Master Incident Backup GDB (optional)
+13. Deletes all features in the newly created GDBs that do not match the user specified IncidentName(s) (optional)
   
   
 ### How does it work?
