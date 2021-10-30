@@ -14,7 +14,7 @@ By default, only the "Contained Line" features that align with the outer edge of
 1. List of Incident Names
 2. Path to Event_Polygon feature class
 3. Toggle to export GDB feature class
-4. Specify GDB to store exported feature class
+4. Specify GDB to store export feature class
 5. Toggle to export Shapefile
 6. Specify Shapefile export directory
 7. Toggle to export KMZ
