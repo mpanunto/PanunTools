@@ -13,12 +13,15 @@ By default, only the "Contained Line" features that align with the outer edge of
 
 1. List of Incident Names
 2. Path to Event_Polygon feature class
-3. Toggle to export GDB feature class
-4. Specify GDB to store export feature class
-5. Toggle to export Shapefile
-6. Specify Shapefile export directory
-7. Toggle to export KMZ
-8. Specify KMZ export directory
+3. Specify IncidentName to use in output file name
+4. Specify Incident ID to use in output file name
+5. Specify DateTime to use in output filename
+6. Toggle to export GDB feature class
+7. Specify GDB to store export feature class
+8. Toggle to export Shapefile
+9. Specify Shapefile export directory
+10. Toggle to export KMZ
+11. Specify KMZ export directory
 
 
 ![screenshot_CreateFirePerimeterExport_1.png](/docs/screenshot_CreateFirePerimeterExport_1.png?raw=true)
