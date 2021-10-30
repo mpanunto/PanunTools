@@ -4,7 +4,7 @@ Simple tool that exports fire perimeters to a new GDB feature class, Shapefile, 
 
 ### How does it work?
 
-First, a selection of 'Wildfire Daily Fire Perimeter' features is performed with the user specified IncidentNames of interest. Once selected, these features are then exported to the user specified output directory with a proper file naming convention.
+First, a selection of 'Wildfire Daily Fire Perimeter' features is performed with the user specified IncidentNames of interest. Once selected, these features are then exported to the user specified output directories, and given a proper file naming convention.
 
 ### User Inputs
 
