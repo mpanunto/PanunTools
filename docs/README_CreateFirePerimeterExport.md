@@ -1,6 +1,10 @@
 # Create Fire Perimeter Export
 
-Simple tool that exports fire perimeters to a new GDB feature class, Shapefile, or KMZ. First, a selection of 'Wildfire Daily Fire Perimeter' features is performed using the user specified IncidentNames of interest. Once selected, these features are then exported to the user specified output directories, and are given proper file naming conventions.
+Simple tool that exports fire perimeters to a new GDB feature class, Shapefile, or KMZ. 
+
+### How does it work?
+
+First, a selection of 'Wildfire Daily Fire Perimeter' features is performed using the user specified IncidentNames of interest. Once selected, these features are then exported to the user specified output directories, and are given proper file naming conventions.
 
 ### User Inputs
 
