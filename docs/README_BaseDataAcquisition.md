@@ -1,5 +1,4 @@
 # Base Data Acquisition Tool
-***Latest version is 20211017***
  
 I was inspired by [SW - Carl Beyerhelm (GISS)](https://community.esri.com/migrated-users/371529)'s USGS Topo Vector Prep tool, and thought it would be useful to have a tool that could also download a variety of other base data. So, I created what I call the "Base Data Acquisition Tool", which will run in both ArcMap and ArcGIS Pro.
 
