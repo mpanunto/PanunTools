@@ -9,7 +9,7 @@ This tool can be used to download a series of vector datasets published to ArcGI
 For a user-specified list of feature services, the tool downloads vector datasets published as feature layers, and stores them as a series of feature classes in an output file geodatabase. This tool consists of 2 components:
 
 -	**Python Script** (FeatureLayerDownload.py)
-    -	The script that the script tool must reference. Place this in the same directory as the toolbox, and ensure that the script path is properly set in the script tool properties
+    -	The script that the script tool must reference. Place this in the same directory as the PanunTools toolbox, and ensure that the script path is properly set in the script tool properties
 -	**CSV File** (FeatureLayerDownload.csv)
     -	Contains a list of feature services and corresponding Item IDs. The tool iterates through these services looking for feature layers. If found, feature layers will be downloaded for the user specified AOI.
     - By default, this CSV file consists of all services needed to produce the USFS National Basemap. However, it can be modified to download feature layers from any published feature service.
