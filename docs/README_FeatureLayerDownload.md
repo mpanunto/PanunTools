@@ -6,10 +6,8 @@ This tool can be used to download a series of vector datasets published to ArcGI
 
 ## How does it work?
 
-For a user-specified list of feature services, the tool downloads vector datasets published as feature layers, and stores them as a series of feature classes in an output file geodatabase. This tool consists of 3 components:
+For a user-specified list of feature services, the tool downloads vector datasets published as feature layers, and stores them as a series of feature classes in an output file geodatabase. This tool consists of 2 components:
 
--	**Toolbox** (FeatureLayerDownload.tbx)
-    -	The toolbox itself, contains the Feature Layer Download script tool
 -	**Python Script** (FeatureLayerDownload.py)
     -	The script that the script tool must reference. Place this in the same directory as the toolbox, and ensure that the script path is properly set in the script tool properties
 -	**CSV File** (FeatureLayerDownload.csv)
