@@ -46,8 +46,6 @@ Once all the inputs are specified, users simply select the datasets that they wa
 
 ![screenshot_BaseDataAcquisition_1.png](/docs/screenshot_BaseDataAcquisition_1.png?raw=true)
 
-Wanna check it out? You can grab it [here](https://github.com/mpanunto/BaseDataAcquisition/archive/refs/heads/master.zip)
- 
 
 At this time, the tool does not support processing local data, everything must be downloaded. The output layer files must also be resourced manually. If possible, I would recommend running the tool in ArcGIS Pro (unless you want the USGS Topo Raster 24K dataset), as it is a 64-bit application and can use more memory.
 
