@@ -1,6 +1,6 @@
 # Calculate Ownership
 
-Basic tool that automates the Intersect & Dissolve process to obtain acres burned by ownership.
+Tool that automates the Intersect & Dissolve process to obtain acres burned by ownership.
 
 ### User Inputs
 
