@@ -2,7 +2,7 @@
 
 This tool can be used to download a series of vector datasets published to ArcGIS Online as feature layers. It was created to simplify the data download process for the [USFS National Basemap](https://community.esri.com/t5/wildfire-response-gis-questions/national-base-map-for-fire/m-p/727457), and can be obtained directly from [this link](https://github.com/mpanunto/FeatureLayerDownload/archive/refs/heads/master.zip). 
 
-**This download package also includes the fonts, and layer files needed to generate the USFS National Basemap.**
+**The PanunTool download package also includes the fonts, and layer files needed to generate the USFS National Basemap.**
 
 ## How does it work?
 
