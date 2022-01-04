@@ -4,7 +4,7 @@
 
 PanunTools is a ***very*** cleverly named toolbox created for GISS on wildfire incidents, and currently contains the following toolsets and tools:
 
-### Daily Workflow
+#### Daily Workflow
 1. [Calculate Containment](docs/README_CalculateContainment.md)
 2. [Calculate Ownership](docs/README_CalculateOwnership.md)
 3. [Create Fire Perimeter Export](docs/README_CreateFirePerimeterExport.md)
@@ -15,12 +15,12 @@ PanunTools is a ***very*** cleverly named toolbox created for GISS on wildfire i
 8. [PDF Georeference Check](docs/README_PDFGeoreferenceCheck.md)
 9. [Update Perimeter IR](docs/README_UpdatePerimeterIR.md)
 
-### Data Download
+#### Data Download
 1. [Base Data Acquisition](docs/README_BaseDataAcquisition.md)
 2. [Feature Layer Download](docs/README_FeatureLayerDownload.md)
 3. [Feature Service Attachment Download](docs/README_FeatureServiceAttachmentDownload.md)
 
-### Incident Setup
+#### Incident Setup
 1. [Incident Setup AGOL](docs/README_IncidentSetupAGOL.md)
 2. [Invite Remove Users AGOL](docs/README_InviteRemoveUsersAGOL.md)
 
