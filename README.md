@@ -11,7 +11,7 @@ PanunTools is a ***very*** cleverly named toolbox created for GISS on wildfire i
 4. [Create Fire Progression](docs/README_CreateFireProgression.md)
 5. [Dissolve Explode Perimeter Edge](docs/README_DissolveExplodePerimeterEdge.md)
 6. [GISS Workflow Assistant](docs/README_GISSWorkflowAssistant.md)
-7. [Multi Export PDF](docs/README_MultiExportPDF.md)
+7. [PDF Multi Export](docs/README_PDFMultiExport.md)
 8. [PDF Georeference Check](docs/README_PDFGeoreferenceCheck.md)
 9. [Update Perimeter IR](docs/README_UpdatePerimeterIR.md)
 
