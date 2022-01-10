@@ -192,27 +192,30 @@ def worker_function_services(in_inputs_list):
         #Reset environments
         arcpy.ResetEnvironments()
 
+        #COMMENTING THIS OUT FOR NOW BECAUSE IT SEEMS THE MULTIPROCESSING ENVIRONMENT
+        #IS MISSING MOST OF THE ENVIRONMENTAL SETTINGS, AND AS OF ARCGISPRO 2.9, WILL
+        #THROW ERRORS
         #Get extent of projected AOI, and set extent environmental variable to that
-        print("..SETTING EXTENT FOR SELECTION")
-        extent_check = False
-        while(extent_check == False):
-            try:
-                aoi_fc_prj_extent = arcpy.Describe(aoi_fc_prj_path).extent
-                curr_extent_xmin = aoi_fc_prj_extent.XMin
-                curr_extent_ymin = aoi_fc_prj_extent.YMin
-                curr_extent_xmax = aoi_fc_prj_extent.XMax
-                curr_extent_ymax = aoi_fc_prj_extent.YMax
-                arcpy.env.extent = arcpy.Extent(curr_extent_xmin, curr_extent_ymin, curr_extent_xmax, curr_extent_ymax)
-                if(str(arcpy.env.extent.XMin) == "None"):
-                    extent_check = False
-                    print("....EXTENT FAILED TO SET, RETRYING")
-                    time.sleep(5)
-                else:
-                    extent_check = True
-            except Exception as e:
-                print(e)
-                print("....EXTENT FAILED TO SET, RETRYING")
-                time.sleep(5)
+        #print("..SETTING EXTENT FOR SELECTION")
+        #extent_check = False
+        #while(extent_check == False):
+            #try:
+                #aoi_fc_prj_extent = arcpy.Describe(aoi_fc_prj_path).extent
+                #curr_extent_xmin = aoi_fc_prj_extent.XMin
+                #curr_extent_ymin = aoi_fc_prj_extent.YMin
+                #curr_extent_xmax = aoi_fc_prj_extent.XMax
+                #curr_extent_ymax = aoi_fc_prj_extent.YMax
+                #arcpy.env.extent = arcpy.Extent(curr_extent_xmin, curr_extent_ymin, curr_extent_xmax, curr_extent_ymax)
+                #if(str(arcpy.env.extent.XMin) == "None"):
+                    #extent_check = False
+                    #print("....EXTENT FAILED TO SET, RETRYING")
+                    #time.sleep(5)
+                #else:
+                    #extent_check = True
+            #except Exception as e:
+                #print(e)
+                #print("....EXTENT FAILED TO SET, RETRYING")
+                #time.sleep(5)
 
 
         ############################################################################
@@ -355,21 +358,24 @@ def worker_function_services(in_inputs_list):
             #Create spatial reference object from user defined output projection
             curr_output_prj_sr = arcpy.SpatialReference(text=curr_output_prj)
 
+            #COMMENTING THIS OUT FOR NOW BECAUSE IT SEEMS THE MULTIPROCESSING ENVIRONMENT
+            #IS MISSING MOST OF THE ENVIRONMENTAL SETTINGS, AND AS OF ARCGISPRO 2.9, WILL
+            #THROW ERRORS
             #Define output coordinate system environmental variable
-            print("..SETTING OUTPUT COORDINATE SYSTEM")
-            outcrs_check = False
-            while(outcrs_check == False):
-                try:
-                    arcpy.env.outputCoordinateSystem = curr_output_prj_sr
-                    if(arcpy.env.outputCoordinateSystem.name != curr_output_prj_sr.name):
-                        print("....OUTPUT COORDINATE SYSTEM FAILED TO SET, RETRYING")
-                        time.sleep(5)
-                    else:
-                        outcrs_check = True
-                except Exception as e:
-                    print(e)
-                    print("....OUTPUT COORDINATE SYSTEM FAILED TO SET, RETRYING")
-                    time.sleep(5)
+            #print("..SETTING OUTPUT COORDINATE SYSTEM")
+            #outcrs_check = False
+            #while(outcrs_check == False):
+                #try:
+                    #arcpy.env.outputCoordinateSystem = curr_output_prj_sr
+                    #if(arcpy.env.outputCoordinateSystem.name != curr_output_prj_sr.name):
+                        #print("....OUTPUT COORDINATE SYSTEM FAILED TO SET, RETRYING")
+                        #time.sleep(5)
+                    #else:
+                        #outcrs_check = True
+                #except Exception as e:
+                    #print(e)
+                    #print("....OUTPUT COORDINATE SYSTEM FAILED TO SET, RETRYING")
+                    #time.sleep(5)
 
             #PERFORM EXPORT
             print("..EXPORTING (" + str(selection_count) + " features)")
@@ -688,7 +694,7 @@ if __name__=='__main__':
     password = arcpy.GetParameterAsText(3)
 
     #Path to AOI shapefile polygon
-    #aoi_shp_path = r"C:\Workspace\development\FeatureLayerDownload\AOI_UT.shp"
+    #aoi_shp_path = r"C:\Workspace\development\FeatureLayerDownload-master\AOI_UT.shp"
     #aoi_shp_path = r"C:\Workspace\development\FeatureLayerDownload\AOI_SLC.shp"
     aoi_shp_path = arcpy.GetParameterAsText(4)
 
@@ -701,12 +707,12 @@ if __name__=='__main__':
     output_prj = arcpy.GetParameterAsText(6)
 
     #Output GDB Directory
-    #outdir = r"C:\Workspace\development\FeatureLayerDownload\output_ut"
+    #outdir = r"C:\Workspace\development\PanunTools_All\output"
     #outdir = r"C:\Workspace\development\FeatureLayerDownload\output_slc"
     outdir = arcpy.GetParameterAsText(7)
 
     #Path to feature service ItemID CSV
-    #service_itemid_csv_path = r"C:\Workspace\development\FeatureLayerDownload\FeatureLayerDownload.csv"
+    #service_itemid_csv_path = r"C:\Workspace\development\PanunTools_All\FeatureLayerDownload.csv"
     service_itemid_csv_path = arcpy.GetParameterAsText(8)
 
     #elevcontour_acquire = "Yes"
@@ -732,15 +738,13 @@ if __name__=='__main__':
     else:
         arcpy_portal = arcpy.SignInToPortal(portalurl, username, password)
 
-
     #Establish connection to the ArcGIS Online Org
     arcpy.AddMessage("\u200B")
-    arcpy.AddMessage("REQUESTING API ACCESS TOKEN")
+    arcpy.AddMessage("..REQUESTING API ACCESS TOKEN")
     if(pro_portal_toggle == "Yes"):
         gis = GIS("pro")
     else:
         gis = GIS(portalurl, username, password, verify_cert=False)
-
 
     #Test if output folder is empty, if not, throw error
     if len(os.listdir(outdir)) != 0:
@@ -880,9 +884,13 @@ if __name__=='__main__':
     aoi_final_path = aoi_gdb_path + "/AOI_final"
     aoi_final_df.spatial.to_featureclass(aoi_final_path, sanitize_columns=False)
 
+    #Reimport the newly created AOI final feature class so that the OBJECTID field makes sense
+    aoi_final_df = arcgis.GeoAccessor.from_featureclass(aoi_final_path)
+
     #Get ObjectIDs from AOI final feature class
     arcpy.AddMessage("\u200B")
     arcpy.AddMessage("CREATING INDIVIDUAL AOI FEATURE CLASSES")
+    objid_field = arcpy.Describe(aoi_final_path).OIDFieldName
     objid_list = list(aoi_final_df["OBJECTID"])
     objid_fc_path_list = []
     for i in range(0, len(objid_list)):
@@ -944,6 +952,13 @@ if __name__=='__main__':
         #Define outpath for the intersection index shapefile
         usgstopovec_index_aoi = scratchdir + "/USGS_TopoVector_Index_AOI.shp"
 
+        #Re-establish connection to the ArcGIS Online Org incase the token expired
+        arcpy.AddMessage("..REQUESTING API ACCESS TOKEN")
+        if(pro_portal_toggle == "Yes"):
+            gis = GIS("pro")
+        else:
+            gis = GIS(portalurl, username, password, verify_cert=False)
+
         #Try querying via ArcGIS API first, if it fails, try again via arcpy
         try:
             arcpy.AddMessage("..QUERYING USGS TOPO VECTOR INDEX VIA ARCGIS API")
@@ -957,10 +972,15 @@ if __name__=='__main__':
             arcpy.AddMessage("..QUERY FAILED, ATTEMPTING QUERY VIA ARCPY" )
             #Reset environment settings
             arcpy.ResetEnvironments()
-            #Set overwrite to True
+
+            #Set overwrite
             arcpy.env.overwriteOutput = True
+
+            #COMMENTING THIS OUT FOR NOW BECAUSE IT SEEMS THE MULTIPROCESSING ENVIRONMENT
+            #IS MISSING MOST OF THE ENVIRONMENTAL SETTINGS, AND AS OF ARCGISPRO 2.9, WILL
+            #THROW ERRORS
             #Set output coordinate system
-            arcpy.env.outputCoordinateSystem = output_sr
+            #arcpy.env.outputCoordinateSystem = output_sr
 
             #Project AOI to feature layer's projection
             arcpy.AddMessage("..PROJECTING AOI FOR SELECTION")
@@ -1120,7 +1140,14 @@ if __name__=='__main__':
         #Define outpath for the intersection index shapefile
         huc8_index_path = scratchdir + "/USGS_HUC8_Index_AOI.shp"
 
-        #Try querying via ArcGIS API first, if it fails, try again via arcpy
+        #Re-establish connection to the ArcGIS Online Org incase the token expired
+        arcpy.AddMessage("..REQUESTING API ACCESS TOKEN")
+        if(pro_portal_toggle == "Yes"):
+            gis = GIS("pro")
+        else:
+            gis = GIS(portalurl, username, password, verify_cert=False)
+
+        #Try querying HUC8 index via ArcGIS API first, if it fails, try again via arcpy
         try:
             arcpy.AddMessage("..QUERYING HUC8 INDEX VIA ARCGIS API")
             huc8_query = huc8_featurelayer.query(where="1=1", geometry_filter=filters.intersects(aoi_geom_prj), out_sr=output_wkid)
@@ -1211,6 +1238,8 @@ if __name__=='__main__':
             arcpy.Merge_management(wetlands_fc_path_list, wetlands_final_out)
             arcpy.ResetEnvironments()
 
+            #COMMENTING THIS OUT BECAUSE I DON'T THINK THIS HUC8 DATASET CAN HAVE
+            #ANY DUPLICATE FEATURES ACROSS HUCS. THEY SHOULD ALL BE IDENTICAL ALREADY
             #Remove identical features in output feature class
             #arcpy.AddMessage("..REMOVING DUPLICATE FEATURES")
             #try:
@@ -1263,7 +1292,7 @@ if __name__=='__main__':
 
     #Create service connections, and build a list of feature layers
     arcpy.AddMessage("\u200B")
-    arcpy.AddMessage("Connecting to feature services")
+    arcpy.AddMessage("CONNECTING TO FEATURE SERVICES")
     featureservice_name_list_primary = []
     featureservice_name_list_secondary = []
     featurelayerurl_list_primary = []
@@ -1366,9 +1395,19 @@ if __name__=='__main__':
     ## BEGIN MULTIPROCESSOR
     ############################################################################
     arcpy.AddMessage("\u200B")
-    arcpy.AddMessage("Begin primary multiprocessing")
+    arcpy.AddMessage("BEGIN PRIMARY MULTIPROCESSING")
+
+    #Re-establish connection to the ArcGIS Online Org incase the token expired
+    arcpy.AddMessage("..REQUESTING API ACCESS TOKEN")
+    if(pro_portal_toggle == "Yes"):
+        gis = GIS("pro")
+    else:
+        gis = GIS(portalurl, username, password, verify_cert=False)
+
+    #Run multiprocessing function
     FeatureLayerDownload.execute_services(inputs_list_primary)
-    arcpy.AddMessage("Finished primary multiprocessing")
+
+    arcpy.AddMessage("FINISHED PRIMARY MULTIPROCESSING")
 
     #Now test to see if any queries, selections, or exports failed during the primary multiprocessing
     filelist = os.listdir(outdir)
@@ -1425,9 +1464,19 @@ if __name__=='__main__':
 
         #Run secondary multiprocessor
         arcpy.AddMessage("\u200B")
-        arcpy.AddMessage("Begin secondary multiprocessing")
+        arcpy.AddMessage("BEGIN SECONDARY MULTIPROCESSING")
+
+        #Re-establish connection to the ArcGIS Online Org incase the token expired
+        arcpy.AddMessage("..REQUESTING API ACCESS TOKEN")
+        if(pro_portal_toggle == "Yes"):
+            gis = GIS("pro")
+        else:
+            gis = GIS(portalurl, username, password, verify_cert=False)
+
+        #Run multiprocessing function
         FeatureLayerDownload.execute_services(inputs_list_secondary)
-        arcpy.AddMessage("Finished secondary multiprocessing")
+
+        arcpy.AddMessage("FINISHED SECONDARY MULTIPROCESSING")
 
 
     ############################################################################
@@ -1436,7 +1485,7 @@ if __name__=='__main__':
 
     #Create master output GDB
     arcpy.AddMessage("\u200B")
-    arcpy.AddMessage("Creating master output GDB")
+    arcpy.AddMessage("CREATING MASTER OUTPUT GDB")
     master_gdb_outname = "FeatureLayerDownload"
     master_gbd_outpath = outdir + "/" + master_gdb_outname + ".gdb"
     if(not arcpy.Exists(master_gbd_outpath)):
@@ -1448,7 +1497,7 @@ if __name__=='__main__':
 
     #Now determine if multiple feature classes exist for any of the datasets. Merge together if so
     arcpy.AddMessage("\u200B")
-    arcpy.AddMessage("Checking if any output feature classes need merging")
+    arcpy.AddMessage("CHECKING IF ANY OUTPUT FEATURE CLASSES NEED MERGING")
 
     #First, check if any corrupt GDBs exist, if so, delete them
     corrupgdb_path_list = []
@@ -1488,7 +1537,7 @@ if __name__=='__main__':
         if(curr_fcname in ["FeatureLayerDownload"]):
             continue
 
-        arcpy.AddMessage("..Processing: " + curr_fcname + " (" + str(i + 1) + " out of " + str(len(fcname_unique_list)) + ")")
+        arcpy.AddMessage("..PROCESSING: " + curr_fcname + " (" + str(i + 1) + " out of " + str(len(fcname_unique_list)) + ")")
         fcname_list_which = []
         for j in range(0, len(fcname_list)):
             if(fcname_list[j] == curr_fcname):
@@ -1511,18 +1560,19 @@ if __name__=='__main__':
         ## CREATE OUTPUT FEATURE CLASSES
         ########################################################################
         #I first tried to simply use merge via arcpy to pull all the corresponding feature classes together, but
-        #for some reason it wasn't merging all features. There would be holes in the output datasets. So, I came
-        #up with a way to do it using Pandas SpatialDataFrames, which is what I'm doing here. I'm concatenating
+        #for some reason it wasn't merging all features. There would be holes in the output datasets. I wonder if
+        #I was hitting a feature count limitation for the merge tool.
+        #So, I came up with a way to do it using Pandas SpatialDataFrames, which is what I'm doing here. I'm concatenating
         #all feature class features into a single dataframe, then exporting as a feature class.
 
         #If just one GDB/FC simply copy it over
         if( len(fc_path_list) == 1 ):
-            arcpy.AddMessage("....Creating output feature class")
+            arcpy.AddMessage("....CREATING OUTPUT FEATURE CLASS")
             arcpy.Copy_management(curr_fcpath, target_fc_path)
 
         else:
             #Else if multiple feature classes, concatenate all into a single SDF
-            arcpy.AddMessage("....Merging " + str(len(fc_path_list)) + " feature classes")
+            arcpy.AddMessage("....MERGING " + str(len(fc_path_list)) + " FEATURE CLASSES")
             sdf_concat_list = []
             for j in range(0, len(fc_path_list)):
 
@@ -1538,7 +1588,7 @@ if __name__=='__main__':
 
             #Now export concatenated SDF to feature class
             try:
-                arcpy.AddMessage("....Creating output feature class")
+                arcpy.AddMessage("....CREATING OUTPUT FEATURE CLASS")
 
                 #For certain datasets, first drop fields that are known to be cause errors when exporting to feature classes
                 if(curr_fcname == "FSOffices"):
@@ -1563,7 +1613,7 @@ if __name__=='__main__':
             #See here: https://community.esri.com/t5/arcgis-api-for-python-questions/system-error-when-exporting-spatially-enabled-dataframe-to/td-p/1044880
             #In an attempt to get around this, if the export fails, try to determine if there are any problematic fields. If so, drop them, and try again.
             except:
-                arcpy.AddMessage("......Feature class export failed, testing if any problematic fields exist")
+                arcpy.AddMessage("......FEATURE CLASS EXPORT FAILED, TESTING IF ANY PROBLEMATIC FIELDS EXIST")
 
                 #Create list of column names
                 output_sdf_cols = list(output_sdf.columns)
@@ -1633,7 +1683,7 @@ if __name__=='__main__':
     #If any of the PrimaryHighway/SecondaryHighway/Roads feature classes exist, continue
     if(arcpy.Exists(primaryhwy_target_fc_path) or arcpy.Exists(secondaryhwy_target_fc_path) or arcpy.Exists(roads_target_fc_path)):
 
-        arcpy.AddMessage("..Processing: HIFLDRoads")
+        arcpy.AddMessage("..PROCESSING: HIFLDRoads")
 
         #Create PrimaryHighway/SecondaryHighway/Roads SDFs
         sdf_concat_list = []
@@ -1668,7 +1718,7 @@ if __name__=='__main__':
     ############################################################################
 
     arcpy.AddMessage("\u200B")
-    arcpy.AddMessage("Importing Feature Layer metadata to output Feature Classes")
+    arcpy.AddMessage("IMPORTING FEATURE LAYER METADATA TO OUTPUT FEATURE CLASSES")
 
     #Get list of feature classes in master output gdb
     arcpy.env.workspace = master_gbd_outpath
