@@ -1,6 +1,6 @@
 # Dissolve Explode Perimeter Line
 
-Tool that assists the GISS in tidying up their perimeter line features (Contained & Uncontained).
+Tool that assists the GISS in tidying up their Perimeter Line features (Contained & Uncontained).
 
 ### How does it work?
 The tool iterates through the user specified list of IncidentName values, and performs a selection of corresponding Contained and Uncontained features. Once selected, these features are dissolved, and then exploded (Multipart to Singlepart). The original Contained and Uncontained features are then deleted, and replaced with the newly exploded features. The user specified IrwinIDs are inserted into the newly exploded features.
