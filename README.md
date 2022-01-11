@@ -32,7 +32,7 @@ These tools have only been tested for use in ArcGIS Pro 2.7. In the future, some
 To use this toolbox:
 1. [Download the repository](https://github.com/mpanunto/PanunTools/archive/refs/heads/main.zip)
 2. Extract PanunTools.tbx, and all accompanying files to the incident's tools directory
-3. Keep Python scripts in the same directory as the extracted toolbox
+3. Keep extracted Python scripts in the same directory as the PanunTools toolbox
 4. Run tools using ArcGIS Pro
 
 Where possible, I would recommend setting your incident's default input values in the script tool parameters. Doing so will speed up the process of running these tools throughout the duration of the incident.
