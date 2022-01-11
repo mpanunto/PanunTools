@@ -14,7 +14,7 @@ By default, only the "Contained" features that align with the outer edge of the 
 1. List of Incident Names
 2. Path to Event_Polygon feature class
 3. Path to Perimeter_Line feature class
-4. Coordinate system to perform acreage calculations
+4. Coordinate system to perform geometry calculations
 5. Geometry measurement type
 6. Toggle to force inclusion of all Contained features in calculation
 7. Toggle to report Contained features excluded from calculation
