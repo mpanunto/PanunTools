@@ -1,5 +1,6 @@
 print("Importing Libraries")
 import arcpy, arcgis, pandas, datetime, time, os, sys, multiprocessing, inspect, urllib, zipfile, glob, shutil, warnings, contextlib
+from urllib.request import urlopen
 from arcgis.gis import GIS
 from arcgis.features import FeatureLayerCollection
 from arcgis.geometry import filters
@@ -669,14 +670,6 @@ def execute_elevwetland(inputs):
 
 if __name__=='__main__':
 
-    # import current script to avoid:
-    # PicklingError: Can't pickle <type 'function'>: attribute lookup __builtin__.function failed
-    import FeatureLayerDownload
-
-    arcpy.AddMessage("\u200B")
-    arcpy.AddMessage("Feature Layer Download Tool developed by Matt Panunto, DOI-BLM")
-    arcpy.AddMessage("Running v20210823")
-
     #ArcGIS Online Portal URL
     #pro_portal_toggle = "Yes"
     pro_portal_toggle = arcpy.GetParameterAsText(0)
@@ -724,6 +717,33 @@ if __name__=='__main__':
     #offline_license_check = "Yes"
     offline_license_check = arcpy.GetParameterAsText(11)
 
+
+    # import current script to avoid:
+    # PicklingError: Can't pickle <type 'function'>: attribute lookup __builtin__.function failed
+    import FeatureLayerDownload
+
+    arcpy.AddMessage("\u200B")
+    arcpy.AddMessage("Feature Layer Download Tool developed by Matt Panunto, DOI-BLM")
+
+    #Get toolbox version
+    scriptpath = sys.argv[0]
+    scriptdirpath = os.path.dirname(scriptpath)
+    tbxpath = scriptdirpath + "/PanunTools.tbx"
+    tbximport = arcpy.ImportToolbox(tbxpath)
+    tbxversion = arcpy.Usage(tbximport)
+
+    #Test if current PanunTools version is up to date
+    githuburl = "https://github.com/mpanunto/PanunTools"
+    try:
+        github_page = urlopen(githuburl)
+        github_html_bytes = github_page.read()
+        github_html = github_html_bytes.decode("utf-8")
+        github_html_split = github_html.split("Latest version is ")
+        github_version = github_html_split[1][:9]
+        if(int(github_version[1:]) > int(tbxversion[1:])):
+            arcpy.AddWarning("New version of PanunTools available (" + github_version + ") at https://github.com/mpanunto/PanunTools")
+    except:
+        "skip"
 
 
     #Check if active portal includes the text "nifc.maps.arcgis.com", throw error if so
