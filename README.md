@@ -27,6 +27,7 @@ PanunTools is a ***very*** cleverly named toolbox created for GISS on wildfire i
 \
 Script tool code and properties are password protected, but can be accessed by entering "password" in the Enter Password box.
 
+\
 These tools have only been tested for use in ArcGIS Pro 2.7. In the future, some of these tools may be migrated to the [Community GISS Tools](https://github.com/smHooper/giss_community_tools) repository, but for now it is easier for me to maintain them as my own toolbox. I also hope to eventually convert this toolbox of script tools into a Python toolbox in order to tidy up files, enhance collaboration, and improve the visibility of version changes.
 
 ## Usage
