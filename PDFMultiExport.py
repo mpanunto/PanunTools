@@ -11,6 +11,7 @@
 #Import libraries
 print("Importing Libraries")
 import arcpy, pandas, time, datetime, os, sys, multiprocessing
+from urllib.request import urlopen
 from multiprocessing import Pool, freeze_support
 
 
@@ -218,11 +219,6 @@ def execute(inputs):
 
 if __name__=="__main__":
 
-    import PDFMultiExport
-
-    arcpy.AddMessage("\u200B")
-    arcpy.AddMessage("PDF Multi Export tool developed by Matt Panunto, DOI-BLM")
-
     #Specify incident name, unit id, and incident number
     #incident_name = "Parleys Canyon"
     incident_name = arcpy.GetParameterAsText(0)
@@ -237,6 +233,33 @@ if __name__=="__main__":
     #Specify the path to the "ExportPDFtable.xlsx" file
     #export_table_xlsx_path = r"C:\Workspace\FireNet\2021_UTNWS_ParleysCanyon - GIS\2021_ParleysCanyon\tools\PDFMultiExport.xlsx"
     export_table_xlsx_path = arcpy.GetParameterAsText(3)
+
+
+    import PDFMultiExport
+
+    arcpy.AddMessage("\u200B")
+    arcpy.AddMessage("PDF Multi Export tool developed by Matt Panunto, DOI-BLM")
+
+    #Get toolbox version
+    scriptpath = sys.argv[0]
+    scriptdirpath = os.path.dirname(scriptpath)
+    tbxpath = scriptdirpath + "/PanunTools.tbx"
+    tbximport = arcpy.ImportToolbox(tbxpath)
+    tbxversion = arcpy.Usage(tbximport)
+
+    #Test if current PanunTools version is up to date
+    githuburl = "https://github.com/mpanunto/PanunTools"
+    try:
+        github_page = urlopen(githuburl)
+        github_html_bytes = github_page.read()
+        github_html = github_html_bytes.decode("utf-8")
+        github_html_split = github_html.split("Latest version is ")
+        github_version = github_html_split[1][:9]
+        if(int(github_version[1:]) > int(tbxversion[1:])):
+            arcpy.AddWarning("New version of PanunTools available (" + github_version + ") at https://github.com/mpanunto/PanunTools")
+    except:
+        "skip"
+
 
     #Convert Incident Name to CamelCase
     if(" " in incident_name):
