@@ -1,6 +1,6 @@
 # Topo Raster 24K Symbolize
 
-Tool that applies a symbology based on a raster's RGB cell values. Developed for Topo Raster 24K outputs from the Base Data Acquisition tool.
+Tool that applies a symbology based on a raster's RGB cell values. Developed for Topo Raster 24K outputs from the ![Base Data Acquisition tool](/docs/README_BaseDataAcquisition.md).
 
 ![screenshot_TopoRaster24KSymbolize_1.png](/docs/screenshot_TopoRaster24KSymbolize_2.png?raw=true)
 
