@@ -1,4 +1,4 @@
-# Invite Remove Users
+# Invite Remove Users AGOL
 
 Tool that automates the Inviting/Removal of ArcGIS Online users across a series of user specified groups.
 
@@ -12,7 +12,7 @@ Using the 'InviteRemoveUser.csv' file, specify a series of ArcGIS Online groups,
 - Values of "Invite" and "Remove" must be used to specify whether a user is invited or removed from a group. Any other value (including blanks) will have no effect.
 - There is no limit to the number of groups, or users that can be listed in the CSV file.
 
-![screenshot_InviteRemoveUsers_2.png](/docs/screenshot_InviteRemoveUsers_2.png?raw=true)
+![screenshot_InviteRemoveUsersAGOL_2.png](/docs/screenshot_InviteRemoveUsersAGOL_2.png?raw=true)
 
 ### User inputs
 
@@ -22,4 +22,4 @@ Using the 'InviteRemoveUser.csv' file, specify a series of ArcGIS Online groups,
 4. Specify path to InviteRemoveUsers.csv
 
 
-![screenshot_InviteRemoveUsers_1.png](/docs/screenshot_InviteRemoveUsers_1.png?raw=true)
+![screenshot_InviteRemoveUsersAGOL_1.png](/docs/screenshot_InviteRemoveUsersAGOL_1.png?raw=true)
