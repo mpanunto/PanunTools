@@ -22,7 +22,7 @@ I’ve created a [Info Sheet](/docs/BaseDataAcquisition_InfoSheet.pdf?raw=true) 
 
 **USGS Historical Topo Raster 100K/250K**: I attempted to identify the most recent GeoTIFF for each 100K and 250K quad by referencing the USGS’s master topo spreadsheet (listed in the attached Info Sheet PDF). As a result, each quad can have a vastly different looking topo map. So, these datasets can be a bit of a hodge podge.
 
-**USGS and USFS Topo Raster 24K**: The output symbology for these datasets are based on the image RGB values, but they will be given a random color scheme when first loaded into ArcGIS Pro. Users can either manually apply the RGB value for each class, or they can use the included “Topo Raster 24K Symbology” tool in ArcGIS Pro.
+**USGS and USFS Topo Raster 24K**: The output symbology for these datasets are based on the image RGB values, but they will be given a random color scheme when first loaded into ArcGIS Pro. Users can either manually apply the RGB value for each class, or they can use the [Topo Raster 24K Symbology](/docs/README_TopoRaster24KSymbology.md) tool.
 
 **USFS Topo Vector**: Unlike the USGS Topo Vector dataset, the USFS Topo Vector dataset uses annotations
 instead of labels. For the annotations to display properly, a series of fonts must be installed
