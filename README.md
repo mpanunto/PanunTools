@@ -24,7 +24,7 @@ PanunTools is a ***very*** cleverly named toolbox created for GISS on wildfire i
 1. [Incident Setup AGOL](docs/README_IncidentSetupAGOL.md)
 2. [Invite Remove Users AGOL](docs/README_InviteRemoveUsersAGOL.md)
 
-#### Miscellaneous
+#### Miscellaneous Toolset
 1. [Summarize Folder Files](docs/README_SummarizeFolderFiles.md)
 2. [Topo Raster 24K Symbolize](docs/README_TopoRaster24KSymbolize.md)
 
