@@ -25,10 +25,7 @@ PanunTools is a ***very*** cleverly named toolbox created for GISS on wildfire i
 2. [Invite Remove Users AGOL](docs/README_InviteRemoveUsersAGOL.md)
 
 \
-Script tool code and properties are password protected, but can be accessed by entering "password" into the Enter Password box.
-
-\
-These tools have only been tested for use in ArcGIS Pro 2.7.
+Script tool code and properties are password protected, but can be accessed by entering "password" into the Enter Password box. These tools have only been tested for use in ArcGIS Pro 2.7.
 
 ## Usage
 
