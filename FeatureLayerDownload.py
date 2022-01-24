@@ -1,4 +1,4 @@
-print("Importing Libraries")
+print("IMPORTING LIBRARIES")
 import arcpy, arcgis, pandas, datetime, time, os, sys, multiprocessing, inspect, urllib, zipfile, glob, shutil, warnings, contextlib
 from urllib.request import urlopen
 from arcgis.gis import GIS
@@ -71,6 +71,10 @@ def worker_function_services(in_inputs_list):
         #curr_multiprocess = inputs_list_secondary[1][9]
         curr_multiprocess = in_inputs_list[9]
 
+        #curr_multiprocess_toggle = inputs_list_primary[65]
+        #curr_multiprocess_toggle = inputs_list_secondary[1]
+        curr_multiprocess_toggle = in_inputs_list[10]
+
         #Get scratchdir
         curr_scratchdir = curr_outdir + "/_scratch"
 
@@ -87,8 +91,9 @@ def worker_function_services(in_inputs_list):
             curr_objid_number = curr_objid.replace("OBJID", "")
 
         #Establish connection to the ArcGIS Online Org
-        print(" " )
-        print("REQUESTING API ACCESS TOKEN")
+        if(curr_multiprocess_toggle == "true"):
+            arcpy.AddMessage("\u200B")
+        arcpy.AddMessage("....REQUESTING API ACCESS TOKEN")
         token_check = False
         while(token_check == False):
             try:
@@ -98,12 +103,12 @@ def worker_function_services(in_inputs_list):
                     gis = GIS(curr_portalurl, curr_username, curr_password, verify_cert=False)
                 token_check = True
             except Exception as e:
-                print(e)
-                print("..HITTING API ACCESS TOKEN REQUEST LIMIT, BACKING OFF FOR 60s")
+                arcpy.AddMessage(e)
+                arcpy.AddMessage("......HITTING API ACCESS TOKEN REQUEST LIMIT, BACKING OFF FOR 60s")
                 time.sleep(60)
 
 
-        print("SIGNING INTO PORTAL")
+        arcpy.AddMessage("....SIGNING INTO PORTAL")
         portal_check = False
         while(portal_check == False):
             try:
@@ -111,8 +116,8 @@ def worker_function_services(in_inputs_list):
                     arcpy_portal = arcpy.SignInToPortal(curr_portalurl, curr_username, curr_password)
                 portal_check = True
             except Exception as e:
-                print(e)
-                print("..FAILED TO SIGN INTO PORTAL, TRYING AGAIN")
+                arcpy.AddMessage(e)
+                arcpy.AddMessage("......FAILED TO SIGN INTO PORTAL, TRYING AGAIN")
 
         #Get feature layer, and properties
         curr_featurelayer = arcgis.features.FeatureLayer(curr_featurelayer_url)
@@ -136,16 +141,16 @@ def worker_function_services(in_inputs_list):
         if(curr_multiprocess == "Primary"):
             if("HIFLD" in curr_featureservice_name_short):
                 curr_hifld_region = curr_featureservice_name_short[-2:]
-                print("PROCESSING FEATURE LAYER: " + "R" + curr_hifld_region + "_" + curr_featurelayer_name)
+                arcpy.AddMessage("....PROCESSING FEATURE LAYER: " + "R" + curr_hifld_region + "_" + curr_featurelayer_name)
             else:
-                print("PROCESSING FEATURE LAYER: " + curr_featurelayer_name)
+                arcpy.AddMessage("....PROCESSING FEATURE LAYER: " + curr_featurelayer_name)
 
         else:
             if("HIFLD" in curr_featureservice_name_short):
                 curr_hifld_region = curr_featureservice_name_short[-2:]
-                print("PROCESSING FEATURE LAYER: " + "R" + curr_hifld_region + "_" + curr_featurelayer_name + " (ObjID " + str(curr_objid_number) + ")")
+                arcpy.AddMessage("....PROCESSING FEATURE LAYER: " + "R" + curr_hifld_region + "_" + curr_featurelayer_name + " (ObjID " + str(curr_objid_number) + ")")
             else:
-                print("PROCESSING FEATURE LAYER: " + curr_featurelayer_name + " (ObjID " + str(curr_objid_number) + ")")
+                arcpy.AddMessage("....PROCESSING FEATURE LAYER: " + curr_featurelayer_name + " (ObjID " + str(curr_objid_number) + ")")
 
 
 
@@ -155,7 +160,7 @@ def worker_function_services(in_inputs_list):
         ## PROJECT AOI
         ############################################################################
 
-        print("..PROJECTING AOI FOR SELECTION")
+        arcpy.AddMessage("......PROJECTING AOI FOR SELECTION")
         project_check = False
         while(project_check == False):
             try:
@@ -180,12 +185,12 @@ def worker_function_services(in_inputs_list):
                 if(int(str(arcpy.GetCount_management(aoi_fc_prj_path))) > 0):
                     project_check = True
                 else:
-                    print("....PROJECTED OUTPUT HAS NO FEATURES, RE-TRYING")
+                    arcpy.AddMessage("........PROJECTED OUTPUT HAS NO FEATURES, RE-TRYING")
                     arcpy.Delete_management(aoi_fc_prj_path)
                     time.sleep(5)
             except Exception as e:
-                print(e)
-                print("....PROJECT FAILED, RE-TRYING")
+                arcpy.AddMessage(e)
+                arcpy.AddMessage("........PROJECT FAILED, RE-TRYING")
                 project_check = False
                 time.sleep(5)
 
@@ -197,7 +202,7 @@ def worker_function_services(in_inputs_list):
         #IS MISSING MOST OF THE ENVIRONMENTAL SETTINGS, AND AS OF ARCGISPRO 2.9, WILL
         #THROW ERRORS
         #Get extent of projected AOI, and set extent environmental variable to that
-        #print("..SETTING EXTENT FOR SELECTION")
+        #arcpy.AddMessage("..SETTING EXTENT FOR SELECTION")
         #extent_check = False
         #while(extent_check == False):
             #try:
@@ -209,13 +214,13 @@ def worker_function_services(in_inputs_list):
                 #arcpy.env.extent = arcpy.Extent(curr_extent_xmin, curr_extent_ymin, curr_extent_xmax, curr_extent_ymax)
                 #if(str(arcpy.env.extent.XMin) == "None"):
                     #extent_check = False
-                    #print("....EXTENT FAILED TO SET, RETRYING")
+                    #arcpy.AddMessage("....EXTENT FAILED TO SET, RETRYING")
                     #time.sleep(5)
                 #else:
                     #extent_check = True
             #except Exception as e:
-                #print(e)
-                #print("....EXTENT FAILED TO SET, RETRYING")
+                #arcpy.AddMessage(e)
+                #arcpy.AddMessage("....EXTENT FAILED TO SET, RETRYING")
                 #time.sleep(5)
 
 
@@ -223,7 +228,7 @@ def worker_function_services(in_inputs_list):
         ## SELECT FEATURES
         ############################################################################
 
-        print("..SELECTING INTERSECTING FEATURES")
+        arcpy.AddMessage("......SELECTING INTERSECTING FEATURES")
         select_test = False
         features_check = False
         select_attempt = 1
@@ -257,19 +262,19 @@ def worker_function_services(in_inputs_list):
                     features_check = True
 
                 if(selection_count == 0):
-                    print("..NO INTERSECTING FEATURES FOUND, SKIPPING DATASET")
+                    arcpy.AddMessage("......NO INTERSECTING FEATURES FOUND, SKIPPING DATASET")
 
                 select_test = True
 
             except Exception as e:
-                print(e)
+                arcpy.AddMessage(e)
                 select_attempt = select_attempt + 1
                 if(select_attempt < 6):
-                    print("....SELECTION FAILED, RE-TRYING")
+                    arcpy.AddMessage("........SELECTION FAILED, RE-TRYING")
                     select_test = False
                     time.sleep(5)
                 if(select_attempt >= 6):
-                    print("....SELECTION FAILED 5 TIMES, SKIPPING DATASET")
+                    arcpy.AddMessage("........SELECTION FAILED 5 TIMES, SKIPPING DATASET")
                     select_test = True
 
                     #Export CSV file containing information needed to retry query outside of multiprocessor
@@ -301,7 +306,7 @@ def worker_function_services(in_inputs_list):
             while(create_gdb_check == False):
                 try:
                     #Create output GDB
-                    print("..FEATURES SELECTED, CREATING OUTPUT GDB")
+                    arcpy.AddMessage("......FEATURES SELECTED, CREATING OUTPUT GDB")
 
                     curr_featurelayer_fc_name = curr_featurelayer_name_short
 
@@ -334,14 +339,14 @@ def worker_function_services(in_inputs_list):
                     create_gdb_check = True
 
                 except Exception as e:
-                    print(e)
+                    arcpy.AddMessage(e)
                     create_gdb_attempt = create_gdb_attempt + 1
                     if(create_gdb_attempt < 6):
-                        print("....FAILED TO CREATE OUTPUT GDB, TRYING AGAIN")
+                        arcpy.AddMessage("........FAILED TO CREATE OUTPUT GDB, TRYING AGAIN")
                         create_gdb_check = False
                         time.sleep(5)
                     if(create_gdb_attempt >= 6):
-                        print("....FAILED TO CREATE OUTPUT GDB 5 TIMES, SKIPPING DATASET")
+                        arcpy.AddMessage("........FAILED TO CREATE OUTPUT GDB 5 TIMES, SKIPPING DATASET")
                         create_gdb_check = True
                         features_check = False
 
@@ -363,23 +368,23 @@ def worker_function_services(in_inputs_list):
             #IS MISSING MOST OF THE ENVIRONMENTAL SETTINGS, AND AS OF ARCGISPRO 2.9, WILL
             #THROW ERRORS
             #Define output coordinate system environmental variable
-            #print("..SETTING OUTPUT COORDINATE SYSTEM")
+            #arcpy.AddMessage("..SETTING OUTPUT COORDINATE SYSTEM")
             #outcrs_check = False
             #while(outcrs_check == False):
                 #try:
                     #arcpy.env.outputCoordinateSystem = curr_output_prj_sr
                     #if(arcpy.env.outputCoordinateSystem.name != curr_output_prj_sr.name):
-                        #print("....OUTPUT COORDINATE SYSTEM FAILED TO SET, RETRYING")
+                        #arcpy.AddMessage("....OUTPUT COORDINATE SYSTEM FAILED TO SET, RETRYING")
                         #time.sleep(5)
                     #else:
                         #outcrs_check = True
                 #except Exception as e:
-                    #print(e)
-                    #print("....OUTPUT COORDINATE SYSTEM FAILED TO SET, RETRYING")
+                    #arcpy.AddMessage(e)
+                    #arcpy.AddMessage("....OUTPUT COORDINATE SYSTEM FAILED TO SET, RETRYING")
                     #time.sleep(5)
 
             #PERFORM EXPORT
-            print("..EXPORTING (" + str(selection_count) + " features)")
+            arcpy.AddMessage("......EXPORTING (" + str(selection_count) + " features)")
             export_test = False
             export_attempt = 1
             while(export_test == False):
@@ -407,13 +412,13 @@ def worker_function_services(in_inputs_list):
                     export_test = True
 
                 except Exception as e:
-                    #print(e)
+                    #arcpy.AddMessage(e)
                     export_attempt = export_attempt + 1
                     if(export_attempt < 6):
-                        print("....EXPORT FAILED, RE-TRYING")
+                        arcpy.AddMessage("........EXPORT FAILED, RE-TRYING")
                         export_test = False
                     if(export_attempt >= 6):
-                        print("....EXPORT FAILED 5 TIMES, SKIPPING DATASET")
+                        arcpy.AddMessage("........EXPORT FAILED 5 TIMES, SKIPPING DATASET")
                         export_test = True
 
                         #Export CSV file containing information needed to retry query outside of multiprocessor
@@ -438,7 +443,7 @@ def worker_function_services(in_inputs_list):
             curr_fc_sr = arcpy.Describe(curr_fc_path).spatialReference
             curr_fc_sr_name = curr_fc_sr.name
             if(curr_fc_sr_name != curr_output_prj_sr.name):
-                print("..PROJECTING OUTPUT FEATURE CLASS")
+                arcpy.AddMessage("......PROJECTING OUTPUT FEATURE CLASS")
                 curr_fc_prj_path = curr_gbd_path + "/" + curr_featurelayer_fc_name + "_prj"
 
                 #Project the exported feature class to match the user specified projection
@@ -448,8 +453,8 @@ def worker_function_services(in_inputs_list):
                         arcpy.Project_management(curr_fc_path, curr_fc_prj_path, curr_output_prj_sr)
                         project_check = True
                     except Exception as e:
-                        print(e)
-                        print("....PROJECT FAILED, RE-TRYING")
+                        arcpy.AddMessage(e)
+                        arcpy.AddMessage("........PROJECT FAILED, RE-TRYING")
                         if(arcpy.Exists(curr_fc_prj_path)):
                             arcpy.Delete_management(curr_fc_prj_path)
                         time.sleep(5)
@@ -461,8 +466,8 @@ def worker_function_services(in_inputs_list):
                         arcpy.Delete_management(curr_fc_path)
                         delete_check = True
                     except Exception as e:
-                        print(e)
-                        print("....DELETE FEATURE CLASS FAILED, RE-TRYING")
+                        arcpy.AddMessage(e)
+                        arcpy.AddMessage("........DELETE FEATURE CLASS FAILED, RE-TRYING")
                         time.sleep(5)
 
                 #Rename the projected feature class
@@ -472,19 +477,20 @@ def worker_function_services(in_inputs_list):
                         arcpy.Rename_management(curr_fc_prj_path, curr_fc_path)
                         rename_check = True
                     except Exception as e:
-                        print(e)
-                        print("....RENAME FEATURE CLASS FAILED, RE-TRYING")
+                        arcpy.AddMessage(e)
+                        arcpy.AddMessage("........RENAME FEATURE CLASS FAILED, RE-TRYING")
                         time.sleep(5)
 
-                print("..EXPORT COMPLETE")
+                arcpy.AddMessage("......EXPORT COMPLETE")
             else:
-                print("..EXPORT COMPLETE")
+                arcpy.AddMessage("......EXPORT COMPLETE")
 
-        print("..DONE!")
+        arcpy.AddMessage("......DONE!")
+
 
     except Exception as e:
-        print(e)
-        print("TOP LEVEL ERROR")
+        arcpy.AddMessage(e)
+        arcpy.AddMessage("TOP LEVEL ERROR")
         time.sleep(60)
 
 
@@ -495,24 +501,31 @@ def worker_function_elevwetland(in_inputs_list):
     try:
         curr_url_list = list(in_inputs_list[0])
         curr_scratchdir_list = list(in_inputs_list[1])
-        curr_outgdb_list = list(in_inputs_list[2])
-        curr_cpu_number_list = list(in_inputs_list[3])
-        curr_elevcontour_wetland_list = list(in_inputs_list[4])
+        curr_cpu_number_list = list(in_inputs_list[2])
+        curr_elevcontour_wetland_list = list(in_inputs_list[3])
 
         curr_scratchdir = curr_scratchdir_list[0]
-        curr_outgdb_path = curr_outgdb_list[0]
         curr_cpu_number = curr_cpu_number_list[0]
         curr_elevcontour_wetland = curr_elevcontour_wetland_list[0]
 
+
+        #Create output GDB, and get path to output feature class
+        arcpy.AddMessage("..CREATING OUTPUT GDB")
         if(curr_elevcontour_wetland == "ElevContour"):
-            elevcontour_wetland_fc_outpath = curr_outgdb_path + "/ElevContour" + "_" + str(curr_cpu_number)
+            elevcontour_wetland_gdb_name = "ElevContour_" + str(curr_cpu_number)
+            elevcontour_wetland_gdb_path = curr_scratchdir + "/" + elevcontour_wetland_gdb_name + ".gdb"
+            arcpy.CreateFileGDB_management(curr_scratchdir, elevcontour_wetland_gdb_name)
+            elevcontour_wetland_fc_outpath = elevcontour_wetland_gdb_path + "/ElevContour" + "_" + str(curr_cpu_number)
         if(curr_elevcontour_wetland == "Wetlands"):
-            elevcontour_wetland_fc_outpath = curr_outgdb_path + "/Wetlands" + "_" + str(curr_cpu_number)
+            elevcontour_wetland_gdb_name = "Wetlands_" + str(curr_cpu_number)
+            elevcontour_wetland_gdb_path = curr_scratchdir + "/" + elevcontour_wetland_gdb_name + ".gdb"
+            arcpy.CreateFileGDB_management(curr_scratchdir, elevcontour_wetland_gdb_name)
+            elevcontour_wetland_fc_outpath = elevcontour_wetland_gdb_path + "/Wetlands" + "_" + str(curr_cpu_number)
 
 
         #Download the GDBs
-        print(" ")
-        print("DOWNLOADING GDBs")
+        arcpy.AddMessage("..DOWNLOADING GDBs")
+
         curr_url_list_sorted = sorted(curr_url_list)
         download_path_list = []
         for i in range(0, len(curr_url_list)):
@@ -521,8 +534,9 @@ def worker_function_elevwetland(in_inputs_list):
             curr_download_path = curr_scratchdir + "/" + curr_url_basename
 
             #Try to download file, will retry if download fails
-            print(".." + curr_url_basename + " (" + str(i + 1) + " out of " + str(len(curr_url_list)) + ")")
+            arcpy.AddMessage("...." + curr_url_basename + " (" + str(i + 1) + " out of " + str(len(curr_url_list)) + ")")
             download_check = False
+            download_attempt = 1
             while(download_check == False):
                 try:
                     urllib.request.urlretrieve(curr_url, curr_download_path)
@@ -530,12 +544,19 @@ def worker_function_elevwetland(in_inputs_list):
                     download_check = True
                     download_path_list.append(curr_download_path)
                 except:
-                    print("....DOWNLOAD FAILED, RE-TRYING")
-                    time.sleep(5)
+                    download_attempt = download_attempt + 1
+                    if(download_attempt < 6):
+                        arcpy.AddMessage("......DOWNLOAD FAILED, RE-TRYING")
+                        time.sleep(5)
+                        download_check = False
+                    if(download_attempt >= 6):
+                        arcpy.AddMessage("......DOWNLOAD FAILED 5 TIMES, SKIPPING DATASET")
+                        download_check = True
+
 
         #Now unzip the downloaded file
-        print(" ")
-        print("UNZIPPING GDBs")
+        arcpy.AddMessage("..UNZIPPING GDBs")
+
         download_path_gdbdir_list = []
         for i in range(0, len(download_path_list)):
 
@@ -544,7 +565,10 @@ def worker_function_elevwetland(in_inputs_list):
                 curr_download_path = download_path_list[i]
                 curr_download_path_basename = os.path.basename(curr_download_path)
                 curr_download_path_gdb = curr_download_path.replace(".zip", ".gdb")
-                print(".." + curr_download_path_basename + " (" + str(i + 1) + " out of " + str(len(download_path_list)) + ")")
+
+                #Try to download file, will retry if download fails
+                arcpy.AddMessage("...." + curr_download_path_basename + " (" + str(i + 1) + " out of " + str(len(download_path_list)) + ")")
+
                 zip_file = zipfile.ZipFile(curr_download_path)
                 zip_file.extractall(curr_scratchdir)
                 zip_file.close()
@@ -556,7 +580,9 @@ def worker_function_elevwetland(in_inputs_list):
                 curr_download_path_basename = os.path.basename(curr_download_path)
                 curr_download_path_gdb = curr_download_path.replace(".zip", ".gdb")
 
-                print(".." + curr_download_path_basename +  " (" + str(i+1) + " out of " + str(len(download_path_list)) + ")" )
+                #Try to download file, will retry if download fails
+                arcpy.AddMessage("...." + curr_download_path_basename +  " (" + str(i+1) + " out of " + str(len(download_path_list)) + ")" )
+
                 zip_file = zipfile.ZipFile(curr_download_path)
                 zip_file.extractall(curr_scratchdir)
                 zip_file.close()
@@ -584,34 +610,34 @@ def worker_function_elevwetland(in_inputs_list):
 
         #Merge all features together
         if( len(elevcontour_wetland_fc_path_list) == 1 ):
-            print(" ")
-            print("COPYING FEATURE CLASS")
+            arcpy.AddMessage("..COPYING FEATURE CLASS")
+
             copy_check = False
             while(copy_check == False):
                 try:
                     arcpy.Copy_management(curr_elevcontour_wetland_fcpath, elevcontour_wetland_fc_outpath)
                     copy_check = True
-                    print("COPY COMPLETE")
+                    arcpy.AddMessage("..COPY COMPLETE")
                 except:
-                    print("FAILED TO COPY FEATURE CLASS, RE-TRYING")
+                    arcpy.AddMessage("....FAILED TO COPY FEATURE CLASS, RE-TRYING")
                     time.sleep(5)
         else:
             #Else if multiple feature classes, merge all into a single SDF
-            print(" ")
-            print("MERGING " + str(len(elevcontour_wetland_fc_path_list)) + " FEATURE CLASSES")
+            arcpy.AddMessage("..MERGING " + str(len(elevcontour_wetland_fc_path_list)) + " FEATURE CLASSES")
             merge_check = False
             while(merge_check == False):
                 try:
                     arcpy.Merge_management(elevcontour_wetland_fc_path_list, elevcontour_wetland_fc_outpath)
                     merge_check = True
-                    print("MERGE COMPLETE")
+                    arcpy.AddMessage("....MERGE COMPLETE")
                 except:
-                    print("FAILED TO MERGE FEATURE CLASSES, RE-TRYING")
+                    arcpy.AddMessage("....FAILED TO MERGE FEATURE CLASSES, RE-TRYING")
                     time.sleep(5)
 
+
     except Exception as e:
-        print(e)
-        print("TOP LEVEL ERROR")
+        arcpy.AddMessage(e)
+        arcpy.AddMessage("TOP LEVEL ERROR")
         time.sleep(60)
 
 
@@ -671,7 +697,7 @@ def execute_elevwetland(inputs):
 if __name__=='__main__':
 
     #ArcGIS Online Portal URL
-    #pro_portal_toggle = "Yes"
+    #pro_portal_toggle = "No"
     pro_portal_toggle = arcpy.GetParameterAsText(0)
 
     #ArcGIS Online Portal URL
@@ -687,8 +713,7 @@ if __name__=='__main__':
     password = arcpy.GetParameterAsText(3)
 
     #Path to AOI shapefile polygon
-    #aoi_shp_path = r"C:\Workspace\development\FeatureLayerDownload-master\AOI_UT.shp"
-    #aoi_shp_path = r"C:\Workspace\development\FeatureLayerDownload\AOI_SLC.shp"
+    #aoi_shp_path = r"C:\Workspace\development\AOI_Shapefiles\AOI_3.shp"
     aoi_shp_path = arcpy.GetParameterAsText(4)
 
     #AOI Subdivision Area (in square miles)
@@ -700,8 +725,7 @@ if __name__=='__main__':
     output_prj = arcpy.GetParameterAsText(6)
 
     #Output GDB Directory
-    #outdir = r"C:\Workspace\development\PanunTools_All\output"
-    #outdir = r"C:\Workspace\development\FeatureLayerDownload\output_slc"
+    #outdir = r"C:\Workspace\development\PanunTools_All\output_FeatureLayerDownload"
     outdir = arcpy.GetParameterAsText(7)
 
     #Path to feature service ItemID CSV
@@ -714,8 +738,12 @@ if __name__=='__main__':
     #wetland_acquire = "Yes"
     wetland_acquire = arcpy.GetParameterAsText(10)
 
+    #Toggle for Multiprocessor use
+    #multiprocess_toggle = "true"
+    multiprocess_toggle = arcpy.GetParameterAsText(11)
+
     #offline_license_check = "Yes"
-    offline_license_check = arcpy.GetParameterAsText(11)
+    offline_license_check = arcpy.GetParameterAsText(12)
 
 
     # import current script to avoid:
@@ -760,7 +788,7 @@ if __name__=='__main__':
 
     #Establish connection to the ArcGIS Online Org
     arcpy.AddMessage("\u200B")
-    arcpy.AddMessage("..REQUESTING API ACCESS TOKEN")
+    arcpy.AddMessage("REQUESTING API ACCESS TOKEN")
     if(pro_portal_toggle == "Yes"):
         gis = GIS("pro")
     else:
@@ -776,7 +804,8 @@ if __name__=='__main__':
     os.mkdir(scratchdir)
 
     #Test if user's license is offline
-    if(offline_license_check == "Yes"):
+    if(multiprocess_toggle == "true" and offline_license_check == "Yes"):
+        arcpy.AddMessage("\u200B")
         arcpy.AddMessage("PERFORMING OFFLINE LICENSE CHECK")
         try:
             appdata_path = os.getenv('LOCALAPPDATA')
@@ -934,7 +963,8 @@ if __name__=='__main__':
     if(elevcontour_acquire == "Yes"):
 
         arcpy.AddMessage("\u200B")
-        arcpy.AddMessage("ACQUIRING USGS TOPO VECTOR CONTOURS")
+        arcpy.AddMessage("\u200B")
+        arcpy.AddMessage("ACQUIRING ELEVATION CONTOUR DATA")
 
         #Get feature layers from the basedata feature service
         basedata_service = curr_service = gis.content.get("6dcb2dab3c314912a45872eabfa467e2")
@@ -1022,13 +1052,6 @@ if __name__=='__main__':
             arcpy.AddMessage("..NO USGS TOPO VECTOR QUADS FOUND, SKIPPING DATASET")
         else:
 
-            #Create output GDB
-            arcpy.AddMessage("..CREATING OUTPUT GDB")
-            outGdb = "ElevContour.gdb"
-            outGdb_path = outdir + "/" + outGdb
-            arcpy.CreateFileGDB_management(outdir, outGdb)
-            elevcontour_fc_path = outGdb_path + "/ElevContour"
-
             #Sort the urlList alphabetically
             urlList_sorted = usgstopovec_url_list
             urlList_sorted.sort()
@@ -1036,44 +1059,70 @@ if __name__=='__main__':
 
             #Create lists for multiprocessor
             scratchdir_list = [scratchdir] * url_count
-            outgdb_path_list = [outGdb_path] * url_count
             elevcontour_str_list = ["ElevContour"] * url_count
 
-            #get CPU count, and range
-            cpu_count = multiprocessing.cpu_count()
-            cpu_range = list(range(1, (cpu_count + 1)))
 
-            #Split lists into equal sizes, based on cpu_count
-            url_list_cpu_split = numpy.array_split(urlList_sorted, cpu_count)
-            scratchdir_list_cpu_split = numpy.array_split(scratchdir_list, cpu_count)
-            outgdb_path_list_cpu_split = numpy.array_split(outgdb_path_list, cpu_count)
-            elevcontour_str_list_cpu_split = numpy.array_split(elevcontour_str_list, cpu_count)
 
-            #Create list of CPU numbers for the multiprocessor
-            cpu_number_list = []
-            for i in range(0, len(url_list_cpu_split)):
-                curr_url_list_len = len(url_list_cpu_split[i])
-                cpu_number_list = cpu_number_list + ([cpu_range[i]] * curr_url_list_len)
+            #Run FeatureLayerDownload function
+            if(multiprocess_toggle == "true"):
+                arcpy.AddMessage("..BEGINNING MULTIPROCESSOR DOWNLOAD: (" + str(url_count) + " GDBs)")
 
-            #Split cpu number list into equal size, based on cpu_count
-            cpu_number_list_cpu_split = numpy.array_split(cpu_number_list, cpu_count)
+                #get CPU count, and range
+                cpu_count = multiprocessing.cpu_count()
+                if(cpu_count > len(urlList_sorted)):
+                    cpu_count = len(urlList_sorted)
+                cpu_range = list(range(1, (cpu_count + 1)))
 
-            #Create inputs list for multiprocessor
-            inputs_list_elevcontour = list(map(list, zip(url_list_cpu_split, scratchdir_list_cpu_split, outgdb_path_list_cpu_split, cpu_number_list_cpu_split, elevcontour_str_list_cpu_split)))
+                #Split lists into equal sizes, based on cpu_count
+                url_list_cpu_split = numpy.array_split(urlList_sorted, cpu_count)
+                scratchdir_list_cpu_split = numpy.array_split(scratchdir_list, cpu_count)
+                elevcontour_str_list_cpu_split = numpy.array_split(elevcontour_str_list, cpu_count)
 
-            arcpy.AddMessage("..BEGINNING MULTIPROCESSOR DOWNLOAD: (" + str(url_count) + " GDBs)")
-            FeatureLayerDownload.execute_elevwetland(inputs_list_elevcontour)
-            arcpy.AddMessage("..FINISHED MULTIPROCESSING")
+                #Create list of CPU numbers for the multiprocessor
+                cpu_number_list = []
+                for i in range(0, len(url_list_cpu_split)):
+                    curr_url_list_len = len(url_list_cpu_split[i])
+                    cpu_number_list = cpu_number_list + ([cpu_range[i]] * curr_url_list_len)
 
-            #List multiprocessing output feature classes
-            arcpy.env.workspace = outGdb_path
-            elevcontour_fc_list = arcpy.ListFeatureClasses()
-            elevcontour_fc_path_list = [outGdb_path + "/" + s  for s in elevcontour_fc_list]
+                #Split cpu number list into equal size, based on cpu_count
+                cpu_number_list_cpu_split = numpy.array_split(cpu_number_list, cpu_count)
 
-            #Merge multiprocessing output feature classes
+                #Create inputs list for multiprocessor
+                inputs_list_elevcontour = list(map(list, zip(url_list_cpu_split, scratchdir_list_cpu_split, cpu_number_list_cpu_split, elevcontour_str_list_cpu_split)))
+
+                FeatureLayerDownload.execute_elevwetland(inputs_list_elevcontour)
+                arcpy.AddMessage("..FINISHED MULTIPROCESSING")
+
+            else:
+                arcpy.AddMessage("..BEGINNING DOWNLOAD: (" + str(url_count) + " GDBs)")
+
+                #Create list of CPU numbers for the multiprocessor
+                cpu_number_list = [1] * len(urlList_sorted)
+
+                #Create inputs list for elevwetland function
+                inputs_list_elevcontour = [urlList_sorted, scratchdir_list, cpu_number_list, elevcontour_str_list]
+
+                worker_function_elevwetland(inputs_list_elevcontour)
+
+
+            #Get list of output feature classes
+            arcpy.env.workspace = scratchdir
+            scratch_gdb_list = arcpy.ListWorkspaces("*", "FileGDB")
+            elevcontour_fc_path_list = []
+            for i in range(0, len(scratch_gdb_list)):
+                curr_gdb_path = scratch_gdb_list[i]
+                curr_gdb_basename = os.path.basename(scratch_gdb_list[i])
+                curr_gdb_basename = curr_gdb_basename.replace(".gdb", "")
+                if("ElevContour_" in curr_gdb_basename):
+                    curr_fc_path = curr_gdb_path + "/" + curr_gdb_basename
+                    elevcontour_fc_path_list.append(curr_fc_path)
+
+            #Merge output feature classes
             arcpy.env.outputCoordinateSystem = curr_output_prj_sr
             arcpy.AddMessage("..PERFORMING FINAL MERGE")
-            elevcontour_final_out = outGdb_path + "/ElevContour"
+            elevcontour_gdb_path = outdir + "/ElevContour.gdb"
+            arcpy.CreateFileGDB_management(outdir, "ElevContour")
+            elevcontour_final_out = elevcontour_gdb_path + "/ElevContour"
             arcpy.Merge_management(elevcontour_fc_path_list, elevcontour_final_out)
             arcpy.ResetEnvironments()
 
@@ -1084,13 +1133,10 @@ if __name__=='__main__':
             except:
                 arcpy.AddMessage("....FAILED TO REMOVE DUPLICATE FEATURES, SKIPPING")
 
-            #Delete individual multiprocessor outputs
-            arcpy.AddMessage("..DELETING MULTIPROCESSOR OUTPUTS")
-            arcpy.Delete_management(elevcontour_fc_path_list)
-
-            #Delete scratch files
+            #Delete individual multiprocessor outputs and scratch files
             arcpy.AddMessage("..DELETING SCRATCH FILES")
             arcpy.env.workspace = scratchdir
+            arcpy.Delete_management(elevcontour_fc_path_list)
 
             #Delete all folders (this includes GDBs)
             scratch_folders_list = glob.glob(scratchdir + "/*/")
@@ -1122,6 +1168,7 @@ if __name__=='__main__':
     ############################################################################
     if(wetland_acquire == "Yes"):
 
+        arcpy.AddMessage("\u200B")
         arcpy.AddMessage("\u200B")
         arcpy.AddMessage("ACQUIRING WETLAND DATA")
 
@@ -1204,12 +1251,6 @@ if __name__=='__main__':
             arcpy.AddMessage("..NO HUC8 DATA FOUND, SKIPPING DATASET")
         else:
 
-            #Create the output GDB.
-            arcpy.AddMessage("..CREATING OUTPUT GDB")
-            outGdb = "Wetlands.gdb"
-            outGdb_path = outdir + "/" + outGdb
-            arcpy.CreateFileGDB_management(outdir, outGdb)
-
             #Sort the urlList alphabetically
             urlList_sorted = huc8_url_list
             urlList_sorted.sort()
@@ -1217,44 +1258,68 @@ if __name__=='__main__':
 
             #Create lists for multiprocessor
             scratchdir_list = [scratchdir] * url_count
-            outgdb_path_list = [outGdb_path] * url_count
             wetlands_str_list = ["Wetlands"] * url_count
 
-            #get CPU count, and range
-            cpu_count = multiprocessing.cpu_count()
-            cpu_range = list(range(1, (cpu_count + 1)))
+            #Run FeatureLayerDownload function
+            if(multiprocess_toggle == "true"):
+                arcpy.AddMessage("..BEGINNING MULTIPROCESSOR DOWNLOAD: (" + str(url_count) + " GDBs)")
 
-            #Split lists into equal sizes, based on cpu_count
-            url_list_cpu_split = numpy.array_split(urlList_sorted, cpu_count)
-            scratchdir_list_cpu_split = numpy.array_split(scratchdir_list, cpu_count)
-            outgdb_path_list_cpu_split = numpy.array_split(outgdb_path_list, cpu_count)
-            wetlands_str_list_cpu_split = numpy.array_split(wetlands_str_list, cpu_count)
+                #get CPU count, and range
+                cpu_count = multiprocessing.cpu_count()
+                if(cpu_count > len(urlList_sorted)):
+                    cpu_count = len(urlList_sorted)
+                cpu_range = list(range(1, (cpu_count + 1)))
 
-            #Create list of CPU numbers for the multiprocessor
-            cpu_number_list = []
-            for i in range(0, len(url_list_cpu_split)):
-                curr_url_list_len = len(url_list_cpu_split[i])
-                cpu_number_list = cpu_number_list + ([cpu_range[i]] * curr_url_list_len)
+                #Split lists into equal sizes, based on cpu_count
+                url_list_cpu_split = numpy.array_split(urlList_sorted, cpu_count)
+                scratchdir_list_cpu_split = numpy.array_split(scratchdir_list, cpu_count)
+                wetlands_str_list_cpu_split = numpy.array_split(wetlands_str_list, cpu_count)
 
-            #Split cpu number list into equal size, based on cpu_count
-            cpu_number_list_cpu_split = numpy.array_split(cpu_number_list, cpu_count)
+                #Create list of CPU numbers for the multiprocessor
+                cpu_number_list = []
+                for i in range(0, len(url_list_cpu_split)):
+                    curr_url_list_len = len(url_list_cpu_split[i])
+                    cpu_number_list = cpu_number_list + ([cpu_range[i]] * curr_url_list_len)
 
-            #Create inputs list for multiprocessor
-            inputs_list_wetlands = list(map(list, zip(url_list_cpu_split, scratchdir_list_cpu_split, outgdb_path_list_cpu_split, cpu_number_list_cpu_split, wetlands_str_list_cpu_split)))
+                #Split cpu number list into equal size, based on cpu_count
+                cpu_number_list_cpu_split = numpy.array_split(cpu_number_list, cpu_count)
 
-            arcpy.AddMessage("..BEGINNING MULTIPROCESSOR DOWNLOAD: (" + str(url_count) + " GDBs)")
-            FeatureLayerDownload.execute_elevwetland(inputs_list_wetlands)
-            arcpy.AddMessage("..FINISHED MULTIPROCESSING")
+                #Create inputs list for multiprocessor
+                inputs_list_wetlands = list(map(list, zip(url_list_cpu_split, scratchdir_list_cpu_split, cpu_number_list_cpu_split, wetlands_str_list_cpu_split)))
 
-            #List multiprocessing output feature classes
-            arcpy.env.workspace = outGdb_path
-            wetlands_fc_list = arcpy.ListFeatureClasses()
-            wetlands_fc_path_list = [outGdb_path + "/" + s  for s in wetlands_fc_list]
+                FeatureLayerDownload.execute_elevwetland(inputs_list_wetlands)
+                arcpy.AddMessage("..FINISHED MULTIPROCESSING")
 
-            #Merge multiprocessing output feature classes
+            else:
+                arcpy.AddMessage("..BEGINNING DOWNLOAD: (" + str(url_count) + " GDBs)")
+
+                #Create list of CPU numbers for the multiprocessor
+                cpu_number_list = [1] * len(urlList_sorted)
+
+                #Create inputs list for elevwetland function
+                inputs_list_wetlands = [urlList_sorted, scratchdir_list, cpu_number_list, wetlands_str_list]
+
+                worker_function_elevwetland(inputs_list_wetlands)
+
+
+            #Get list of output feature classes
+            arcpy.env.workspace = scratchdir
+            scratch_gdb_list = arcpy.ListWorkspaces("*", "FileGDB")
+            wetlands_fc_path_list = []
+            for i in range(0, len(scratch_gdb_list)):
+                curr_gdb_path = scratch_gdb_list[i]
+                curr_gdb_basename = os.path.basename(scratch_gdb_list[i])
+                curr_gdb_basename = curr_gdb_basename.replace(".gdb", "")
+                if("Wetlands_" in curr_gdb_basename):
+                    curr_fc_path = curr_gdb_path + "/" + curr_gdb_basename
+                    wetlands_fc_path_list.append(curr_fc_path)
+
+            #Merge output feature classes
             arcpy.env.outputCoordinateSystem = curr_output_prj_sr
             arcpy.AddMessage("..PERFORMING FINAL MERGE")
-            wetlands_final_out = outGdb_path + "/Wetlands"
+            wetlands_gdb_path = outdir + "/Wetlands.gdb"
+            arcpy.CreateFileGDB_management(outdir, "Wetlands")
+            wetlands_final_out = wetlands_gdb_path + "/Wetlands"
             arcpy.Merge_management(wetlands_fc_path_list, wetlands_final_out)
             arcpy.ResetEnvironments()
 
@@ -1267,12 +1332,9 @@ if __name__=='__main__':
             #except:
                 #arcpy.AddMessage("....FAILED TO REMOVE DUPLICATE FEATURES, SKIPPING")
 
-            #Delete individual multiprocessor outputs
-            arcpy.AddMessage("..DELETING MULTIPROCESSOR OUTPUTS")
-            arcpy.Delete_management(wetlands_fc_path_list)
-
-            #Delete scratch files
+            #Delete individual outputs and scratch files
             arcpy.AddMessage("..DELETING SCRATCH FILES")
+            arcpy.Delete_management(wetlands_fc_path_list)
             arcpy.env.workspace = scratchdir
 
             #Delete all folders (this includes GDBs)
@@ -1311,6 +1373,7 @@ if __name__=='__main__':
     os.mkdir(metadatadir)
 
     #Create service connections, and build a list of feature layers
+    arcpy.AddMessage("\u200B")
     arcpy.AddMessage("\u200B")
     arcpy.AddMessage("CONNECTING TO FEATURE SERVICES")
     featureservice_name_list_primary = []
@@ -1393,10 +1456,10 @@ if __name__=='__main__':
 
 
                     except Exception as e:
-                        print(e)
+                        arcpy.AddMessage(e)
 
         except Exception as e:
-            print(e)
+            arcpy.AddMessage(e)
 
     #Create input lists for primary multiprocessing
     featurelayer_count_primary = len(featurelayerurl_list_primary)
@@ -1408,26 +1471,35 @@ if __name__=='__main__':
     output_prj_list_primary = [output_prj] * featurelayer_count_primary
     gdb_outdir_list_primary = [outdir] * featurelayer_count_primary
     multiprocess_list_primary = ["Primary"] * featurelayer_count_primary
-    inputs_list_primary = list(map(list, zip(pro_portal_toggle_list_primary, portalurl_list_primary, username_list_primary, password_list_primary, aoi_path_list_primary, output_prj_list_primary, gdb_outdir_list_primary, featurelayerurl_list_primary, featureservice_name_list_primary, multiprocess_list_primary)))
+    multiprocess_toggle_list_primary = [multiprocess_toggle] * featurelayer_count_primary
+    inputs_list_primary = list(map(list, zip(pro_portal_toggle_list_primary, portalurl_list_primary, username_list_primary, password_list_primary, aoi_path_list_primary, output_prj_list_primary, gdb_outdir_list_primary, featurelayerurl_list_primary, featureservice_name_list_primary, multiprocess_list_primary, multiprocess_toggle_list_primary)))
 
 
     ############################################################################
     ## BEGIN MULTIPROCESSOR
     ############################################################################
     arcpy.AddMessage("\u200B")
-    arcpy.AddMessage("BEGIN PRIMARY MULTIPROCESSING")
+    arcpy.AddMessage("\u200B")
+    arcpy.AddMessage("PRIMARY FEATURE LAYER PROCESSING")
 
     #Re-establish connection to the ArcGIS Online Org incase the token expired
-    arcpy.AddMessage("..REQUESTING API ACCESS TOKEN")
     if(pro_portal_toggle == "Yes"):
         gis = GIS("pro")
     else:
         gis = GIS(portalurl, username, password, verify_cert=False)
 
-    #Run multiprocessing function
-    FeatureLayerDownload.execute_services(inputs_list_primary)
+    #Run FeatureLayerDownload function
+    if(multiprocess_toggle == "true"):
+        arcpy.AddMessage("..BEGIN MULTIPROCESSING")
+        FeatureLayerDownload.execute_services(inputs_list_primary)
+        arcpy.AddMessage("..FINISHED MULTIPROCESSING")
 
-    arcpy.AddMessage("FINISHED PRIMARY MULTIPROCESSING")
+    else:
+        for i in range(0, len(inputs_list_primary)):
+            arcpy.AddMessage("..FEATURE LAYER " + str(i+1) + " OUT OF " + str(len(inputs_list_primary)))
+            curr_inputs_list = inputs_list_primary[i]
+            worker_function_services(curr_inputs_list)
+
 
     #Now test to see if any queries, selections, or exports failed during the primary multiprocessing
     filelist = os.listdir(outdir)
@@ -1480,23 +1552,33 @@ if __name__=='__main__':
         featurelayerurl_list_secondary_all = featurelayerurl_list_secondary * objid_count
         featureservice_name_list_secondary_all = featureservice_name_list_secondary * objid_count
         multiprocess_list_secondary = ["Secondary"] * (objid_count * featurelayer_count_secondary)
-        inputs_list_secondary = list(zip(pro_portal_toggle_list_secondary, portalurl_list_secondary, username_list_secondary, password_list_secondary, aoi_path_list_secondary, output_prj_list_secondary, gdb_outdir_list_secondary, featurelayerurl_list_secondary_all, featureservice_name_list_secondary_all, multiprocess_list_secondary))
+        multiprocess_toggle_list_secondary = [multiprocess_toggle] * (objid_count * featurelayer_count_secondary)
+        inputs_list_secondary = list(zip(pro_portal_toggle_list_secondary, portalurl_list_secondary, username_list_secondary, password_list_secondary, aoi_path_list_secondary, output_prj_list_secondary, gdb_outdir_list_secondary, featurelayerurl_list_secondary_all, featureservice_name_list_secondary_all, multiprocess_list_secondary, multiprocess_toggle_list_secondary))
 
         #Run secondary multiprocessor
         arcpy.AddMessage("\u200B")
-        arcpy.AddMessage("BEGIN SECONDARY MULTIPROCESSING")
+        arcpy.AddMessage("\u200B")
+        arcpy.AddMessage("SECONDARY FEATURE LAYER PROCESSING")
 
         #Re-establish connection to the ArcGIS Online Org incase the token expired
-        arcpy.AddMessage("..REQUESTING API ACCESS TOKEN")
         if(pro_portal_toggle == "Yes"):
             gis = GIS("pro")
         else:
             gis = GIS(portalurl, username, password, verify_cert=False)
 
-        #Run multiprocessing function
-        FeatureLayerDownload.execute_services(inputs_list_secondary)
+        #Run FeatureLayerDownload function
+        if(multiprocess_toggle == "true"):
+            arcpy.AddMessage("..BEGIN MULTIPROCESSING")
+            FeatureLayerDownload.execute_services(inputs_list_secondary)
+            arcpy.AddMessage("..FINISHED MULTIPROCESSING")
 
-        arcpy.AddMessage("FINISHED SECONDARY MULTIPROCESSING")
+        else:
+            for i in range(0, len(inputs_list_secondary)):
+                arcpy.AddMessage("..FEATURE LAYER " + str(i+1) + " OUT OF " + str(len(inputs_list_secondary)))
+                curr_inputs_list = inputs_list_secondary[i]
+                worker_function_services(curr_inputs_list)
+
+
 
 
     ############################################################################
@@ -1505,7 +1587,8 @@ if __name__=='__main__':
 
     #Create master output GDB
     arcpy.AddMessage("\u200B")
-    arcpy.AddMessage("CREATING MASTER OUTPUT GDB")
+    arcpy.AddMessage("\u200B")
+    arcpy.AddMessage("CREATING FINAL OUTPUT GDB")
     master_gdb_outname = "FeatureLayerDownload"
     master_gbd_outpath = outdir + "/" + master_gdb_outname + ".gdb"
     if(not arcpy.Exists(master_gbd_outpath)):
@@ -1514,10 +1597,6 @@ if __name__=='__main__':
     #Reset environment settings
     arcpy.ResetEnvironments()
     arcpy.env.overwriteOutput = True
-
-    #Now determine if multiple feature classes exist for any of the datasets. Merge together if so
-    arcpy.AddMessage("\u200B")
-    arcpy.AddMessage("CHECKING IF ANY OUTPUT FEATURE CLASSES NEED MERGING")
 
     #First, check if any corrupt GDBs exist, if so, delete them
     corrupgdb_path_list = []
@@ -1581,7 +1660,7 @@ if __name__=='__main__':
         ########################################################################
         #I first tried to simply use merge via arcpy to pull all the corresponding feature classes together, but
         #for some reason it wasn't merging all features. There would be holes in the output datasets. I wonder if
-        #I was hitting a feature count limitation for the merge tool.
+        #I was hitting a feature count limitation for the merge tool. Not sure.
         #So, I came up with a way to do it using Pandas SpatialDataFrames, which is what I'm doing here. I'm concatenating
         #all feature class features into a single dataframe, then exporting as a feature class.
 
@@ -1664,21 +1743,21 @@ if __name__=='__main__':
 
                 #If bad columns were identified, try dropping them and re-export. If none found, or if export fails again after dropping columns, skip dataset
                 if(len(bad_cols) > 0):
-                    arcpy.AddMessage("......Dropping problematic fields, and re-attempting feature class export")
+                    arcpy.AddMessage("......DROPPING PROBLEMATIC FIELDS, AND RE-ATTEMPTING FEATURE CLASS EXPORT")
                     try:
                         output_sdf = pandas.concat(sdf_concat_list)
                         output_sdf = output_sdf.drop(bad_cols, axis=1)
                         output_sdf.spatial.to_featureclass(target_fc_path, sanitize_columns=False)
-                        arcpy.AddMessage("......Export success")
+                        arcpy.AddMessage("......EXPORT SUCCESS")
                     except:
-                        arcpy.AddMessage("......Feature class export still failing, skipping dataset")
+                        arcpy.AddMessage("......FEATURE CLASS EXPORT STILL FAILING, SKIPPING DATASET")
                         continue
                 else:
-                    arcpy.AddMessage("......No problematic fields identified, skipping dataset")
+                    arcpy.AddMessage("......NO PROBLEMATIC FIELDS IDENTIFIED, SKIPPING DATASET")
                     continue
 
             #Remove identical features in output feature class
-            arcpy.AddMessage("....Removing duplicate features")
+            arcpy.AddMessage("....REMOVING DUPLICATE FEATURES")
             arcpy.DeleteIdentical_management(target_fc_path, fields=["Shape"])
 
             #Clear output_sdf from memory
@@ -1686,7 +1765,7 @@ if __name__=='__main__':
             del sdf_concat_list
 
         #Delete GDBs
-        arcpy.AddMessage("....Deleting GDBs")
+        arcpy.AddMessage("....DELETING SCRATCH GDBs")
         arcpy.Delete_management(gdb_path_list)
 
 
@@ -1719,26 +1798,27 @@ if __name__=='__main__':
 
         #Concatenate PrimaryHighway/SecondaryHighway/Roads SDFs together
         if( len(sdf_concat_list) > 1):
-            arcpy.AddMessage("....Merging PrimaryHighway/SecondaryHighway/Roads feature classes")
+            arcpy.AddMessage("....MERGING PrimaryHighway/SecondaryHighway/Roads FEATURE CLASSES")
             output_sdf = pandas.concat(sdf_concat_list)
         else:
             output_sdf = sdf_concat_list[0]
 
         #Create output feature class
-        arcpy.AddMessage("....Creating output feature class")
+        arcpy.AddMessage("....CREATING OUTPUT FEATURE CLASS")
         output_sdf.spatial.to_featureclass(hifldroads_fc_outpath, sanitize_columns=False)
 
         #Remove identical features
-        arcpy.AddMessage("....Removing duplicate features")
+        arcpy.AddMessage("....REMOVING DUPLICATE FEATURES")
         arcpy.DeleteIdentical_management(hifldroads_fc_outpath, fields=["Shape"])
 
 
     ############################################################################
-    ## INSERT METADATA INTO OUTPUT FEATURE CLASSES
+    ## INSERT METADATA INTO FEATURE CLASSES
     ############################################################################
 
     arcpy.AddMessage("\u200B")
-    arcpy.AddMessage("IMPORTING FEATURE LAYER METADATA TO OUTPUT FEATURE CLASSES")
+    arcpy.AddMessage("\u200B")
+    arcpy.AddMessage("IMPORTING FEATURE LAYER METADATA INTO FEATURE CLASSES")
 
     #Get list of feature classes in master output gdb
     arcpy.env.workspace = master_gbd_outpath
@@ -1751,10 +1831,8 @@ if __name__=='__main__':
         curr_fc_metadata_path = metadatadir + "/" + curr_fc_name + ".xml"
 
         #If the metadata xml exists for the feature class, proceed
+        arcpy.AddMessage(".." + curr_fc_name)
         if(arcpy.Exists(curr_fc_metadata_path)):
-
-            arcpy.AddMessage(".." + curr_fc_name)
-
             #Create metadata object from feature class
             fc_metadata_obj = arcpy.metadata.Metadata(curr_fc_path)
 
@@ -1767,8 +1845,30 @@ if __name__=='__main__':
             #Save metadata
             fc_metadata_obj.save()
 
+    ############################################################################
+    ## DELETE SCRATCH FILES
+    ############################################################################
 
     arcpy.AddMessage("\u200B")
-    arcpy.AddMessage("Done!")
+    arcpy.AddMessage("\u200B")
+    arcpy.AddMessage("DELETING SCRATCH FILES")
+
+    #Delete scratch directory
+    arcpy.Delete_management(scratchdir)
+
+    #Get list of files in the output directory
+    outdir_files = os.listdir(outdir)
+    outdir_files.remove("FeatureLayerDownload.gdb")
+    if(len(outdir_files) > 0):
+        for i in range(0, len(outdir_files)):
+            curr_file_path = outdir + "/" + outdir_files[i]
+            os.remove(curr_file_path)
+
+
+
+
+    arcpy.AddMessage("\u200B")
+    arcpy.AddMessage("\u200B")
+    arcpy.AddMessage("DONE!")
 
 
