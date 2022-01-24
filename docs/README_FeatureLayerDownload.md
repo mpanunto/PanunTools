@@ -14,7 +14,7 @@ For a user-specified list of feature services, the tool downloads vector dataset
     -	Contains a list of feature services and corresponding Item IDs. The tool iterates through these services looking for feature layers. If found, feature layers will be downloaded for the user specified AOI.
     - By default, this CSV file consists of all services needed to produce the USFS National Basemap. However, it can be modified to download feature layers from any published feature service.
 
-This tool harnesses the Python multiprocessing module to run several instances of Python simultaneously. When running, several command prompt windows will appear on your screen. Just leave them be, as they should disappear once all datasets have been downloaded. However, if you run into an error, you may have to terminate ArcGIS Pro in order to manually close them.
+If enabled, this tool will harness the Python multiprocessing module to run several instances of Python simultaneously. When running, several command prompt windows will appear on your screen. Just leave them be, as they should disappear once all datasets have been downloaded. However, if you run into an error, you may have to terminate ArcGIS Pro in order to manually close them.
 
 ## User Inputs:
 1.	Toggle for using ArcGIS Pro’s Active Portal to make feature service connections
@@ -28,7 +28,8 @@ This tool harnesses the Python multiprocessing module to run several instances o
 9.	Path to FeatureLayerDownload.csv
 10.	Toggle for downloading Elevation Contour data from the USGS
 11.	Toggle for downloading Wetlands data from the USFWS
-12.	Toggle for performing Offline License Check
+12.	Toggle for using multiprocessor
+13.	Toggle for performing Offline License Check
 
 ![screenshot_FeatureLayerDownload_1.png](/docs/screenshot_FeatureLayerDownload_1.png?raw=true)
 
