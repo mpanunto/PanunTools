@@ -24,6 +24,9 @@ PanunTools is a ***very*** cleverly named toolbox created for GISS on wildfire i
 1. [Incident Setup AGOL](docs/README_IncidentSetupAGOL.md)
 2. [Invite Remove Users AGOL](docs/README_InviteRemoveUsersAGOL.md)
 
+#### Miscellaneous
+1. [Summarize Folder Files](docs/README_SummarizeFolderFiles.md)
+
 \
 Script tool code and properties are password protected, but can be accessed by entering "password" into the Enter Password box. These tools have only been tested for use in ArcGIS Pro 2.7.
 
