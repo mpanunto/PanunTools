@@ -1,4 +1,4 @@
-## Summarize Folder Files Tool
+## Summarize Folder Files
 
 This tool summarizes folder and file sizes for a user specified directory. It generates two outputs:
 - A CSV that summarizes the files within the user specified directory
