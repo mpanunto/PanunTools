@@ -4,6 +4,7 @@ This tool summarizes folder and file sizes for a user specified directory. It ge
 - A CSV that summarizes the files within the user specified directory
 - A CSV that summarizes the immediate sub-directories of the user specified directory
 
+![screenshot_SummarizeFolderFiles_3.png](/docs/screenshot_SummarizeFolderFiles_3.png?raw=true)
 
 ### User Inputs
 
@@ -12,3 +13,5 @@ This tool summarizes folder and file sizes for a user specified directory. It ge
 3. Path to output directory
 
 ![screenshot_SummarizeFolderFiles_1.png](/docs/screenshot_SummarizeFolderFiles_1.png?raw=true)
+
+![screenshot_SummarizeFolderFiles_2.png](/docs/screenshot_SummarizeFolderFiles_2.png?raw=true)
