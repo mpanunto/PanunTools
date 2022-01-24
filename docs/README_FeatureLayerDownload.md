@@ -34,6 +34,3 @@ If enabled, this tool will harness the Python multiprocessing module to run seve
 ![screenshot_FeatureLayerDownload_1.png](/docs/screenshot_FeatureLayerDownload_1.png?raw=true)
 
 ![screenshot_FeatureLayerDownload_2.png](/docs/screenshot_FeatureLayerDownload_2.png?raw=true)
-
-## Contact
-Feel free to contact me (Matt Panunto) at mpanunto@blm.gov with any comments, questions, or error reports.
