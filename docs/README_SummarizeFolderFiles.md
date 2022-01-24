@@ -12,5 +12,3 @@ This tool summarizes folder and file sizes for a user specified directory. It ge
 3. Path to output directory
 
 ![screenshot_SummarizeFolderFiles_1.png](/docs/screenshot_SummarizeFolderFiles_1.png?raw=true)
-
-This tool will work in both Python 2 and Python 3 environments.
