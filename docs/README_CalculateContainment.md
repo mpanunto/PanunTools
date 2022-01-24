@@ -19,7 +19,6 @@ By default, only the "Contained" features that align with the outer edge of the 
 6. Toggle to force inclusion of all Contained features in calculation
 7. Toggle to report Contained features excluded from calculation
 8. Toggle to export the Contained features excluded from calculation
-9. Specify export directory
 
 ![screenshot_CalculateContainment_1.png](/docs/screenshot_CalculateContainment_1.png?raw=true)
 \
