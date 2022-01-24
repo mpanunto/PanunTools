@@ -1,4 +1,4 @@
-# Feature Layer Download Tool
+# Feature Layer Download
 
 This tool can be used to download a series of vector datasets published to ArcGIS Online as feature layers. It was created to simplify the data download process for the [USFS National Basemap](https://community.esri.com/t5/wildfire-response-gis-questions/national-base-map-for-fire/m-p/727457), but can be used to download data from any accessible feature layer. 
 
