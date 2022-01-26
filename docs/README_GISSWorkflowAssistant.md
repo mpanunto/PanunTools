@@ -2,7 +2,7 @@
 
 To improve quality of life while performing the GISS Workflow, this tool does the following:
 1. Calculates geometry for all Event feature classes (optional, and only if geometries have changed)
-2. Inserts missing IrwinIDs, or replaces if incorrect (optional)
+2. Inserts missing IrwinIDs and CpxNames, or replaces if incorrect (optional)
 3. Checks for null values in IncidentName field (optional)
 4. Checks for case sensitivity issues and hidden spaces in IncidentName fields (optional)
 5. Checks for proper attribution so that Wildfire Daily Fire Perimeters are accessible to public (optional)
@@ -11,9 +11,8 @@ To improve quality of life while performing the GISS Workflow, this tool does th
 8. Checks for features with FeatureStatus = Proposed (optional)
 9. Checks for features with FeatureStatus = In Review (optional)
 10. Checks for features with Duplicate Geometry (optional)
-11. Creates a new Master Incident GDB (optional)
-12. Creates a new Master Incident Backup GDB (optional)
-13. Deletes all features in the newly created GDBs that do not match the user specified IncidentName(s) (optional)
+11. Creates a new Master Incident GDB and Backup GDB (optional)
+12. Deletes all features in the newly created GDBs that do not match the user specified IncidentName(s) (optional)
   
   
 ### How does it work?
@@ -21,11 +20,11 @@ To improve quality of life while performing the GISS Workflow, this tool does th
 
 - Each feature is tested to determine if the geometry has changed since it was last calculated. If a change is detected, the tool will insert the new geometry value, triggering an edit. No edit will be made if a change is not detected, thus minimizing [conflicts that might arise due to offline edits](https://www.nwcg.gov/publications/pms936-1/edit-incident-data/securing-incident-information#collapseX)
 
-- If the user specifies multiple IncidentNames and IrwinIDs, the tool will iterate through each incident one at a time, and perform the various geospatial and QA/QC processes for each.
+- If the user specifies multiple IncidentNames, the tool will iterate through each incident one at a time, and perform the various geospatial and QA/QC processes for each.
 
 - If requested, the tool will then convert the Mobile GDB to a new Master Incident GDB, and place it in the same directory as the original. It will also place a new Master Incident Backup GDB in the backups folder with an appropriate date/time stamp. If the user specified multiple IncidentNames and IrwinIDs, the data from all incidents will be exported to a single Master Incident GDB.
 
-- Lastly, any features in the new Master Incident GDB and new Backup GDB whose IncidentName does not match any of the user specified values can be deleted. This option provides users a simple way to maintain clean datasets relevant to only the fire(s) of interest.
+- Lastly, any features in the new Master Incident GDB and new Backup GDB whose IncidentName does not match any of the user specified values can be deleted. This option provides users a simple way to maintain clean datasets relevant to only their fire(s) of interest.
 
 The main idea behind this tool is that once all manual feature and attribute edits are made, it reduces the GISS workload down to simply ensuring that IncidentName values are clean. The IncidentName field is used because:
 - Field users (Collector/Field Maps/Survey123) can enter this information. Sometimes even correctly!
@@ -33,32 +32,23 @@ The main idea behind this tool is that once all manual feature and attribute edi
 - It's a lot easier for the GISS to visually determine if an IncidentName is incorrect vs an IrwinID
 
 ### User inputs
-1. Specify Incident Name(s) and IrwinID(s)
-2. Path to Mobile GDB (aka local copy)
-3. Specify Coordinate System to use for GISAcres and LengthFeet Calculations
+1. Specify Incident Name(s), IrwinID(s), and CpxName(s)
+2. Toggle to calculate geometries, and insert missing/bad IrwinIDs and CpxNames
+3. Path to Mobile GDB (aka local copy)
+4. Specify Coordinate System to use for GISAcres and LengthFeet Calculations
     - Point feature geometries are always calculated in WGS84
-4. Specify desired geometry measurement type
-5. Toggle to check for IncidentName issues (case sensitivity and hidden spaces)
-6. Toggle to check for public access to Wildfire Daily Fire Perimeters
-7. Toggle to check for features with values of DeleteThis = Yes
-8. Toggle to check for missing Drop Point and Helispot Labels
-9. Toggle to check for Proposed features
-10. Toggle to check for In Review features
-11. Toggle for Duplicate Geometries (Advanced License Only)
-12. Toggle for creating new Master Incident and Backup GDBs
-13. Path to Master Incident GDB
-14. Specify Incident GDB Backup directory
-15. Toggle to only keep features with user specified IncidentNames(s)
+5. Specify desired geometry measurement type
+6. Toggle to check for IncidentName issues (case sensitivity and hidden spaces)
+7. Toggle to check for public access to Wildfire Daily Fire Perimeters
+8. Toggle to check for features with values of DeleteThis = Yes
+9. Toggle to check for missing Drop Point and Helispot Labels
+10. Toggle to check for Proposed features
+11. Toggle to check for In Review features
+12. Toggle for Duplicate Geometries (Advanced License Only)
+13. Toggle for creating new Master Incident and Backup GDBs
+14. Path to Master Incident GDB
+15. Specify Incident GDB Backup directory
+16. Toggle to only keep features with user specified IncidentNames(s)
     - All other features will be deleted from the new Master Incident GDB
 
 ![screenshot_GISSWorkflowAssistant_1.png](/docs/screenshot_GISSWorkflowAssistant_1.png?raw=true)
-
-### When using this tool, the general workflow is:
-1. Download Map (aka Create Local Copy) or Sync
-2. Perform all feature and attribute edits
-    - The tool will calculate geometries for you
-    - The tool will insert IrwinIDs for you
-3. Save Edits
-4. Run this tool
-5. Sync
-6. Swap out Master Incident GDB
