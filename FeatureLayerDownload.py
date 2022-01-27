@@ -485,6 +485,11 @@ def worker_function_services(in_inputs_list):
             else:
                 arcpy.AddMessage("......EXPORT COMPLETE")
 
+
+        ## DELETE AOI GDB
+        arcpy.Delete_management(aoi_proj_gdb_path)
+        arcpy.AddMessage("......DELETING AOI")
+
         arcpy.AddMessage("......DONE!")
 
 
