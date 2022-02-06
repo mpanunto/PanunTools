@@ -4,7 +4,7 @@ I know that several fire progression tools have been created over the years. Thi
 
 ### How does it work?
 
-The tool builds a fire progression by iteratively projecting, clipping, erasing, and merging the perimeters inside an incident's Progression GDB. For this tool to work, the fire perimeter feature classes within the incident's Progression GDB must follow a "i_YYYYMMDD_HHMM_IncidentName_OtherInfo" naming convention, as shown in the below screenshot. The tool parses perimeter dates & times from the filenames, and uses this information to create some useful labeling/symbolization fields.
+The tool builds a fire progression by iteratively projecting, clipping, erasing, and merging the perimeters inside an incident's Progression GDB. For this tool to work, the fire perimeter feature classes within the incident's Progression GDB must follow a "i_YYYYMMDD_HHMM_IncidentName_AnyOtherInfo" naming convention, as shown in the below screenshot. The tool parses perimeter dates & times from the filenames, and uses this information to create some useful labeling/symbolization fields.
 
 
 ![screenshot_CreateFireProgression_1.png](/docs/screenshot_CreateFireProgression_1.png?raw=true)
