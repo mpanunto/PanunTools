@@ -20,7 +20,7 @@ This information is then compiled into a dataframe and exported to a CSV file.
 
 ### User inputs
 
-1.	Toggle for using ArcGIS Pro’s Active Portal to make feature service connections
+1.	Toggle for using ArcGIS Pro’s Active Portal to make group connections
 2.	ArcGIS Online Portal URL
 3.	ArcGIS Online Username
 4.	ArcGIS Online Password
