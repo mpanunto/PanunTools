@@ -1,6 +1,6 @@
 # Calculate Containment
 
-Tool that calculates the containment for one or more user specified incidents.
+Tool that calculates the containment for one or more user specified incidents. This tool also provides users with the ability to inspect their Contained features to ensure that they align with the Wildfire Daily Fire Perimeter.
 
 ### How does it work?
 
