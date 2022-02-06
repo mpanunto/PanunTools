@@ -4,7 +4,7 @@ Tool that pulls together AGOL group member information and exports to a CSV
 
 ### How does it work?
 
-Using the ArcGIS API for Python, the tool will attempt to connect to the user specified ArcGIS Online group. If found, it will generate a list of group members, then iterate through each one identifying the following information:
+Using the ArcGIS API for Python, the tool will attempt to connect to the user specified ArcGIS Online group. If found, it will generate a list of group members, then iterate through each one and grab the following information:
 
 - Username
 - Full Name
