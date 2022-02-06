@@ -1,4 +1,4 @@
-***Latest version is v20220205***
+***Latest version is v20220206***
 
 ## About
 
