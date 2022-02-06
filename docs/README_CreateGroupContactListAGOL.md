@@ -1,4 +1,4 @@
-#Create Group Contact List AGOL
+# Create Group Contact List AGOL
 
 Tool that pulls together AGOL group member information and exports to a CSV
 
