@@ -4,7 +4,6 @@ Tool that calculates the containment for one or more user specified incidents. T
 
 ### How does it work?
 \
-\
 ![screenshot_CalculateContainment_1.png](/docs/screenshot_CalculateContainment_1.png?raw=true)
 \
 If "Inspect Contained Feature Alignment" is selected, the tool will iterate through the provided list of IncidentNames and determine the "Contained" feature alignment for each. **Due to the nature of how this tool was designed, it is highly recommended to always run this inspection prior to calculating containment**. If alignment issues are detected, users can visually inspect the output feature classes to determine where these locations are. Proper Contained feature alignment is crucial for accurate containment calculations when using this tool, and is also necessary for the the [Update Perimeter IR](README_UpdatePerimeterIR.md) tool to function as intended.
