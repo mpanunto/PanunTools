@@ -13,8 +13,6 @@ If "Inspect Contained Feature Alignment" is selected, the tool will iterate thro
 \
 \
 \
-\
-\
 ![screenshot_CalculateContainment_2.png](/docs/screenshot_CalculateContainment_2.png?raw=true)
 \
 If "Calculate Containment" is selected, the tool will iterate through the provided list of IncidentNames and calculate containment for each. To do so, it first selects an incident's corresponding "Wildfire Daily Fire Perimeter" and "Contained" features. Next, a Union is performed on the "Wildfire Daily Fire Perimeter" in order to remove any interior gaps. Once gaps are removed, the perimeter is then converted to a line, and dissolved. The "Contained" features are also dissolved. Lastly, the two dissolved features are then projected to the user specified coordinate system prior to calculating geometry and containment percentage. If containment is calculated for more than one incident, a combined total containment will also be calculated across all incidents.
