@@ -16,10 +16,11 @@ Using the 'InviteRemoveUser.csv' file, specify a series of ArcGIS Online groups,
 
 ### User inputs
 
-1. Specify ArcGIS Online Portal URL
-2. Specify ArcGIS Online Username
-3. Specify ArcGIS Online Password
-4. Specify path to InviteRemoveUsersAGOL.csv
+1.	Toggle for using ArcGIS Pro’s Active Portal to make org connection
+2.	ArcGIS Online Portal URL
+3.	ArcGIS Online Username
+4.	ArcGIS Online Password
+5. Specify path to InviteRemoveUsersAGOL.csv
 
 
 ![screenshot_InviteRemoveUsersAGOL_1.png](/docs/screenshot_InviteRemoveUsersAGOL_1.png?raw=true)
