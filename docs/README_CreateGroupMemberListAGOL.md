@@ -16,7 +16,7 @@ Using the ArcGIS API for Python, the tool will attempt to connect to the user sp
 
 This information is then compiled into a dataframe and exported to a CSV file.
 
-![screenshot_CreateGroupMemberListAGOL_2.png](/docs/screenshot_CreateGroupContactListAGOL_2.png?raw=true)
+![screenshot_CreateGroupMemberListAGOL_2.png](/docs/screenshot_CreateGroupMemberListAGOL_2.png?raw=true)
 
 ### User inputs
 
@@ -27,4 +27,4 @@ This information is then compiled into a dataframe and exported to a CSV file.
 5.	Group Name
 6.	Output Directory
 
-![screenshot_CreateGroupMemberListAGOL_1.png](/docs/screenshot_CreateGroupContactListAGOL_1.png?raw=true)
+![screenshot_CreateGroupMemberListAGOL_1.png](/docs/screenshot_CreateGroupMemberListAGOL_1.png?raw=true)
