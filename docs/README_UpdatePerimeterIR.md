@@ -6,6 +6,13 @@ Additionally, this tool can be used to inspect the new IR Heat Perimeter. If use
 
 ### How does it work?
 
+![screenshot_UpdatePerimeterIR_1.png](/docs/screenshot_UpdatePerimeterIR_1.png?raw=true)
+
+
+
+![screenshot_UpdatePerimeterIR_2.png](/docs/screenshot_UpdatePerimeterIR_2.png?raw=true)
+
+
 To complete these processes, the tool performs a series of feature appends to the user's Mobile GDB from the specified Perimeter/IR feature classes. Any new data appended to the Mobile GDB will have attributes automatically filled with the user specified input values. 
 
 Deletion of old features, and the creation of updated 'Uncontained' features is made possible by a series of selections that query the IRWINID and FeatureCategory fields. As such, users ***MUST*** properly attribute their data with the correct IRWINID and FeatureCategory. All features of the following FeatureCategory types must have correct IRWINIDs.
@@ -21,32 +28,7 @@ Deletion of old features, and the creation of updated 'Uncontained' features is 
 
 Additionally, for the updated 'Uncontained' features to be correct, the incident's 'Contained' features ***MUST*** match the fire perimeter's edge. If the newly generated 'Uncontained' features appear to be overlapping any 'Contained' features, this is a good indication that the incident's 'Contained' features do not match the fire perimeter's edge at these locations, and need to be cleaned up.
 
-### User Inputs
 
-1. Path to Mobile GDB
-2. Incident Name
-3. Incident IRWIN ID
-4. Map Method
-5. IR Flight Time (UTC)
-6. IRIN Contact Name
-7. IRIN Contact Email
-8. IRIN Contact Phone
-9. Coordinate System for Geometry Calculations
-10. Desired Geometry Measurement Type
-11. Scratch Directory
-12. Path to Heat Perimter feature class
-13. Toggle to merge new Heat Perimeter with old Wildfire Daily Fire Perimeter
-14. Toggle to delete old Wildfire Daily Fire Perimeter
-15. Toggle to delete old Fire Edge
-16. Toggle to create updated Fire Edge
-17. Path to IR Intense Heat feature class
-18. Toggle to delete old IR Intense Heat features
-19. Path to IR Isolated Heat feature class
-20. Toggle to delete old IR Isolated Heat features
-21. Path to Scattered Heat feature class
-22. Toggle to delete old IR Scattered Heat features
-
-![screenshot_UpdatePerimeterIR_1.png](/docs/screenshot_UpdatePerimeterIR_1.png?raw=true)
 
 
 
