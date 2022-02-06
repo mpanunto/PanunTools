@@ -21,7 +21,7 @@ If "Calculate Containment" is selected, the tool will iterate through the provid
 
 By default, only the "Contained" features that align with the "Wildfire Daily Fire Perimeter" exterior will be included in the containment calculation. However, users have the option to force the inclusion of all "Contained" features in the calculation. This tool doesn't generate any outputs. The calculations are provided to the user in the Geoprocessing Messages:
 \
-\
+
 ### Acknowledgements
 
 Many thanks to [SW - Carl Beyerhelm (GISS)](https://community.esri.com/migrated-users/371529) for developing the original tool.
