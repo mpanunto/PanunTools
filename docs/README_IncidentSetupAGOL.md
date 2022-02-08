@@ -10,8 +10,6 @@ The tool uses the ArcGIS API for Python to tap into the NIFC Org, and create/org
 - If the user requests groups to be created along with services and web maps, these items will automatically be shared to the corresponding groups. For example, the Incident Web Map and Suppression Repair Web Map will automatically be shared with the Mobile Editing group, while the View Only Incident Web Map will be automatically shared with the Viewer group.
 - Lastly, checks are performed on the layers of the two Mobile Editing web maps (Incident and Suppression Repair) to ensure they are Sync enabled.
 
-***NOTE:*** Typically, an IMT should already have their own set of standard groups, and should not need to create incident specific ones.
-
 ### User inputs
 1. Specify NIFC ArcGIS Online Username
 2. Specify NIFC ArcGIS Online Password
