@@ -11,345 +11,681 @@
 #Import libraries
 print("Importing Libraries")
 print(" ")
-import arcpy, pandas, time, datetime, os, sys, multiprocessing
+import arcpy, pandas, time, datetime, os, sys, multiprocessing, random, ftplib, glob
 from urllib.request import urlopen
 from multiprocessing import Pool, freeze_support
 
+#There is a reported bug in Python
+#Apply the patch in a new class
+#Reference: https://stackoverflow.com/questions/33438456/python-ftps-upload-error-425-unable-to-build-data-connection-operation-not-per
+class Explicit_FTP_TLS(ftplib.FTP_TLS):
+    """Explicit FTPS, with shared TLS session"""
+    def ntransfercmd(self, cmd, rest=None):
+        conn, size = ftplib.FTP.ntransfercmd(self, cmd, rest)
+        if self._prot_p:
+            conn = self.context.wrap_socket(conn, server_hostname=self.host, session=self.sock.session)
+        return conn, size
 
 #Define function to export PDFs
 def worker_function(in_inputs_list):
 
-    incidentname = in_inputs_list[0]
-    unitid = in_inputs_list[1]
-    incidentnumber = in_inputs_list[2]
-    productdir = in_inputs_list[3]
-    export = in_inputs_list[4]
-    proddate = in_inputs_list[5]
+    export_count = len(in_inputs_list)
 
-    filename = in_inputs_list[6]
-    user_specified = in_inputs_list[7]
-    geoops_maptype = in_inputs_list[8]
-    geoops_pagesize = in_inputs_list[9]
-    geoops_orientation = in_inputs_list[10]
-    geoops_period = in_inputs_list[11]
-    export_label = in_inputs_list[12]
+    if(export_count > 0):
+        arcpy.AddMessage("\u200B")
+        arcpy.AddMessage("EXPORTING")
+
+    exportrequest_val_list = []
+    exportrequest_dupe_val_list = []
+    exportrequest_label_val_list = []
+    pdf_path_val_list = []
+    pdf_prefix_val_list = []
+    ftpupload_val_list = []
+    ftpuploadrequest_val_list = []
+    ftpfilename_val_list = []
+    ftp_user_specified_val_list = []
+    ftpuploaddir_val_list = []
+    for i in range(0, len(in_inputs_list)):
+
+        curr_in_inputs_list = in_inputs_list[i]
+
+        incidentname = curr_in_inputs_list[0]
+        unitid = curr_in_inputs_list[1]
+        incidentnumber = curr_in_inputs_list[2]
+        productdir = curr_in_inputs_list[3]
+        ftpupload_toggle_val = curr_in_inputs_list[4]
+        ftp_username_val = curr_in_inputs_list[5]
+        ftp_password_val = curr_in_inputs_list[6]
+        multiprocess_toggle_val = curr_in_inputs_list[7]
+        export = curr_in_inputs_list[8]
+        exportrequest = curr_in_inputs_list[9]
+        exportrequest_dupe = curr_in_inputs_list[10]
+        proddate = curr_in_inputs_list[11]
+
+        exportfilename = curr_in_inputs_list[12]
+        export_user_specified = curr_in_inputs_list[13]
+        geoops_maptype = curr_in_inputs_list[14]
+        geoops_pagesize = curr_in_inputs_list[15]
+        geoops_orientation = curr_in_inputs_list[16]
+        geoops_period = curr_in_inputs_list[17]
+        exportrequest_label = curr_in_inputs_list[18]
+
+        mapseries_pages = curr_in_inputs_list[19]
+        mapseries_range = curr_in_inputs_list[20]
+        mapseries_files = curr_in_inputs_list[21]
+
+        ftpupload_val = curr_in_inputs_list[22]
+        ftpuploadrequest_val = curr_in_inputs_list[23]
+        ftpfilename_val = curr_in_inputs_list[24]
+        ftp_user_specified_val = curr_in_inputs_list[25]
+        ftpuploaddir_val = curr_in_inputs_list[26]
+
+        clipgraphics_val = curr_in_inputs_list[27]
+        imagecompress_val = curr_in_inputs_list[28]
+        imagecompressquality_val = int(curr_in_inputs_list[29])
+        compressvectorgraphics_val = curr_in_inputs_list[30]
+        vectorresolution_val = int(curr_in_inputs_list[31])
+        rasterresample_val = curr_in_inputs_list[32]
+        embedfonts_val = curr_in_inputs_list[33]
+        layersattributes_val = curr_in_inputs_list[34]
+
+        layoutname = curr_in_inputs_list[35]
+        aprxpath = curr_in_inputs_list[36]
 
 
-    mapseries_pages = in_inputs_list[13]
-    mapseries_range = in_inputs_list[14]
-    mapseries_files = in_inputs_list[15]
+        #If export was requested, proceed
+        if export == "YES":
 
-    clipgraphics_val = in_inputs_list[16]
-    imagecompress_val = in_inputs_list[17]
-    imagecompressquality_val = in_inputs_list[18]
-    compressvectorgraphics_val = in_inputs_list[19]
-    vectorresolution_val = in_inputs_list[20]
-    rasterresample_val = in_inputs_list[21]
-    embedfonts_val = in_inputs_list[22]
-    layersattributes_val = in_inputs_list[23]
+            if(exportrequest in ["GEO AND IMAGE", "GEO AND GEOIMAGE"] and exportrequest_label == "NO" and ftpupload_val == "YES" and ftpuploadrequest_val in ["GEO AND IMAGE", "GEO AND GEOIMAGE"]):
+                exportrequest_label = "YES - PREFIX"
 
-    layoutname = in_inputs_list[24]
-    aprxpath = in_inputs_list[25]
+            #Cleanup filename variables if they are blank
+            if(geoops_maptype == "nan"):
+                geoops_maptype = ""
+            if(geoops_pagesize == "nan"):
+                geoops_pagesize = ""
+            if(geoops_orientation == "nan"):
+                geoops_orientation = ""
+            if(geoops_period == "nan"):
+                geoops_period = ""
 
-    #Cleanup filename variables if they are blank
-    if(geoops_maptype == "nan"):
-        geoops_maptype = ""
-    if(geoops_pagesize == "nan"):
-        geoops_pagesize = ""
-    if(geoops_orientation == "nan"):
-        geoops_orientation = ""
-    if(geoops_period == "nan"):
-        geoops_period = ""
+            #Build GeoOps filenaming string
+            geoops_list = [geoops_maptype, geoops_pagesize, geoops_orientation]
+            geoops_str = ""
+            if(geoops_list[0] != ""):
+                geoops_str = geoops_list[0]
+            if(geoops_list[1] != ""):
+                geoops_str = geoops_str + "_" + geoops_list[1]
+            if(geoops_list[2] != ""):
+                geoops_str = geoops_str + "_" + geoops_list[2]
+            if(len(geoops_str) > 0):
+                if(geoops_str[0] == "_"):
+                    geoops_str = geoops_str[1:]
 
-    #Build GeoOps filenaming string
-    geoops_list = [geoops_maptype, geoops_pagesize, geoops_orientation]
-    geoops_str = ""
-    if(geoops_list[0] != ""):
-        geoops_str = geoops_list[0]
-    if(geoops_list[1] != ""):
-        geoops_str = geoops_str + "_" + geoops_list[1]
-    if(geoops_list[2] != ""):
-        geoops_str = geoops_str + "_" + geoops_list[2]
-    if(geoops_str[0] == "_"):
-        geoops_str = geoops_str[1:]
+            #Print the current export being processed
+            if(exportfilename == "GEO OPS"):
+                arcpy.AddMessage(".." + geoops_str + " (" + str(i+1) + " out of " + str(export_count) + ")")
+            if(exportfilename == "USER SPECIFIED"):
+                arcpy.AddMessage(".." + export_user_specified + " (" + str(i+1) + " out of " + str(export_count) + ")")
 
-    #Print the current export being processed
-    if(filename == "GEO OPS"):
-        arcpy.AddMessage("PROCESSING: " + geoops_str)
-    if(filename == "USER SPECIFIED"):
-        arcpy.AddMessage("PROCESSING: " + user_specified)
+            #First check to make sure the aprx path is good
+            aprx_check = arcpy.Exists(aprxpath)
 
-    #First check to make sure the aprx path is good
-    aprx_check = arcpy.Exists(aprxpath)
+            #If aprx exists, read-in, else throw error
+            if(aprx_check == True):
+                aprx = arcpy.mp.ArcGISProject(aprxpath)
+            else:
+                arcpy.AddMessage("....APRX NOT FOUND AT USER SPECIFIED PATH:")
+                arcpy.AddMessage(aprxpath)
+                raise arcpy.ExecuteError
 
-    #If aprx exists, read-in, else throw error
-    if(aprx_check == True):
-        aprx = arcpy.mp.ArcGISProject(aprxpath)
-    else:
-        arcpy.AddMessage("APRX NOT FOUND AT USER SPECIFIED PATH:")
-        arcpy.AddMessage(aprxpath)
-        raise arcpy.ExecuteError
+            #Now test to see if layout exists, throw error if not
+            layoutname_check = (len(aprx.listLayouts(layoutname)) == 1)
+            if(layoutname_check == False):
+                arcpy.AddMessage("....LAYOUT NAME NOT FOUND IN APRX, CHECK SPELLING: " + layoutname)
+                raise arcpy.ExecuteError
 
-    #Now test to see if layout exists, throw error if not
-    layoutname_check = (len(aprx.listLayouts(layoutname)) == 1)
-    if(layoutname_check == False):
-        arcpy.AddMessage("LAYOUT NAME NOT FOUND IN APRX, CHECK SPELLING: " + layoutname)
-        raise arcpy.ExecuteError
+            #Create layout object
+            lyt = aprx.listLayouts(layoutname)[0]
 
-    #Create layout object
-    lyt = aprx.listLayouts(layoutname)[0]
+            #Determine if layout is a map series
+            if(lyt.mapSeries == None):
+                mapseries = False
+            else:
+                mapseries = lyt.mapSeries.enabled
 
-    #Determine if layout is a map series
-    if(lyt.mapSeries == None):
-        mapseries = False
-    else:
-        mapseries = lyt.mapSeries.enabled
+            #Print message informing user it is a map series
+            if(mapseries == True):
+                arcpy.AddMessage("....MAP SERIES LAYOUT")
 
-    #Print message informing user it is a map series
-    if(mapseries == True):
-        arcpy.AddMessage("..MAP SERIES LAYOUT")
+            #If Map Series, get the proper parameter value for "multiple_files" paramter
+            if(mapseries == True):
+                if(mapseries_files == "SINGLE PDF FILE"):
+                    multiple_files_val = "PDF_SINGLE_FILE"
+                if(mapseries_files == "MULTIPLE PDF FILES (PAGE NAME AS SUFFIX)"):
+                    multiple_files_val = "PDF_MULTIPLE_FILES_PAGE_NAME"
+                if(mapseries_files == "MULTIPLE PDF FILES (PAGE NUMBER AS SUFFIX)"):
+                    multiple_files_val = "PDF_MULTIPLE_FILES_PAGE_NUMBER"
 
-    #If Map Series, get the proper parameter value for "multiple_files" paramter
-    if(mapseries == True):
-        if(mapseries_files == "SINGLE PDF FILE"):
-            multiple_files_val = "PDF_SINGLE_FILE"
-        if(mapseries_files == "MULTIPLE PDF FILES (PAGE NAME AS SUFFIX)"):
-            multiple_files_val = "PDF_MULTIPLE_FILES_PAGE_NAME"
-        if(mapseries_files == "MULTIPLE PDF FILES (PAGE NUMBER AS SUFFIX)"):
-            multiple_files_val = "PDF_MULTIPLE_FILES_PAGE_NUMBER"
+            #If Map Series, and RANGE is specified, remove the spaces from the user specified range
+            if(mapseries == True and mapseries_pages == "RANGE"):
+                mapseries_range_val = mapseries_range.replace(" ", "")
 
-    #If Map Series, and RANGE is specified, remove the spaces from the user specified range
-    if(mapseries == True and mapseries_pages == "RANGE"):
-        mapseries_range_val = mapseries_range.replace(" ", "")
+            #Create datetime stamp for current time
+            now = datetime.datetime.now()
+            curr_datetime_str = now.strftime("%Y%m%d_%H%M")
 
-    #Create datetime stamp for current time
-    now = datetime.datetime.now()
-    curr_datetime_str = now.strftime("%Y%m%d_%H%M")
+            #Create variables for output directory paths
+            product_date_dir = productdir + "/" + proddate
+            image_dir = product_date_dir + "/IMAGE"
+            geo_dir = product_date_dir + "/GEO"
+            geoimage_dir = product_date_dir + "/GEOIMAGE"
 
-    #If export was requested, proceed
-    if export in ["IMAGE", "GEO", "GEOIMAGE", "GEO AND IMAGE"]:
-
-        #Create variables for output directory paths
-        product_date_dir = productdir + "/" + proddate
-        image_dir = product_date_dir + "/IMAGE"
-        geo_dir = product_date_dir + "/GEO"
-        geoimage_dir = product_date_dir + "/GEOIMAGE"
-
-        #Create daily product folder, if it doesn't exist
-        try:
-            if( not os.path.isdir(product_date_dir) ):
-                os.mkdir(product_date_dir)
-        except:
-            arcpy.AddMessage("..FAILED TO CREATE DAILY PRODUCTS FOLDER")
-
-        #Create GEO folder, if it doesn't exist
-        if(export == "GEO"):
+            #Create daily product folder, if it doesn't exist
             try:
-                if( not os.path.isdir(geo_dir) ):
-                    os.mkdir(geo_dir)
+                if( not os.path.isdir(product_date_dir) ):
+                    os.mkdir(product_date_dir)
             except:
-                arcpy.AddMessage("..FAILED TO CREATE GEO FOLDER")
+                arcpy.AddMessage("....FAILED TO CREATE DAILY PRODUCTS FOLDER")
 
-        #Create IMAGE folder, if it doesn't exist
-        if(export == "IMAGE"):
-            try:
-                if( not os.path.isdir(image_dir) ):
-                    os.mkdir(image_dir)
-            except:
-                arcpy.AddMessage("..FAILED TO CREATE IMAGE FOLDER")
-
-        #Create GEOIMAGE folder, if it doesn't exist
-        if(export == "GEOIMAGE"):
-            try:
-                if( not os.path.isdir(geoimage_dir) ):
-                    os.mkdir(geoimage_dir)
-            except:
-                arcpy.AddMessage("..FAILED TO CREATE GEOIMAGE FOLDER")
-
-
-
-        if(filename == "GEO OPS"):
-            if(geoops_period == ""):
-                if(export_label == "YES - PREFIX"):
-                    pdf_geo_outpath = geo_dir + "/GEO_" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + ".pdf"
-                    pdf_image_outpath = image_dir + "/IMAGE_" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + ".pdf"
-                    pdf_geoimage_outpath = geoimage_dir + "/GEOIMAGE_" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + ".pdf"
-                if(export_label == "YES - SUFFIX"):
-                    pdf_geo_outpath = geo_dir + "/" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_GEO.pdf"
-                    pdf_image_outpath = image_dir + "/" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_IMAGE.pdf"
-                    pdf_geoimage_outpath = geoimage_dir + "/" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_GEOIMAGE.pdf"
-                if(export_label == "NO"):
-                    pdf_geo_outpath = geo_dir + "/" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + ".pdf"
-                    pdf_image_outpath = image_dir + "/" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + ".pdf"
-                    pdf_geoimage_outpath = geoimage_dir + "/" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + ".pdf"
-
-            if(geoops_period != ""):
-                if(export_label == "YES - PREFIX"):
-                    pdf_geo_outpath = geo_dir + "/GEO_" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_" + geoops_period + ".pdf"
-                    pdf_image_outpath = image_dir + "/IMAGE_" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_" + geoops_period + ".pdf"
-                    pdf_geoimage_outpath = geoimage_dir + "/GEOIMAGE_" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_" + geoops_period + ".pdf"
-                if(export_label == "YES - SUFFIX"):
-                    pdf_geo_outpath = geo_dir + "/" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_" + geoops_period + "_GEO.pdf"
-                    pdf_image_outpath = image_dir + "/" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_" + geoops_period + "_IMAGE.pdf"
-                    pdf_geoimage_outpath = geoimage_dir + "/" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_" + geoops_period + "_GEOIMAGE.pdf"
-                if(export_label == "NO"):
-                    pdf_geo_outpath = geo_dir + "/" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_" + geoops_period + ".pdf"
-                    pdf_image_outpath = image_dir + "/" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_" + geoops_period + ".pdf"
-                    pdf_geoimage_outpath = geoimage_dir + "/" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_" + geoops_period + ".pdf"
-        if(filename == "USER SPECIFIED"):
-            if(export_label == "YES - PREFIX"):
-                pdf_geo_outpath = geo_dir + "/GEO_" + user_specified + ".pdf"
-                pdf_image_outpath = image_dir + "/IMAGE_" + user_specified + ".pdf"
-                pdf_geoimage_outpath = geoimage_dir + "/GEOIMAGE_" + user_specified + ".pdf"
-            if(export_label == "YES - SUFFIX"):
-                pdf_geo_outpath = geo_dir + "/" + user_specified + "_GEO.pdf"
-                pdf_image_outpath = image_dir + "/" + user_specified + "_IMAGE.pdf"
-                pdf_geoimage_outpath = geoimage_dir + "/" + user_specified + "_GEOIMAGE.pdf"
-            if(export_label == "NO"):
-                pdf_geo_outpath = geo_dir + "/" + user_specified + ".pdf"
-                pdf_image_outpath = image_dir + "/" + user_specified + ".pdf"
-                pdf_geoimage_outpath = geoimage_dir + "/" + user_specified + ".pdf"
-
-
-
-        if(mapseries == False):
-            arcpy.AddMessage("..EXPORTING")
-        else:
-            arcpy.AddMessage("....EXPORTING")
-
-
-        #If GEO or GEO AND IMAGE was requested, export PDF with georefererence information
-        if export in ["GEO", "GEO AND IMAGE"]:
-            geo_export_complete = False
-            while(geo_export_complete == False):
+            #Create GEO folder, if it doesn't exist
+            if(exportrequest in ["GEO", "GEO AND IMAGE", "GEO AND GEOIMAGE"]):
                 try:
+                    if( not os.path.isdir(geo_dir) ):
+                        os.mkdir(geo_dir)
+                except:
+                    arcpy.AddMessage("....FAILED TO CREATE GEO FOLDER")
 
-                    #If not a map series, perform a regular export
-                    if(mapseries == False):
-                        arcpy.AddMessage("....GEO EXPORT")
-                        lyt.exportToPDF(pdf_geo_outpath, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
-                                        image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val, layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val,
-                                        output_as_image=False, georef_info=True)
-                        arcpy.AddMessage("......EXPORT COMPLETE")
-                        geo_export_complete = True
+            #Create IMAGE folder, if it doesn't exist
+            if(exportrequest in ["IMAGE", "GEO AND IMAGE"]):
+                try:
+                    if( not os.path.isdir(image_dir) ):
+                        os.mkdir(image_dir)
+                except:
+                    arcpy.AddMessage("....FAILED TO CREATE IMAGE FOLDER")
 
-                    #If a map series, perform a map series export
-                    if(mapseries == True):
-                        arcpy.AddMessage("......GEO EXPORT")
+            #Create GEOIMAGE folder, if it doesn't exist
+            if(exportrequest in ["GEOIMAGE", "GEO AND GEOIMAGE"]):
+                try:
+                    if( not os.path.isdir(geoimage_dir) ):
+                        os.mkdir(geoimage_dir)
+                except:
+                    arcpy.AddMessage("....FAILED TO CREATE GEOIMAGE FOLDER")
 
-                        #If ALL was requested, export all pages
-                        if(mapseries_pages == "ALL"):
-                            arcpy.AddMessage("........ALL PAGES")
-                            lyt.mapSeries.exportToPDF(pdf_geo_outpath, page_range_type=mapseries_pages, multiple_files=multiple_files_val, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
+
+
+            if(exportfilename == "GEO OPS"):
+                if(geoops_period == ""):
+                    if(exportrequest_label == "YES - PREFIX"):
+                        pdf_geo_outpath = geo_dir + "/GEO_" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + ".pdf"
+                        pdf_image_outpath = image_dir + "/IMAGE_" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + ".pdf"
+                        pdf_geoimage_outpath = geoimage_dir + "/GEOIMAGE_" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + ".pdf"
+                    if(exportrequest_label == "YES - SUFFIX"):
+                        pdf_geo_outpath = geo_dir + "/" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_GEO.pdf"
+                        pdf_image_outpath = image_dir + "/" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_IMAGE.pdf"
+                        pdf_geoimage_outpath = geoimage_dir + "/" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_GEOIMAGE.pdf"
+                    if(exportrequest_label == "NO"):
+                        pdf_geo_outpath = geo_dir + "/" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + ".pdf"
+                        pdf_image_outpath = image_dir + "/" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + ".pdf"
+                        pdf_geoimage_outpath = geoimage_dir + "/" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + ".pdf"
+
+                if(geoops_period != ""):
+                    if(exportrequest_label == "YES - PREFIX"):
+                        pdf_geo_outpath = geo_dir + "/GEO_" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_" + geoops_period + ".pdf"
+                        pdf_image_outpath = image_dir + "/IMAGE_" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_" + geoops_period + ".pdf"
+                        pdf_geoimage_outpath = geoimage_dir + "/GEOIMAGE_" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_" + geoops_period + ".pdf"
+                    if(exportrequest_label == "YES - SUFFIX"):
+                        pdf_geo_outpath = geo_dir + "/" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_" + geoops_period + "_GEO.pdf"
+                        pdf_image_outpath = image_dir + "/" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_" + geoops_period + "_IMAGE.pdf"
+                        pdf_geoimage_outpath = geoimage_dir + "/" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_" + geoops_period + "_GEOIMAGE.pdf"
+                    if(exportrequest_label == "NO"):
+                        pdf_geo_outpath = geo_dir + "/" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_" + geoops_period + ".pdf"
+                        pdf_image_outpath = image_dir + "/" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_" + geoops_period + ".pdf"
+                        pdf_geoimage_outpath = geoimage_dir + "/" + geoops_str + "_" + curr_datetime_str + "_" + incidentname + "_" + unitid + incidentnumber + "_" + geoops_period + ".pdf"
+
+            if(exportfilename == "USER SPECIFIED"):
+                if(exportrequest_label == "YES - PREFIX"):
+                    pdf_geo_outpath = geo_dir + "/GEO_" + export_user_specified + ".pdf"
+                    pdf_image_outpath = image_dir + "/IMAGE_" + export_user_specified + ".pdf"
+                    pdf_geoimage_outpath = geoimage_dir + "/GEOIMAGE_" + export_user_specified + ".pdf"
+                if(exportrequest_label == "YES - SUFFIX"):
+                    pdf_geo_outpath = geo_dir + "/" + export_user_specified + "_GEO.pdf"
+                    pdf_image_outpath = image_dir + "/" + export_user_specified + "_IMAGE.pdf"
+                    pdf_geoimage_outpath = geoimage_dir + "/" + export_user_specified + "_GEOIMAGE.pdf"
+                if(exportrequest_label == "NO"):
+                    pdf_geo_outpath = geo_dir + "/" + export_user_specified + ".pdf"
+                    pdf_image_outpath = image_dir + "/" + export_user_specified + ".pdf"
+                    pdf_geoimage_outpath = geoimage_dir + "/" + export_user_specified + ".pdf"
+
+
+
+            #If GEO or GEO AND IMAGE was requested, export PDF with georefererence information
+            if exportrequest in ["GEO", "GEO AND IMAGE", "GEO AND GEOIMAGE"]:
+                geo_export_complete = False
+                while(geo_export_complete == False):
+                    try:
+
+                        #If not a map series, perform a regular export
+                        if(mapseries == False):
+                            arcpy.AddMessage("....GEO EXPORT")
+                            lyt.exportToPDF(pdf_geo_outpath, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
                                             image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val, layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val,
                                             output_as_image=False, georef_info=True)
+                            #arcpy.AddMessage("......EXPORT COMPLETE")
+                            geo_export_complete = True
 
-                        #If RANGE was requested, export range
-                        if(mapseries_pages == "RANGE"):
-                            arcpy.AddMessage("........PAGES " + mapseries_range_val)
-                            lyt.mapSeries.exportToPDF(pdf_geo_outpath, page_range_type=mapseries_pages, page_range_string=mapseries_range_val, multiple_files=multiple_files_val, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
-                                            image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val, layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val,
-                                            output_as_image=False, georef_info=True)
+                            #Append export paths and ftp parameters to lists
+                            exportrequest_val_list.append(exportrequest)
+                            exportrequest_dupe_val_list.append(exportrequest_dupe)
+                            exportrequest_label_val_list.append(exportrequest_label)
+                            pdf_path_val_list.append(pdf_geo_outpath)
+                            pdf_prefix_val_list.append("GEO")
+                            ftpupload_val_list.append(ftpupload_val)
+                            ftpuploadrequest_val_list.append(ftpuploadrequest_val)
+                            ftpfilename_val_list.append(ftpfilename_val)
+                            ftp_user_specified_val_list.append(ftp_user_specified_val)
+                            ftpuploaddir_val_list.append(ftpuploaddir_val)
 
-                        arcpy.AddMessage("..........EXPORT COMPLETE")
+                        #If a map series, perform a map series export
+                        if(mapseries == True):
+                            arcpy.AddMessage("......GEO EXPORT")
+
+                            #If ALL was requested, export all pages
+                            if(mapseries_pages == "ALL"):
+                                arcpy.AddMessage("........ALL PAGES")
+                                lyt.mapSeries.exportToPDF(pdf_geo_outpath, page_range_type=mapseries_pages, multiple_files=multiple_files_val, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
+                                                image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val, layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val,
+                                                output_as_image=False, georef_info=True)
+
+                            #If RANGE was requested, export range
+                            if(mapseries_pages == "RANGE"):
+                                arcpy.AddMessage("........PAGES " + mapseries_range_val)
+                                lyt.mapSeries.exportToPDF(pdf_geo_outpath, page_range_type=mapseries_pages, page_range_string=mapseries_range_val, multiple_files=multiple_files_val, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
+                                                image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val, layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val,
+                                                output_as_image=False, georef_info=True)
+
+                            #arcpy.AddMessage("..........EXPORT COMPLETE")
+                            geo_export_complete = True
+
+                            #Get paths to all the map series exports
+                            mapseries_dirname = os.path.dirname(pdf_geo_outpath)
+                            mapseries_basename = os.path.basename(pdf_geo_outpath)
+                            mapseries_basename = mapseries_basename.replace(".pdf", "")
+                            mapseries_pattern = "*" + mapseries_basename + "*"
+                            mapseries_pdf_path_val_list = glob.glob(mapseries_dirname + "/" + mapseries_pattern)
+
+                            #Create lists of map series ftp parameters
+                            mapseries_ftp_user_specified_val_list = []
+                            for j in range(0, len(mapseries_pdf_path_val_list)):
+                                curr_mapseries_export_pdf_path = mapseries_pdf_path_val_list[j]
+                                curr_mapseries_dirname = os.path.dirname(curr_mapseries_export_pdf_path)
+                                curr_mapseries_basename = os.path.basename(curr_mapseries_export_pdf_path)
+                                curr_suffix = curr_mapseries_basename.replace(mapseries_basename, "")
+                                curr_ftp_user_specified_val = ftp_user_specified_val + curr_suffix
+                                mapseries_ftp_user_specified_val_list.append(curr_ftp_user_specified_val)
+                            mapseries_exportrequest_val_list = [exportrequest] * len(mapseries_pdf_path_val_list)
+                            mapseries_exportrequest_dupe_val_list = [exportrequest_dupe] * len(mapseries_pdf_path_val_list)
+                            mapseries_exportrequest_label_val_list = [exportrequest_label] * len(mapseries_pdf_path_val_list)
+                            mapseries_pdf_prefix_val_list = ["GEO"] * len(mapseries_pdf_path_val_list)
+                            mapseries_ftpupload_val_list = [ftpupload_val] * len(mapseries_pdf_path_val_list)
+                            mapseries_ftpuploadrequest_val_list = [ftpuploadrequest_val] * len(mapseries_pdf_path_val_list)
+                            mapseries_ftpfilename_val_list = [ftpfilename_val] * len(mapseries_pdf_path_val_list)
+                            mapseries_ftpuploaddir_val_list = [ftpuploaddir_val] * len(mapseries_pdf_path_val_list)
+
+                            #Append map series export paths and ftp parameters to lists
+                            exportrequest_val_list = exportrequest_val_list + mapseries_exportrequest_val_list
+                            exportrequest_dupe_val_list = exportrequest_dupe_val_list + mapseries_exportrequest_dupe_val_list
+                            exportrequest_label_val_list = exportrequest_label_val_list + mapseries_exportrequest_label_val_list
+                            pdf_path_val_list = pdf_path_val_list + mapseries_pdf_path_val_list
+                            pdf_prefix_val_list = pdf_prefix_val_list + mapseries_pdf_prefix_val_list
+                            ftpupload_val_list = ftpupload_val_list + mapseries_ftpupload_val_list
+                            ftpuploadrequest_val_list = ftpuploadrequest_val_list + mapseries_ftpuploadrequest_val_list
+                            ftpfilename_val_list = ftpfilename_val_list + mapseries_ftpfilename_val_list
+                            ftp_user_specified_val_list = ftp_user_specified_val_list + mapseries_ftp_user_specified_val_list
+                            ftpuploaddir_val_list = ftpuploaddir_val_list + mapseries_ftpuploaddir_val_list
+
+                    except Exception as e:
+                        arcpy.AddMessage(e)
+                        arcpy.AddMessage("......FAILED TO PERFORM GEO EXPORT, SKIPPING")
                         geo_export_complete = True
 
-                except Exception as e:
-                    arcpy.AddMessage(e)
-                    arcpy.AddMessage("....FAILED TO PERFORM GEO EXPORT, SKIPPING")
-                    geo_export_complete = True
 
+            #If IMAGE or GEO AND IMAGE was requested, export PDF as an image without georeference information
+            if exportrequest in ["IMAGE", "GEO AND IMAGE"]:
+                image_export_complete = False
+                while(image_export_complete == False):
+                    try:
 
-        #If IMAGE or GEO AND IMAGE was requested, export PDF as an image without georeference information
-        if export in ["IMAGE", "GEO AND IMAGE"]:
-            image_export_complete = False
-            while(image_export_complete == False):
-                try:
-
-                    #If not a map series, perform a regular export
-                    if(mapseries == False):
-                        arcpy.AddMessage("....IMAGE EXPORT")
-                        lyt.exportToPDF(pdf_image_outpath, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
-                                        image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val, layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val,
-                                        output_as_image=True, georef_info=False)
-                        arcpy.AddMessage("......EXPORT COMPLETE")
-                        image_export_complete = True
-
-                    #If a map series, perform a map series export
-                    if(mapseries == True):
-                        arcpy.AddMessage("......IMAGE EXPORT")
-
-                        #If ALL was requested, export all pages
-                        if(mapseries_pages == "ALL"):
-                            arcpy.AddMessage("........ALL PAGES")
-                            lyt.mapSeries.exportToPDF(pdf_image_outpath, page_range_type=mapseries_pages, multiple_files=multiple_files_val, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
+                        #If not a map series, perform a regular export
+                        if(mapseries == False):
+                            arcpy.AddMessage("....IMAGE EXPORT")
+                            lyt.exportToPDF(pdf_image_outpath, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
                                             image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val, layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val,
                                             output_as_image=True, georef_info=False)
+                            #arcpy.AddMessage("......EXPORT COMPLETE")
+                            image_export_complete = True
 
-                        #If RANGE was requested, export range
-                        if(mapseries_pages == "RANGE"):
-                            arcpy.AddMessage("........PAGES " + mapseries_range_val)
-                            lyt.mapSeries.exportToPDF(pdf_image_outpath, page_range_type=mapseries_pages, page_range_string=mapseries_range_val, multiple_files=multiple_files_val, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
-                                            image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val, layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val,
-                                            output_as_image=True, georef_info=False)
+                            #Append export paths and ftp parameters to lists
+                            exportrequest_val_list.append(exportrequest)
+                            exportrequest_dupe_val_list.append(exportrequest_dupe)
+                            exportrequest_label_val_list.append(exportrequest_label)
+                            pdf_path_val_list.append(pdf_image_outpath)
+                            pdf_prefix_val_list.append("IMAGE")
+                            ftpupload_val_list.append(ftpupload_val)
+                            ftpuploadrequest_val_list.append(ftpuploadrequest_val)
+                            ftpfilename_val_list.append(ftpfilename_val)
+                            ftp_user_specified_val_list.append(ftp_user_specified_val)
+                            ftpuploaddir_val_list.append(ftpuploaddir_val)
 
-                        arcpy.AddMessage("..........EXPORT COMPLETE")
+                        #If a map series, perform a map series export
+                        if(mapseries == True):
+                            arcpy.AddMessage("......IMAGE EXPORT")
+
+                            #If ALL was requested, export all pages
+                            if(mapseries_pages == "ALL"):
+                                arcpy.AddMessage("........ALL PAGES")
+                                lyt.mapSeries.exportToPDF(pdf_image_outpath, page_range_type=mapseries_pages, multiple_files=multiple_files_val, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
+                                                image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val, layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val,
+                                                output_as_image=True, georef_info=False)
+
+                            #If RANGE was requested, export range
+                            if(mapseries_pages == "RANGE"):
+                                arcpy.AddMessage("........PAGES " + mapseries_range_val)
+                                lyt.mapSeries.exportToPDF(pdf_image_outpath, page_range_type=mapseries_pages, page_range_string=mapseries_range_val, multiple_files=multiple_files_val, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
+                                                image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val, layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val,
+                                                output_as_image=True, georef_info=False)
+
+                            #arcpy.AddMessage("..........EXPORT COMPLETE")
+                            image_export_complete = True
+
+                            #Get paths to all the map series exports
+                            mapseries_dirname = os.path.dirname(pdf_image_outpath)
+                            mapseries_basename = os.path.basename(pdf_image_outpath)
+                            mapseries_basename = mapseries_basename.replace(".pdf", "")
+                            mapseries_pattern = "*" + mapseries_basename + "*"
+                            mapseries_pdf_path_val_list = glob.glob(mapseries_dirname + "/" + mapseries_pattern)
+
+                            #Create lists of map series ftp parameters
+                            mapseries_ftp_user_specified_val_list = []
+                            for j in range(0, len(mapseries_pdf_path_val_list)):
+                                curr_mapseries_export_pdf_path = mapseries_pdf_path_val_list[j]
+                                curr_mapseries_dirname = os.path.dirname(curr_mapseries_export_pdf_path)
+                                curr_mapseries_basename = os.path.basename(curr_mapseries_export_pdf_path)
+                                curr_suffix = curr_mapseries_basename.replace(mapseries_basename, "")
+                                curr_ftp_user_specified_val = ftp_user_specified_val + curr_suffix
+                                mapseries_ftp_user_specified_val_list.append(curr_ftp_user_specified_val)
+                            mapseries_exportrequest_val_list = [exportrequest] * len(mapseries_pdf_path_val_list)
+                            mapseries_exportrequest_dupe_val_list = [exportrequest_dupe] * len(mapseries_pdf_path_val_list)
+                            mapseries_exportrequest_label_val_list = [exportrequest_label] * len(mapseries_pdf_path_val_list)
+                            mapseries_pdf_prefix_val_list = ["IMAGE"] * len(mapseries_pdf_path_val_list)
+                            mapseries_ftpupload_val_list = [ftpupload_val] * len(mapseries_pdf_path_val_list)
+                            mapseries_ftpuploadrequest_val_list = [ftpuploadrequest_val] * len(mapseries_pdf_path_val_list)
+                            mapseries_ftpfilename_val_list = [ftpfilename_val] * len(mapseries_pdf_path_val_list)
+                            mapseries_ftpuploaddir_val_list = [ftpuploaddir_val] * len(mapseries_pdf_path_val_list)
+
+                            #Append map series export paths and ftp parameters to lists
+                            exportrequest_val_list = exportrequest_val_list + mapseries_exportrequest_val_list
+                            exportrequest_dupe_val_list = exportrequest_dupe_val_list + mapseries_exportrequest_dupe_val_list
+                            exportrequest_label_val_list = exportrequest_label_val_list + mapseries_exportrequest_label_val_list
+                            pdf_path_val_list = pdf_path_val_list + mapseries_pdf_path_val_list
+                            pdf_prefix_val_list = pdf_prefix_val_list + mapseries_pdf_prefix_val_list
+                            ftpupload_val_list = ftpupload_val_list + mapseries_ftpupload_val_list
+                            ftpuploadrequest_val_list = ftpuploadrequest_val_list + mapseries_ftpuploadrequest_val_list
+                            ftpfilename_val_list = ftpfilename_val_list + mapseries_ftpfilename_val_list
+                            ftp_user_specified_val_list = ftp_user_specified_val_list + mapseries_ftp_user_specified_val_list
+                            ftpuploaddir_val_list = ftpuploaddir_val_list + mapseries_ftpuploaddir_val_list
+
+                    except Exception as e:
+                        arcpy.AddMessage(e)
+                        arcpy.AddMessage("......FAILED TO PERFORM IMAGE EXPORT, SKIPPING")
                         image_export_complete = True
 
-                except Exception as e:
-                    arcpy.AddMessage(e)
-                    arcpy.AddMessage("....FAILED TO PERFORM IMAGE EXPORT, SKIPPING")
-                    image_export_complete = True
 
+            #If GEOIMAGE was requested, export PDF as an image and also with georefererence information
+            if exportrequest in ["GEOIMAGE", "GEO AND GEOIMAGE"]:
+                geoimage_export_complete = False
+                while(geoimage_export_complete == False):
+                    try:
 
-
-
-
-        #If GEOIMAGE was requested, export PDF as an image and also with georefererence information
-        if export == "GEOIMAGE":
-            geoimage_export_complete = False
-            while(geoimage_export_complete == False):
-                try:
-
-                    #If not a map series, perform a regular export
-                    if(mapseries == False):
-                        arcpy.AddMessage("....GEOIMAGE EXPORT")
-                        lyt.exportToPDF(pdf_geoimage_outpath, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
-                                        image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val, layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val,
-                                        georef_info=True, output_as_image=True)
-                        arcpy.AddMessage("......EXPORT COMPLETE")
-                        geoimage_export_complete = True
-
-                    #If a map series, perform a map series export
-                    if(mapseries == True):
-                        arcpy.AddMessage("......GEOIMAGE EXPORT")
-
-                        #If ALL was requested, export all pages
-                        if(mapseries_pages == "ALL"):
-                            arcpy.AddMessage("........ALL PAGES")
-                            lyt.mapSeries.exportToPDF(pdf_geoimage_outpath, page_range_type=mapseries_pages, multiple_files=multiple_files_val, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
+                        #If not a map series, perform a regular export
+                        if(mapseries == False):
+                            arcpy.AddMessage("....GEOIMAGE EXPORT")
+                            lyt.exportToPDF(pdf_geoimage_outpath, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
                                             image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val, layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val,
                                             georef_info=True, output_as_image=True)
+                            #arcpy.AddMessage("......EXPORT COMPLETE")
+                            geoimage_export_complete = True
 
-                        #If RANGE was requested, export range
-                        if(mapseries_pages == "RANGE"):
-                            arcpy.AddMessage("........PAGES " + mapseries_range_val)
-                            lyt.mapSeries.exportToPDF(pdf_geoimage_outpath, page_range_type=mapseries_pages, page_range_string=mapseries_range_val, multiple_files=multiple_files_val, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
-                                            image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val, layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val,
-                                            georef_info=True, output_as_image=True)
+                            #Append export paths and ftp parameters to lists
+                            exportrequest_val_list.append(exportrequest)
+                            exportrequest_dupe_val_list.append(exportrequest_dupe)
+                            exportrequest_label_val_list.append(exportrequest_label)
+                            pdf_path_val_list.append(pdf_geoimage_outpath)
+                            pdf_prefix_val_list.append("GEOIMAGE")
+                            ftpupload_val_list.append(ftpupload_val)
+                            ftpuploadrequest_val_list.append(ftpuploadrequest_val)
+                            ftpfilename_val_list.append(ftpfilename_val)
+                            ftp_user_specified_val_list.append(ftp_user_specified_val)
+                            ftpuploaddir_val_list.append(ftpuploaddir_val)
 
-                        arcpy.AddMessage("..........EXPORT COMPLETE")
+                        #If a map series, perform a map series export
+                        if(mapseries == True):
+                            arcpy.AddMessage("......GEOIMAGE EXPORT")
+
+                            #If ALL was requested, export all pages
+                            if(mapseries_pages == "ALL"):
+                                arcpy.AddMessage("........ALL PAGES")
+                                lyt.mapSeries.exportToPDF(pdf_geoimage_outpath, page_range_type=mapseries_pages, multiple_files=multiple_files_val, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
+                                                image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val, layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val,
+                                                georef_info=True, output_as_image=True)
+
+                            #If RANGE was requested, export range
+                            if(mapseries_pages == "RANGE"):
+                                arcpy.AddMessage("........PAGES " + mapseries_range_val)
+                                lyt.mapSeries.exportToPDF(pdf_geoimage_outpath, page_range_type=mapseries_pages, page_range_string=mapseries_range_val, multiple_files=multiple_files_val, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
+                                                image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val, layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val,
+                                                georef_info=True, output_as_image=True)
+
+                            #arcpy.AddMessage("..........EXPORT COMPLETE")
+                            geoimage_export_complete = True
+
+                            #Get paths to all the map series exports
+                            mapseries_dirname = os.path.dirname(pdf_geoimage_outpath)
+                            mapseries_basename = os.path.basename(pdf_geoimage_outpath)
+                            mapseries_basename = mapseries_basename.replace(".pdf", "")
+                            mapseries_pattern = "*" + mapseries_basename + "*"
+                            mapseries_pdf_path_val_list = glob.glob(mapseries_dirname + "/" + mapseries_pattern)
+
+                            #Create lists of map series ftp parameters
+                            mapseries_ftp_user_specified_val_list = []
+                            for j in range(0, len(mapseries_pdf_path_val_list)):
+                                curr_mapseries_export_pdf_path = mapseries_pdf_path_val_list[j]
+                                curr_mapseries_dirname = os.path.dirname(curr_mapseries_export_pdf_path)
+                                curr_mapseries_basename = os.path.basename(curr_mapseries_export_pdf_path)
+                                curr_suffix = curr_mapseries_basename.replace(mapseries_basename, "")
+                                curr_ftp_user_specified_val = ftp_user_specified_val + curr_suffix
+                                mapseries_ftp_user_specified_val_list.append(curr_ftp_user_specified_val)
+                            mapseries_exportrequest_val_list = [exportrequest] * len(mapseries_pdf_path_val_list)
+                            mapseries_exportrequest_dupe_val_list = [exportrequest_dupe] * len(mapseries_pdf_path_val_list)
+                            mapseries_exportrequest_label_val_list = [exportrequest_label] * len(mapseries_pdf_path_val_list)
+                            mapseries_pdf_prefix_val_list = ["GEOIMAGE"] * len(mapseries_pdf_path_val_list)
+                            mapseries_ftpupload_val_list = [ftpupload_val] * len(mapseries_pdf_path_val_list)
+                            mapseries_ftpuploadrequest_val_list = [ftpuploadrequest_val] * len(mapseries_pdf_path_val_list)
+                            mapseries_ftpfilename_val_list = [ftpfilename_val] * len(mapseries_pdf_path_val_list)
+                            mapseries_ftpuploaddir_val_list = [ftpuploaddir_val] * len(mapseries_pdf_path_val_list)
+
+                            #Append map series export paths and ftp parameters to lists
+                            exportrequest_val_list = exportrequest_val_list + mapseries_exportrequest_val_list
+                            exportrequest_dupe_val_list = exportrequest_dupe_val_list + mapseries_exportrequest_dupe_val_list
+                            exportrequest_label_val_list = exportrequest_label_val_list + mapseries_exportrequest_label_val_list
+                            pdf_path_val_list = pdf_path_val_list + mapseries_pdf_path_val_list
+                            pdf_prefix_val_list = pdf_prefix_val_list + mapseries_pdf_prefix_val_list
+                            ftpupload_val_list = ftpupload_val_list + mapseries_ftpupload_val_list
+                            ftpuploadrequest_val_list = ftpuploadrequest_val_list + mapseries_ftpuploadrequest_val_list
+                            ftpfilename_val_list = ftpfilename_val_list + mapseries_ftpfilename_val_list
+                            ftp_user_specified_val_list = ftp_user_specified_val_list + mapseries_ftp_user_specified_val_list
+                            ftpuploaddir_val_list = ftpuploaddir_val_list + mapseries_ftpuploaddir_val_list
+
+                    except Exception as e:
+                        arcpy.AddMessage(e)
+                        arcpy.AddMessage("......FAILED TO PERFORM GEOIMAGE EXPORT, SKIPPING")
                         geoimage_export_complete = True
 
-                except Exception as e:
-                    arcpy.AddMessage(e)
-                    arcpy.AddMessage("....FAILED TO PERFORM GEOIMAGE EXPORT, SKIPPING")
-                    geoimage_export_complete = True
+
+
+    #Upload maps to FTP
+    if(ftpupload_toggle_val == "Yes" and "YES" in ftpupload_val_list):
+
+        #Loop through each export
+        prefix_match_check_list = []
+        ftpupload_check_list = []
+        for i in range(0, len(ftpupload_val_list)):
+            curr_ftpupload_val = ftpupload_val_list[i]
+            curr_exportrequest = exportrequest_val_list[i]
+            curr_exportrequest_dupe = exportrequest_dupe_val_list[i]
+            curr_exportrequest_label = exportrequest_label_val_list[i]
+            curr_pdf_path_val = pdf_path_val_list[i]
+            curr_pdf_prefix_val = pdf_prefix_val_list[i]
+            curr_ftpuploadrequest_val = ftpuploadrequest_val_list[i]
+            curr_ftpfilename_val = ftpfilename_val_list[i]
+            curr_ftp_user_specified_val = ftp_user_specified_val_list[i]
+            curr_ftpuploaddir_val = ftpuploaddir_val_list[i]
+
+            #Check to make sure that EXPORT_REQUEST matches the FTP_UPLOAD_REQUEST, only want to upload if this is true
+            prefix_match_check = False
+            if(curr_ftpuploadrequest_val == "GEO AND IMAGE" and curr_pdf_prefix_val in ["GEO", "IMAGE"]):
+                prefix_match_check = True
+            if(curr_ftpuploadrequest_val == "GEO AND GEOIMAGE" and curr_pdf_prefix_val in ["GEO", "GEOIMAGE"]):
+                prefix_match_check = True
+            if(curr_ftpuploadrequest_val == curr_pdf_prefix_val):
+                prefix_match_check = True
+            prefix_match_check_list.append(prefix_match_check)
+
+            #Check if an upload should be performed
+            if(curr_ftpupload_val == "YES" and prefix_match_check == True):
+                ftpupload_check_list.append("YES")
+            else:
+                ftpupload_check_list.append("NO")
+
+
+        #If a value of "YES" is found in ftpupload_check_list, proceed with upload(s)
+        if("YES" in ftpupload_check_list):
+
+            arcpy.AddMessage("\u200B")
+            arcpy.AddMessage("UPLOADING EXPORTS TO FTP")
+
+            #Establish FTP connection
+            arcpy.AddMessage("..ESTABLISHING FTP CONNECTION")
+
+            try:
+                host = 'ftp.wildfire.gov'
+                port = 1021
+                session = Explicit_FTP_TLS()
+                session.connect(host, port)
+                session.auth()
+                session.login(ftp_username_val, ftp_password_val)
+                session.prot_p()
+
+                #Loop through each ftp upload value
+                arcpy.AddMessage("..UPLOADING EXPORTS")
+                ftpupload_count = ftpupload_check_list.count("YES")
+                curr_iter = 0
+                for i in range(0, len(ftpupload_check_list)):
+                    curr_ftpupload_val = ftpupload_val_list[i]
+                    curr_exportrequest = exportrequest_val_list[i]
+                    curr_exportrequest_dupe = exportrequest_dupe_val_list[i]
+                    curr_exportrequest_label = exportrequest_label_val_list[i]
+                    curr_pdf_path_val = pdf_path_val_list[i]
+                    curr_pdf_prefix_val = pdf_prefix_val_list[i]
+                    curr_ftpuploadrequest_val = ftpuploadrequest_val_list[i]
+                    curr_ftpfilename_val = ftpfilename_val_list[i]
+                    curr_ftp_user_specified_val = ftp_user_specified_val_list[i]
+                    curr_ftpuploaddir_val = ftpuploaddir_val_list[i]
+                    curr_prefix_match_check_val = prefix_match_check_list[i]
+
+
+                    #If FTP_UPLOAD == "YES" and FTP_UPLOAD_REQUEST value matches the current prefix, proceed with upload
+                    if(curr_ftpupload_val == "YES" and curr_prefix_match_check_val == True):
+
+                        curr_iter = curr_iter + 1
+                        curr_export_pdf_path_dirname = os.path.dirname(curr_pdf_path_val)
+                        curr_export_pdf_path_basename = os.path.basename(curr_pdf_path_val)
+                        arcpy.AddMessage("...." + curr_export_pdf_path_basename + " (" + str(curr_iter) + " out of " + str(ftpupload_count) + ")")
+
+                        #Change FTP directory
+                        try:
+                            session.cwd(curr_ftpuploaddir_val)
+                        except:
+                            arcpy.AddMessage("......FTP DIRECTORY DOES NOT EXIST, CREATING")
+                            try:
+                                session.mkd(curr_ftpuploaddir_val)
+                                session.cwd(curr_ftpuploaddir_val)
+                                arcpy.AddMessage("......SUCCESS, CONTINUING UPLOAD")
+                            except:
+                                arcpy.AddMessage("......FAILED, SKIPPING UPLOAD. CHECK THAT FTP PARENT DIRECTORY EXISTS")
+                                continue
+
+
+                        #Rename upload
+                        rename_check = False
+                        if(curr_ftpfilename_val == "SAME AS EXPORT" and curr_exportrequest_label == "NO" and curr_ftpuploadrequest_val in ["GEO AND IMAGE", "GEO AND GEOIMAGE"]):
+
+                            #Force Prefix
+                            curr_ftp_rename_val = curr_pdf_prefix_val + "_" + curr_export_pdf_path_basename
+
+                            #Remove duplicate extension if present
+                            if(".pdf.pdf" in curr_ftp_rename_val):
+                                curr_ftp_rename_val = curr_ftp_rename_val.replace(".pdf.pdf", ".pdf")
+
+                            #Add .pdf extension if it doesn't exist
+                            if(curr_ftp_rename_val[-4:] != ".pdf"):
+                                curr_ftp_rename_val = curr_ftp_rename_val + ".pdf"
+
+                            rename_check = True
+
+                        if(curr_ftpfilename_val == "USER SPECIFIED"):
+
+                            #Force prefix if necessary
+                            if(curr_ftpuploadrequest_val in ["GEO AND IMAGE", "GEO AND GEOIMAGE"]):
+                                curr_ftp_rename_val = curr_pdf_prefix_val + "_" + curr_ftp_user_specified_val
+                            else:
+                                curr_ftp_rename_val = curr_ftp_user_specified_val
+
+                            #Remove duplicate extension if present
+                            if(".pdf.pdf" in curr_ftp_rename_val):
+                                curr_ftp_rename_val = curr_ftp_rename_val.replace(".pdf.pdf", ".pdf")
+
+                            #Add .pdf extension if it doesn't exist
+                            if(curr_ftp_rename_val[-4:] != ".pdf"):
+                                curr_ftp_rename_val = curr_ftp_rename_val + ".pdf"
+
+                            rename_check = True
+
+
+                        #Upload file
+                        try:
+                            file = open(curr_pdf_path_val,'rb')
+
+                            if(rename_check == True):
+                                session.storbinary("STOR " + curr_ftp_rename_val, file)     # send the file
+                            else:
+                                session.storbinary("STOR " + curr_export_pdf_path_basename, file)     # send the file
+
+                        except:
+                            arcpy.AddMessage("......FAILED TO UPLOAD, SKIPPING")
+                            continue
+
+
+            except Exception as e:
+                arcpy.AddMessage(e)
+
+
+    if(multiprocess_toggle_val == "true"):
+        arcpy.AddMessage("\u200B")
+        arcpy.AddMessage("DONE!")
 
 
 
-        #Add space to separate print text from next export
-        arcpy.AddMessage(" ")
 
 
 
@@ -390,13 +726,23 @@ if __name__=="__main__":
     products_dir = arcpy.GetParameterAsText(2)
 
     #Specify the path to the "ExportPDFtable.xlsx" file
-    #export_table_xlsx_path = r"C:\Workspace\development\PanunTools_All\PDFMultiExport.xlsx"
-    #export_table_xlsx_path = r"C:\Workspace\FireNet\2021_CATIA_Windy - GIS Data\2021_Windy\tools\PanunTools-main\MultiExportPDF_MP.xlsx"
+    #export_table_xlsx_path = r"C:\Workspace\development\PanunTools-main\PDFMultiExport_Test2.xlsx"
     export_table_xlsx_path = arcpy.GetParameterAsText(3)
 
+    #Toggle for FTP Upload
+    #ftpupload_toggle = "Yes"
+    ftpupload_toggle = arcpy.GetParameterAsText(4)
+
+    #ftp_username = "mpanunto"
+    ftp_username = arcpy.GetParameterAsText(5)
+
+    #ftp_password = "xxxxxxxxxxx"
+    ftp_password = arcpy.GetParameterAsText(6)
+
     #Toggle for Multiprocessor use
-    #multiprocess_toggle = "false"
-    multiprocess_toggle = arcpy.GetParameterAsText(4)
+    #multiprocess_toggle = "true"
+    multiprocess_toggle = arcpy.GetParameterAsText(7)
+
 
 
     import PDFMultiExport
@@ -447,16 +793,102 @@ if __name__=="__main__":
         arcpy.AddError("UNABLE TO READ PDF MULTI EXPORT SPREADSHEET, CHECK TO MAKE SURE IT ISN'T CURRENTLY OPEN")
         raise arcpy.ExecuteError
 
+    #Check that FTP_UPLOAD_REQUEST values agree with the EXPORT_REQUEST
+    ftpuploadrequest_match_check_list = []
+    ftpuploadrequest_error_row_list = []
+    for i in range(0, len(export_table_df)):
+        curr_row = export_table_df.iloc[i]
+        curr_row_number = i + 2
+        curr_row_export = curr_row["EXPORT"]
+        curr_row_exportrequest = curr_row["EXPORT_REQUEST"]
+        curr_row_ftpupload = curr_row["FTP_UPLOAD"]
+        curr_row_ftpuploadrequest = curr_row["FTP_UPLOAD_REQUEST"]
+        if(curr_row_export == "YES" and curr_row_ftpupload == "YES"):
+            ftpuploadrequest_match_check = False
+            if(curr_row_exportrequest == "GEO AND IMAGE" and curr_row_ftpuploadrequest in ["GEO", "IMAGE"]):
+                ftpuploadrequest_match_check = True
+            if(curr_row_exportrequest == "GEO AND GEOIMAGE" and curr_row_ftpuploadrequest in ["GEO", "GEOIMAGE"]):
+                ftpuploadrequest_match_check = True
+            if(curr_row_exportrequest == curr_row_ftpuploadrequest):
+                ftpuploadrequest_match_check = True
+            ftpuploadrequest_match_check_list.append(ftpuploadrequest_match_check)
+            if(ftpuploadrequest_match_check == False):
+                ftpuploadrequest_error_row_list.append(curr_row_number)
+    if(False in ftpuploadrequest_match_check_list):
+        ftpuploadrequest_error_str = [str(element) for element in ftpuploadrequest_error_row_list]
+        ftpuploadrequest_error_str = ", ".join(ftpuploadrequest_error_str)
+        arcpy.AddError("CHECK ROW(S) " + str(ftpuploadrequest_error_str) + " OF SPREADSHEET")
+        arcpy.AddError("FTP_UPLOAD_REQUEST CONTAINS VALUES THAT WERE NOT EXPORTED")
+        raise arcpy.ExecuteError
 
-    #Create list of EXPORT values from the spreadsheet
+
+    #Check if any entries have EXPORT == YES and FTP_UPLOAD == "YES", but have a bad FTP_UPLOAD_DIRECTORY value
+    ftpuploaddir_issue_list = []
+    ftpuploaddir_error_1 = False
+    ftpuploaddir_error_1_list = []
+    ftpuploaddir_error_2 = False
+    ftpuploaddir_error_2_list = []
+    for i in range(0, len(export_table_df)):
+        curr_row = export_table_df.iloc[i]
+        curr_row_number = i + 2
+        curr_row_export = curr_row["EXPORT"]
+        curr_row_ftpupload = curr_row["FTP_UPLOAD"]
+        curr_row_ftpuploaddir = curr_row["FTP_UPLOAD_DIRECTORY"]
+        curr_row_layoutname = curr_row["LAYOUT_NAME"]
+        if(curr_row_export == "YES" and curr_row_ftpupload == "YES"):
+            if(curr_row_ftpuploaddir[0:24] != "/incident_specific_data/"):
+                ftpuploaddir_error_1 = True
+                ftpuploaddir_error_1_list.append(curr_row_number)
+            if(curr_row_ftpuploaddir == "/incident_specific_data/"):
+                ftpuploaddir_error_2 = True
+                ftpuploaddir_error_2_list.append(curr_row_number)
+    if(ftpuploaddir_error_1 == True):
+        ftpuploaddir_error_1_str = [str(element) for element in ftpuploaddir_error_1_list]
+        ftpuploaddir_error_1_str = ", ".join(ftpuploaddir_error_1_str)
+        arcpy.AddError("CHECK ROW(S) " + str(ftpuploaddir_error_1_str) + " OF SPREADSHEET")
+        arcpy.AddError("FTP_UPLOAD_DIRECTORY VALUE MUST BEGIN WITH '/incident_specific_data/'")
+        raise arcpy.ExecuteError
+    if(ftpuploaddir_error_2 == True):
+        ftpuploaddir_error_2_str = [str(element) for element in ftpuploaddir_error_2_list]
+        ftpuploaddir_error_2_str = ", ".join(ftpuploaddir_error_2_str)
+        arcpy.AddError("CHECK ROW(S) " + str(ftpuploaddir_error_2_str) + " OF SPREADSHEET")
+        arcpy.AddError("FTP_UPLOAD_DIRECTORY VALUE MUST BE LONGER THAN '/incident_specific_data/'")
+        raise arcpy.ExecuteError
+
+
+    #Check if ftpupload_toggle == YES, and if any entries have EXPORT == YES and EXPORT_REQUEST in ["GEO AND IMAGE", "GEO AND GEOIMAGE"] and EXPORT_REQUEST_LABEL == "NO" and FTP_UPLOAD == "YES"
+    #These could cause issues in the FTP upload, as there could be two PDFs uploaded with the same name at the same time
+    #If that happens, one will be overwritten. So, if any entries have these values, need to force EXPORT_REQUEST_LABEL to be "YES - PREFIX"
+    ftpuploaddir_warning_list = []
+    for i in range(0, len(export_table_df)):
+        curr_row = export_table_df.iloc[i]
+        curr_row_number = i + 2
+        curr_row_export = curr_row["EXPORT"]
+        curr_row_request = curr_row["EXPORT_REQUEST"]
+        curr_row_requestlabel = curr_row["EXPORT_REQUEST_LABEL"]
+        curr_row_ftpupload = curr_row["FTP_UPLOAD"]
+        curr_row_ftpuploadrequest = curr_row["FTP_UPLOAD_REQUEST"]
+        if(ftpupload_toggle == "Yes" and curr_row_export == "YES" and curr_row_ftpupload == "YES" and curr_row_ftpuploadrequest in ["GEO AND IMAGE", "GEO AND GEOIMAGE"] and curr_row_requestlabel == "NO"):
+            ftpuploaddir_warning_list.append(curr_row_number)
+    ftpuploaddir_warning_str = [str(element) for element in ftpuploaddir_warning_list]
+    ftpuploaddir_warning_str = ", ".join(ftpuploaddir_warning_str)
+
+    #Now warn user of entries that had a forced EXPORT_REQUEST_LABEL value
+    if(len(ftpuploaddir_warning_list) > 0):
+        arcpy.AddMessage("\u200B")
+        arcpy.AddWarning("TO AVOID DUPLICATE FTP FILENAMES, ADDING EXPORT REQUEST LABELS TO FTP UPLOADS FOR SPREADSHEET ROW(S) " + ftpuploaddir_warning_str)
+        arcpy.AddMessage("\u200B")
+
+
+    #Create list of EXPORT and REQUEST values from the spreadsheet
     export_col = list(export_table_df["EXPORT"])
 
     #Get count of how many items need processing, and also determine which items
     processing_needed_list = []
     processing_needed_which_list = []
     for i in range(0, len(export_col)):
-        curr_str = export_col[i]
-        export_check = any(x in curr_str for x in ["IMAGE", "GEO", "GEOIMAGE", "GEO AND IMAGE"])
+        curr_export = export_col[i]
+        export_check = (curr_export == "YES")
         if(export_check == True):
             processing_needed_list.append(1)
             processing_needed_which_list.append(i)
@@ -466,16 +898,18 @@ if __name__=="__main__":
 
     #Create lists for export request and filename information
     export_list = [list(map(str, export_table_df["EXPORT"]))[i] for i in processing_needed_which_list]
+    exportrequest_list = [list(map(str, export_table_df["EXPORT_REQUEST"]))[i] for i in processing_needed_which_list]
+    exportrequest_dupe_list = [list(map(str, export_table_df["EXPORT_REQUEST"]))[i] for i in processing_needed_which_list]
     productsdate_list = [list(map(str, export_table_df["PRODUCTS_DATE"]))[i] for i in processing_needed_which_list]
 
     #Create lists for file naming
-    filename_list = [list(map(str, export_table_df["FILENAME"]))[i] for i in processing_needed_which_list]
-    user_specified_list = [list(map(str, export_table_df["USER_SPECIFIED"]))[i] for i in processing_needed_which_list]
+    exportfilename_list = [list(map(str, export_table_df["EXPORT_FILENAME"]))[i] for i in processing_needed_which_list]
+    export_user_specified_list = [list(map(str, export_table_df["EXPORT_USER_SPECIFIED"]))[i] for i in processing_needed_which_list]
     geoops_maptype_list = [list(map(str, export_table_df["GEOOPS_MAPTYPE"]))[i] for i in processing_needed_which_list]
     geoops_pagesize_list = [list(map(str, export_table_df["GEOOPS_PAGESIZE"]))[i] for i in processing_needed_which_list]
     geoops_orientation_list = [list(map(str, export_table_df["GEOOPS_ORIENTATION"]))[i] for i in processing_needed_which_list]
     geoops_period_list = [list(map(str, export_table_df["GEOOPS_PERIOD"]))[i] for i in processing_needed_which_list]
-    exportlabel_list = [list(map(str, export_table_df["EXPORT_LABEL"]))[i] for i in processing_needed_which_list]
+    exportrequestlabel_list = [list(map(str, export_table_df["EXPORT_REQUEST_LABEL"]))[i] for i in processing_needed_which_list]
 
     #Create lists for Map Series export settings
     mapseries_pages_list = [list(export_table_df["MAPSERIES_PAGES"])[i] for i in processing_needed_which_list]
@@ -492,6 +926,13 @@ if __name__=="__main__":
     embedfonts_list = [list(export_table_df["EMBED_FONTS"])[i] for i in processing_needed_which_list]
     layersattributes_list = [list(map(str, export_table_df["LAYERS_ATTRIBUTES"]))[i] for i in processing_needed_which_list]
 
+    #Create lists of FTP settings
+    ftpupload_list = [list(map(str, export_table_df["FTP_UPLOAD"]))[i] for i in processing_needed_which_list]
+    ftpuploadrequest_list = [list(map(str, export_table_df["FTP_UPLOAD_REQUEST"]))[i] for i in processing_needed_which_list]
+    ftpfilename_list = [list(map(str, export_table_df["FTP_FILENAME"]))[i] for i in processing_needed_which_list]
+    ftp_user_specified_list = [list(map(str, export_table_df["FTP_USER_SPECIFIED"]))[i] for i in processing_needed_which_list]
+    ftpuploaddir_list = [list(map(str, export_table_df["FTP_UPLOAD_DIRECTORY"]))[i] for i in processing_needed_which_list]
+
     #Create lists for the Layout name and APRX Path
     layoutname_list = [list(map(str, export_table_df["LAYOUT_NAME"]))[i] for i in processing_needed_which_list]
     aprxpath_list = [list(map(str, export_table_df["APRX_PATH"]))[i] for i in processing_needed_which_list]
@@ -501,12 +942,21 @@ if __name__=="__main__":
     unitid_list = [unit_id] * processing_count
     incidentnumber_list = [incident_number] * processing_count
     productsdir_list = [products_dir] * processing_count
+    ftpupload_toggle_list = [ftpupload_toggle] * processing_count
+    ftp_username_list = [ftp_username] * processing_count
+    ftp_password_list = [ftp_password] * processing_count
+    multiprocess_toggle_list = [multiprocess_toggle] * processing_count
 
-    inputs_list = list(map(list, zip(incidentname_list, unitid_list, incidentnumber_list, productsdir_list,
-                export_list, productsdate_list, filename_list, user_specified_list, geoops_maptype_list, geoops_pagesize_list, geoops_orientation_list, geoops_period_list, exportlabel_list,
+    inputs_list = list(map(list, zip(incidentname_list, unitid_list, incidentnumber_list, productsdir_list, ftpupload_toggle_list, ftp_username_list, ftp_password_list, multiprocess_toggle_list,
+                export_list, exportrequest_list, exportrequest_dupe_list, productsdate_list, exportfilename_list, export_user_specified_list, geoops_maptype_list, geoops_pagesize_list, geoops_orientation_list, geoops_period_list, exportrequestlabel_list,
                 mapseries_pages_list, mapseries_range_list, mapseries_files_list,
+                ftpupload_list, ftpuploadrequest_list, ftpfilename_list, ftp_user_specified_list, ftpuploaddir_list,
                 clipgraphics_list, imagecompress_list, imagecompressquality_list, compressvectorgraphics_list, vectorresolution_list, rasterresample_list, embedfonts_list, layersattributes_list,
                 layoutname_list, aprxpath_list)))
+
+
+    #get CPU count, and range
+    cpu_count = multiprocessing.cpu_count()
 
     #Create new inputs_list by finding any export requests that are BOTH
     #Need to split these into separate list elements of AVENZA and IMAGE to speed up multiprocessing
@@ -515,42 +965,84 @@ if __name__=="__main__":
 
         curr_input_list = list(inputs_list[i])
         curr_input_list_geo = list(inputs_list[i])
-        curr_input_list_geo[4] = "GEO"
+        curr_input_list_geo[9] = "GEO"
         curr_input_list_image = list(inputs_list[i])
-        curr_input_list_image[4] = "IMAGE"
+        curr_input_list_image[9] = "IMAGE"
+        curr_input_list_geoimage = list(inputs_list[i])
+        curr_input_list_geoimage[9] = "GEOIMAGE"
 
-        curr_export = curr_input_list[4]
+        curr_exportrequest = curr_input_list[9]
 
-        if(curr_export == "GEO"):
+        if(curr_exportrequest == "GEO"):
             inputs_list_multiprocess.append(curr_input_list)
 
-        if(curr_export == "IMAGE"):
+        if(curr_exportrequest == "IMAGE"):
             inputs_list_multiprocess.append(curr_input_list)
 
-        if(curr_export == "GEOIMAGE"):
+        if(curr_exportrequest == "GEOIMAGE"):
             inputs_list_multiprocess.append(curr_input_list)
 
-        if(curr_export == "GEO AND IMAGE"):
+        if(curr_exportrequest == "GEO AND IMAGE"):
             inputs_list_multiprocess.append(curr_input_list_geo)
             inputs_list_multiprocess.append(curr_input_list_image)
 
-
+        if(curr_exportrequest == "GEO AND GEOIMAGE"):
+            inputs_list_multiprocess.append(curr_input_list_geo)
+            inputs_list_multiprocess.append(curr_input_list_geoimage)
 
 
     #Export maps. Use multiprocessor if user enabled it, else export one map at a time.
     if(multiprocess_toggle == "true"):
+
+        #Shuffle the inputs_list_multiprocess to randomize the processing order
+        random.shuffle(inputs_list_multiprocess)
+        inputs_list_multiprocess_cpu_split = numpy.array_split(inputs_list_multiprocess, cpu_count)
+
+        #If any of the "inputs_list_multiprocess_cpu_split" elements contain multiple map series, reshuffle
+        #Reshuffle up to 1000 times
+        reshuffle_check = True
+        reshuffle_attempt = 0
+        while(reshuffle_check == True and reshuffle_attempt <= 1000):
+
+            #Build list of map series values
+            reshuffle_check_list = []
+            for i in range(0, len(inputs_list_multiprocess_cpu_split)):
+                curr_inputs_list_multiprocess_cpu_split = inputs_list_multiprocess_cpu_split[i]
+                mapseries_pages_val_list = []
+                for j in range(0, len(curr_inputs_list_multiprocess_cpu_split)):
+                    mapseries_pages_val_list.append(curr_inputs_list_multiprocess_cpu_split[j][19])
+
+                #Determine if any elements have 2 or more map series
+                mapseries_all_count = mapseries_pages_val_list.count("ALL")
+                mapseries_range_count = mapseries_pages_val_list.count("RANGE")
+                mapseries_sum_count = sum([mapseries_all_count, mapseries_range_count])
+                if(mapseries_sum_count >= 2):
+                    reshuffle_check_list.append(True)
+                else:
+                    reshuffle_check_list.append(False)
+
+            #If any elements have 2 or more map series, reshuffle
+            if(True in reshuffle_check_list):
+                reshuffle_check = True
+                random.shuffle(inputs_list_multiprocess)
+                inputs_list_multiprocess_cpu_split = numpy.array_split(inputs_list_multiprocess, cpu_count)
+                reshuffle_attempt = reshuffle_attempt + 1
+            else:
+                reshuffle_check = False
+        #arcpy.AddMessage(str(reshuffle_attempt) + " Reshuffle Attempts")
+
+
         arcpy.AddMessage("\u200B")
         arcpy.AddMessage("Begin multiprocessing")
-        PDFMultiExport.execute(inputs_list_multiprocess)
+        PDFMultiExport.execute(inputs_list_multiprocess_cpu_split)
         arcpy.AddMessage("..Finished multiprocessing")
 
     else:
-        for i in range(0, len(inputs_list)):
-            arcpy.AddMessage("\u200B")
-            arcpy.AddMessage("EXPORT REQUEST " + str(i+1) + " OUT OF " + str(len(inputs_list)))
-            curr_inputs_list = inputs_list[i]
-            worker_function(curr_inputs_list)
+
+        worker_function(inputs_list)
+
 
     arcpy.AddMessage("\u200B")
-    arcpy.AddMessage("Done!")
+    arcpy.AddMessage("DONE!")
+    arcpy.AddMessage("\u200B")
 
