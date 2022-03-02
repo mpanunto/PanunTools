@@ -20,7 +20,11 @@ Here is a sample of what the spreadsheet looks like:
     - Incident Name
     - Incident ID
     - Products directory
-    - Path to the PDFMultiExport.xlsx spreadsheet.
+    - Path to the PDFMultiExport.xlsx spreadsheet
+    - Toggle for uploading exports to FTP
+    - NIFC FTP Username
+    - NIFC FTP Password
+    - Toggle for using Multiprocessor
 5. Run tool
 
 ![screenshot_PDFMultiExport_2.png](/docs/screenshot_PDFMultiExport_2.png?raw=true)
