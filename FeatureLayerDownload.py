@@ -1,5 +1,5 @@
 print("IMPORTING LIBRARIES")
-import arcpy, arcgis, pandas, datetime, time, os, sys, multiprocessing, inspect, urllib, zipfile, glob, shutil, warnings, contextlib
+import arcpy, arcgis, pandas, datetime, time, os, sys, multiprocessing, inspect, urllib, zipfile, glob, shutil, warnings, contextlib, gc
 from urllib.request import urlopen
 from arcgis.gis import GIS
 from arcgis.features import FeatureLayerCollection
@@ -62,18 +62,23 @@ def worker_function_services(in_inputs_list):
         #curr_featurelayer_url = inputs_list_secondary[1][7]
         curr_featurelayer_url = in_inputs_list[7]
 
-        #Features service name
-        #curr_featureservice_name = inputs_list_primary[65][8]
-        #curr_featureservice_name = inputs_list_secondary[1][8]
-        curr_featureservice_name = in_inputs_list[8]
+        #Feature layer name
+        #curr_featurelayer_name_input = inputs_list_primary[65][8]
+        #curr_featurelayer_name_input = inputs_list_secondary[1][8]
+        curr_featurelayer_name_input = in_inputs_list[8]
 
-        #curr_multiprocess = inputs_list_primary[65][9]
-        #curr_multiprocess = inputs_list_secondary[1][9]
-        curr_multiprocess = in_inputs_list[9]
+        #Features service name
+        #curr_featureservice_name = inputs_list_primary[65][9]
+        #curr_featureservice_name = inputs_list_secondary[1][9]
+        curr_featureservice_name = in_inputs_list[9]
+
+        #curr_multiprocess = inputs_list_primary[65][10]
+        #curr_multiprocess = inputs_list_secondary[1][10]
+        curr_multiprocess = in_inputs_list[10]
 
         #curr_multiprocess_toggle = inputs_list_primary[65]
-        #curr_multiprocess_toggle = inputs_list_secondary[1]
-        curr_multiprocess_toggle = in_inputs_list[10]
+        #curr_multiprocess_toggle = inputs_list_secondary[11]
+        curr_multiprocess_toggle = in_inputs_list[11]
 
         #Get scratchdir
         curr_scratchdir = curr_outdir + "/_scratch"
@@ -85,13 +90,13 @@ def worker_function_services(in_inputs_list):
         curr_aoi_fc_basename = os.path.basename(curr_aoi_fc_path)
 
         #Get ObjID string and number
-        if(curr_multiprocess == "Secondary"):
+        if(curr_multiprocess in ["Secondary", "Tertiary"]):
             curr_aoi_fc_path_split = curr_aoi_fc_path.split("_")
             curr_objid = curr_aoi_fc_path_split[len(curr_aoi_fc_path_split)-1]
             curr_objid_number = curr_objid.replace("OBJID", "")
 
         #Establish connection to the ArcGIS Online Org
-        if(curr_multiprocess_toggle == "true"):
+        if(curr_multiprocess_toggle == "true" and curr_multiprocess in ["Primary", "Secondary"]):
             arcpy.AddMessage("\u200B")
         arcpy.AddMessage("....REQUESTING API ACCESS TOKEN")
         token_check = False
@@ -162,6 +167,7 @@ def worker_function_services(in_inputs_list):
 
         arcpy.AddMessage("......PROJECTING AOI FOR SELECTION")
         project_check = False
+        project_attempt = 1
         while(project_check == False):
             try:
                 #The Transportation HIFLD services all have the same feature layer names, need to parse out the region number from the service name here
@@ -190,9 +196,43 @@ def worker_function_services(in_inputs_list):
                     time.sleep(5)
             except Exception as e:
                 arcpy.AddMessage(e)
-                arcpy.AddMessage("........PROJECT FAILED, RE-TRYING")
-                project_check = False
-                time.sleep(5)
+                project_attempt = project_attempt + 1
+
+                if(project_attempt < 6):
+                    arcpy.AddMessage("........PROJECTION FAILED, RE-TRYING")
+                    project_check = False
+                    time.sleep(5)
+                if(project_attempt >= 6):
+                    arcpy.AddMessage("........PROJECTION FAILED 5 TIMES, SKIPPING DATASET")
+                    project_check = True
+                    features_check = False
+
+                    #Export CSV file containing information needed to retry query
+                    if(curr_multiprocess == "Primary"):
+                        csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+                        projectfail_df = pandas.DataFrame(csvdata)
+                        if("HIFLD" in curr_featureservice_name_short):
+                            projectfail_csv_path = curr_outdir + "/primary_projectfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + ".csv"
+                        else:
+                            projectfail_csv_path = curr_outdir + "/primary_projectfail_" + curr_featurelayer_name_short + ".csv"
+                        projectfail_df.to_csv(projectfail_csv_path, index=False)
+                    if(curr_multiprocess == "Secondary"):
+                        csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+                        projectfail_df = pandas.DataFrame(csvdata)
+                        if("HIFLD" in curr_featureservice_name_short):
+                            projectfail_csv_path = curr_outdir + "/secondary_projectfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                        else:
+                            projectfail_csv_path = curr_outdir + "/secondary_projectfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                        projectfail_df.to_csv(projectfail_csv_path, index=False)
+                    if(curr_multiprocess == "Tertiary"):
+                        csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+                        projectfail_df = pandas.DataFrame(csvdata)
+                        if("HIFLD" in curr_featureservice_name_short):
+                            projectfail_csv_path = curr_outdir + "/tertiary_projectfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                        else:
+                            projectfail_csv_path = curr_outdir + "/tertiary_projectfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                        projectfail_df.to_csv(projectfail_csv_path, index=False)
+
 
 
         #Reset environments
@@ -228,72 +268,82 @@ def worker_function_services(in_inputs_list):
         ## SELECT FEATURES
         ############################################################################
 
-        arcpy.AddMessage("......SELECTING INTERSECTING FEATURES")
-        select_test = False
-        features_check = False
-        select_attempt = 1
-        while(select_test == False):
-            try:
+        #Proceed to selection only if the AOI was successfully projected in 5 or less tries
+        if(project_attempt < 6):
+            arcpy.AddMessage("......SELECTING INTERSECTING FEATURES")
+            select_test = False
+            features_check = False
+            select_attempt = 1
+            while(select_test == False):
+                try:
 
-                #Perform selection via arcpy
-                selection = arcpy.SelectLayerByLocation_management(curr_featurelayer_url, overlap_type="INTERSECT", select_features=aoi_fc_prj_path, selection_type="NEW_SELECTION")
-                selection_count = int(arcpy.GetCount_management(selection)[0])
+                    #Perform selection via arcpy
+                    selection = arcpy.SelectLayerByLocation_management(curr_featurelayer_url, overlap_type="INTERSECT", select_features=aoi_fc_prj_path, selection_type="NEW_SELECTION")
+                    selection_count = int(arcpy.GetCount_management(selection)[0])
 
-                #Perform selection via arcgis api
-                #fl = arcgis.features.FeatureLayer(curr_featurelayer_url)
-                #fl_query_objids = fl.query(where="1=1", return_ids_only=True, geometry_filter=filters.intersects(aoi_geom))
-                #objectid_fieldname = fl_query_objids["objectIdFieldName"]
-                #objectid_values = fl_query_objids["objectIds"]
-                #selection_count = len(objectid_values)
-                #if(selection_count > 0):
-                    #if(selection_count == 1):
-                        #wherefield = objectid_fieldname
-                        #wherevalues = str(objectid_values[0])
-                        #whereClause = '"' + wherefield + '"' + ' = ' + wherevalues
-                    #else:
-                        #wherefield = objectid_fieldname
-                        #wherevalues = str(tuple(objectid_values))
-                        #whereClause = '"' + wherefield + '"' + ' IN ' + wherevalues
-                    #fl_query = fl.query(where=whereClause)
-                    #fl_sdf = fl_query.sdf
+                    #Perform selection via arcgis api
+                    #fl = arcgis.features.FeatureLayer(curr_featurelayer_url)
+                    #fl_query_objids = fl.query(where="1=1", return_ids_only=True, geometry_filter=filters.intersects(aoi_geom))
+                    #objectid_fieldname = fl_query_objids["objectIdFieldName"]
+                    #objectid_values = fl_query_objids["objectIds"]
+                    #selection_count = len(objectid_values)
+                    #if(selection_count > 0):
+                        #if(selection_count == 1):
+                            #wherefield = objectid_fieldname
+                            #wherevalues = str(objectid_values[0])
+                            #whereClause = '"' + wherefield + '"' + ' = ' + wherevalues
+                        #else:
+                            #wherefield = objectid_fieldname
+                            #wherevalues = str(tuple(objectid_values))
+                            #whereClause = '"' + wherefield + '"' + ' IN ' + wherevalues
+                        #fl_query = fl.query(where=whereClause)
+                        #fl_sdf = fl_query.sdf
 
-                #If the selection returned features, perform query, and set toggle
-                if(selection_count > 0):
-                    features_check = True
+                    #If the selection returned features, perform query, and set toggle
+                    if(selection_count > 0):
+                        features_check = True
 
-                if(selection_count == 0):
-                    arcpy.AddMessage("......NO INTERSECTING FEATURES FOUND, SKIPPING DATASET")
+                    if(selection_count == 0):
+                        arcpy.AddMessage("......NO INTERSECTING FEATURES FOUND, SKIPPING DATASET")
 
-                select_test = True
-
-            except Exception as e:
-                arcpy.AddMessage(e)
-                select_attempt = select_attempt + 1
-                if(select_attempt < 6):
-                    arcpy.AddMessage("........SELECTION FAILED, RE-TRYING")
-                    select_test = False
-                    time.sleep(5)
-                if(select_attempt >= 6):
-                    arcpy.AddMessage("........SELECTION FAILED 5 TIMES, SKIPPING DATASET")
                     select_test = True
 
-                    #Export CSV file containing information needed to retry query outside of multiprocessor
-                    if(curr_multiprocess == "Primary"):
-                        csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
-                        selectfail_df = pandas.DataFrame(csvdata)
-                        if("HIFLD" in curr_featureservice_name_short):
-                            selectfail_csv_path = curr_outdir + "/selectfail_primary_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + ".csv"
-                        else:
-                            selectfail_csv_path = curr_outdir + "/selectfail_primary_" + curr_featurelayer_name_short + ".csv"
-                        selectfail_df.to_csv(selectfail_csv_path, index=False)
-                    if(curr_multiprocess == "Secondary"):
-                        csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
-                        selectfail_df = pandas.DataFrame(csvdata)
-                        if("HIFLD" in curr_featureservice_name_short):
-                            selectfail_csv_path = curr_outdir + "/selectfail_secondary_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
-                        else:
-                            selectfail_csv_path = curr_outdir + "/selectfail_secondary_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
-                        selectfail_df.to_csv(selectfail_csv_path, index=False)
+                except Exception as e:
+                    arcpy.AddMessage(e)
+                    select_attempt = select_attempt + 1
+                    if(select_attempt < 6):
+                        arcpy.AddMessage("........SELECTION FAILED, RE-TRYING")
+                        select_test = False
+                        time.sleep(5)
+                    if(select_attempt >= 6):
+                        arcpy.AddMessage("........SELECTION FAILED 5 TIMES, SKIPPING DATASET")
+                        select_test = True
+
+                        #Export CSV file containing information needed to retry query
+                        if(curr_multiprocess == "Primary"):
+                            csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+                            selectfail_df = pandas.DataFrame(csvdata)
+                            if("HIFLD" in curr_featureservice_name_short):
+                                selectfail_csv_path = curr_outdir + "/primary_selectfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + ".csv"
+                            else:
+                                selectfail_csv_path = curr_outdir + "/primary_selectfail_" + curr_featurelayer_name_short + ".csv"
+                            selectfail_df.to_csv(selectfail_csv_path, index=False)
+                        if(curr_multiprocess == "Secondary"):
+                            csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+                            selectfail_df = pandas.DataFrame(csvdata)
+                            if("HIFLD" in curr_featureservice_name_short):
+                                selectfail_csv_path = curr_outdir + "/secondary_selectfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                            else:
+                                selectfail_csv_path = curr_outdir + "/secondary_selectfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                            selectfail_df.to_csv(selectfail_csv_path, index=False)
+                        if(curr_multiprocess == "Tertiary"):
+                            csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+                            selectfail_df = pandas.DataFrame(csvdata)
+                            if("HIFLD" in curr_featureservice_name_short):
+                                selectfail_csv_path = curr_outdir + "/tertiary_selectfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                            else:
+                                selectfail_csv_path = curr_outdir + "/tertiary_selectfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                            selectfail_df.to_csv(selectfail_csv_path, index=False)
 
 
         ############################################################################
@@ -313,6 +363,8 @@ def worker_function_services(in_inputs_list):
                     if(curr_multiprocess == "Primary"):
                         curr_gdb_name = curr_featurelayer_name_short + "_1"
                     if(curr_multiprocess == "Secondary"):
+                        curr_gdb_name = curr_featurelayer_fc_name + "_OBJID" + str(curr_objid_number) + "_1"
+                    if(curr_multiprocess == "Tertiary"):
                         curr_gdb_name = curr_featurelayer_fc_name + "_OBJID" + str(curr_objid_number) + "_1"
 
                     curr_gbd_path = curr_outdir + "/" + curr_gdb_name + ".gdb"
@@ -398,97 +450,165 @@ def worker_function_services(in_inputs_list):
                     #curr_fc_path = curr_gbd_path + "/" + curr_featurelayer_fc_name
                     #fl_sdf.spatial.to_featureclass(curr_fc_path)
 
-                    #Create metadata file
-                    curr_fc_metadata_path = curr_metadatadir + "/" + curr_featurelayer_name_short + ".xml"
-                    if(not arcpy.Exists(curr_fc_metadata_path)):
-                        curr_featurelayer_description = curr_featurelayer.properties.description
-                        curr_featurelayer_credits = curr_featurelayer.properties.copyrightText
-                        curr_fc_metadata = arcpy.metadata.Metadata(curr_fc_path)
-                        curr_fc_metadata.description = curr_featurelayer_description
-                        curr_fc_metadata.credits = curr_featurelayer_credits
-                        curr_fc_metadata.save()
-                        curr_fc_metadata.exportMetadata(curr_fc_metadata_path)
+                    #Get feature count of export, test to make sure it matches the selection count
+                    export_count = int(str(arcpy.GetCount_management(curr_fc_path)))
+                    if(export_count == selection_count):
 
-                    export_test = True
+                        #Create metadata file
+                        curr_fc_metadata_path = curr_metadatadir + "/" + curr_featurelayer_name_short + ".xml"
+                        if(not arcpy.Exists(curr_fc_metadata_path)):
+                            curr_featurelayer_description = curr_featurelayer.properties.description
+                            curr_featurelayer_credits = curr_featurelayer.properties.copyrightText
+                            curr_fc_metadata = arcpy.metadata.Metadata(curr_fc_path)
+                            curr_fc_metadata.description = curr_featurelayer_description
+                            curr_fc_metadata.credits = curr_featurelayer_credits
+                            curr_fc_metadata.save()
+                            curr_fc_metadata.exportMetadata(curr_fc_metadata_path)
+
+                        export_test = True
+
+                    else:
+
+                        export_attempt = export_attempt + 1
+                        if(export_attempt < 6):
+                            arcpy.AddMessage("........FEATURE EXPORT COUNT DOES NOT MATCH FEATURE SELECTION COUNT, RE-TRYING")
+                            arcpy.AddMessage("..........FEATURE EXPORT COUNT = " + str(export_count))
+                            arcpy.AddMessage("..........FEATURE SELECTION COUNT = " + str(selection_count))
+                            arcpy.Delete_management(curr_fc_path)
+                            export_test = False
+                        if(export_attempt >= 6 and curr_multiprocess in ["Primary", "Secondary"]):
+                            arcpy.AddMessage("........FEATURE EXPORT COUNT FAILED 5 TIMES, SKIPPING DATASET")
+                            arcpy.AddMessage("..........FEATURE EXPORT COUNT = " + str(export_count))
+                            arcpy.AddMessage("..........FEATURE SELECTION COUNT = " + str(selection_count))
+                            arcpy.AddMessage("........DELETING OUTPUT GDB")
+                            arcpy.Delete_management(curr_gbd_path)
+                            export_test = True
+                        if(export_attempt >= 6 and curr_multiprocess == "Tertiary"):
+                            arcpy.AddMessage("........FEATURE EXPORT COUNT FAILED 5 TIMES, PROCEEDING")
+                            arcpy.AddMessage("..........FEATURE EXPORT COUNT = " + str(export_count))
+                            arcpy.AddMessage("..........FEATURE SELECTION COUNT = " + str(selection_count))
+                            export_test = True
+
+                        if(export_attempt >= 6):
+                            #Export CSV file containing information needed to retry query
+                            if(curr_multiprocess == "Primary"):
+                                csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+                                exportcountfail_df = pandas.DataFrame(csvdata)
+                                if("HIFLD" in curr_featureservice_name_short):
+                                    exportcountfail_csv_path = curr_outdir + "/primary_exportcountfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + ".csv"
+                                else:
+                                    exportcountfail_csv_path = curr_outdir + "/primary_exportcountfail_" + curr_featurelayer_name_short + ".csv"
+                                exportcountfail_df.to_csv(exportcountfail_csv_path, index=False)
+                            if(curr_multiprocess == "Secondary"):
+                                csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+                                exportcountfail_df = pandas.DataFrame(csvdata)
+                                if("HIFLD" in curr_featureservice_name_short):
+                                    exportcountfail_csv_path = curr_outdir + "/secondary_exportcountfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                                else:
+                                    exportcountfail_csv_path = curr_outdir + "/secondary_exportcountfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                                exportcountfail_df.to_csv(exportcountfail_csv_path, index=False)
+                            if(curr_multiprocess == "Tertiary"):
+                                csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+                                exportcountfail_df = pandas.DataFrame(csvdata)
+                                if("HIFLD" in curr_featureservice_name_short):
+                                    exportcountfail_csv_path = curr_outdir + "/tertiary_exportcountfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                                else:
+                                    exportcountfail_csv_path = curr_outdir + "/tertiary_exportcountfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                                exportcountfail_df.to_csv(exportcountfail_csv_path, index=False)
+
+
 
                 except Exception as e:
-                    #arcpy.AddMessage(e)
+                    arcpy.AddMessage(e)
                     export_attempt = export_attempt + 1
                     if(export_attempt < 6):
                         arcpy.AddMessage("........EXPORT FAILED, RE-TRYING")
                         export_test = False
                     if(export_attempt >= 6):
                         arcpy.AddMessage("........EXPORT FAILED 5 TIMES, SKIPPING DATASET")
+                        arcpy.AddMessage("........DELETING OUTPUT GDB")
+                        arcpy.Delete_management(curr_gbd_path)
                         export_test = True
 
-                        #Export CSV file containing information needed to retry query outside of multiprocessor
+                        #Export CSV file containing information needed to retry query
                         if(curr_multiprocess == "Primary"):
                             csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                             exportfail_df = pandas.DataFrame(csvdata)
                             if("HIFLD" in curr_featureservice_name_short):
-                                exportfail_csv_path = curr_outdir + "/exportfail_primary_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + ".csv"
+                                exportfail_csv_path = curr_outdir + "/primary_exportfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + ".csv"
                             else:
-                                exportfail_csv_path = curr_outdir + "/exportfail_primary_" + curr_featurelayer_name_short + ".csv"
+                                exportfail_csv_path = curr_outdir + "/primary_exportfail_" + curr_featurelayer_name_short + ".csv"
                             exportfail_df.to_csv(exportfail_csv_path, index=False)
                         if(curr_multiprocess == "Secondary"):
                             csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                             exportfail_df = pandas.DataFrame(csvdata)
                             if("HIFLD" in curr_featureservice_name_short):
-                                exportfail_csv_path = curr_outdir + "/exportfail_secondary_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                                exportfail_csv_path = curr_outdir + "/secondary_exportfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
                             else:
-                                exportfail_csv_path = curr_outdir + "/exportfail_secondary_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                                exportfail_csv_path = curr_outdir + "/secondary_exportfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                            exportfail_df.to_csv(exportfail_csv_path, index=False)
+                        if(curr_multiprocess == "Tertiary"):
+                            csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+                            exportfail_df = pandas.DataFrame(csvdata)
+                            if("HIFLD" in curr_featureservice_name_short):
+                                exportfail_csv_path = curr_outdir + "/tertiary_exportfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                            else:
+                                exportfail_csv_path = curr_outdir + "/tertiary_exportfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
                             exportfail_df.to_csv(exportfail_csv_path, index=False)
 
             #PROJECT OUTPUT IF THE COORDINATE SYSTEM DOES NOT MATCH THE USER SPECIFIED PROJECTION
-            curr_fc_sr = arcpy.Describe(curr_fc_path).spatialReference
-            curr_fc_sr_name = curr_fc_sr.name
-            if(curr_fc_sr_name != curr_output_prj_sr.name):
-                arcpy.AddMessage("......PROJECTING OUTPUT FEATURE CLASS")
-                curr_fc_prj_path = curr_gbd_path + "/" + curr_featurelayer_fc_name + "_prj"
+            #Only proceed to this step if the data was successfully exported (export_attempt < 6)
+            if(arcpy.Exists(curr_gbd_path)):
+                curr_fc_sr = arcpy.Describe(curr_fc_path).spatialReference
+                curr_fc_sr_name = curr_fc_sr.name
+                if(curr_fc_sr_name != curr_output_prj_sr.name):
+                    arcpy.AddMessage("......PROJECTING OUTPUT FEATURE CLASS")
+                    curr_fc_prj_path = curr_gbd_path + "/" + curr_featurelayer_fc_name + "_prj"
 
-                #Project the exported feature class to match the user specified projection
-                project_check = False
-                while(project_check == False):
-                    try:
-                        arcpy.Project_management(curr_fc_path, curr_fc_prj_path, curr_output_prj_sr)
-                        project_check = True
-                    except Exception as e:
-                        arcpy.AddMessage(e)
-                        arcpy.AddMessage("........PROJECT FAILED, RE-TRYING")
-                        if(arcpy.Exists(curr_fc_prj_path)):
-                            arcpy.Delete_management(curr_fc_prj_path)
-                        time.sleep(5)
+                    #Project the exported feature class to match the user specified projection
+                    project_check = False
+                    while(project_check == False):
+                        try:
+                            arcpy.Project_management(curr_fc_path, curr_fc_prj_path, curr_output_prj_sr)
+                            project_check = True
+                        except Exception as e:
+                            arcpy.AddMessage(e)
+                            arcpy.AddMessage("........PROJECT FAILED, RE-TRYING")
+                            if(arcpy.Exists(curr_fc_prj_path)):
+                                arcpy.Delete_management(curr_fc_prj_path)
+                            time.sleep(5)
 
-                #Delete the original exported output
-                delete_check = False
-                while(delete_check == False):
-                    try:
-                        arcpy.Delete_management(curr_fc_path)
-                        delete_check = True
-                    except Exception as e:
-                        arcpy.AddMessage(e)
-                        arcpy.AddMessage("........DELETE FEATURE CLASS FAILED, RE-TRYING")
-                        time.sleep(5)
+                    #Delete the original exported output
+                    delete_check = False
+                    while(delete_check == False):
+                        try:
+                            arcpy.Delete_management(curr_fc_path)
+                            delete_check = True
+                        except Exception as e:
+                            arcpy.AddMessage(e)
+                            arcpy.AddMessage("........DELETE FEATURE CLASS FAILED, RE-TRYING")
+                            time.sleep(5)
 
-                #Rename the projected feature class
-                rename_check = False
-                while(rename_check == False):
-                    try:
-                        arcpy.Rename_management(curr_fc_prj_path, curr_fc_path)
-                        rename_check = True
-                    except Exception as e:
-                        arcpy.AddMessage(e)
-                        arcpy.AddMessage("........RENAME FEATURE CLASS FAILED, RE-TRYING")
-                        time.sleep(5)
+                    #Rename the projected feature class
+                    rename_check = False
+                    while(rename_check == False):
+                        try:
+                            arcpy.Rename_management(curr_fc_prj_path, curr_fc_path)
+                            rename_check = True
+                        except Exception as e:
+                            arcpy.AddMessage(e)
+                            arcpy.AddMessage("........RENAME FEATURE CLASS FAILED, RE-TRYING")
+                            time.sleep(5)
 
-                arcpy.AddMessage("......EXPORT COMPLETE")
-            else:
-                arcpy.AddMessage("......EXPORT COMPLETE")
+                    arcpy.AddMessage("......EXPORT COMPLETE")
+                else:
+                    arcpy.AddMessage("......EXPORT COMPLETE")
 
 
         ## DELETE AOI GDB
-        arcpy.Delete_management(aoi_proj_gdb_path)
         arcpy.AddMessage("......DELETING AOI")
+        arcpy.Delete_management(aoi_proj_gdb_path)
+
 
         arcpy.AddMessage("......DONE!")
 
@@ -496,6 +616,58 @@ def worker_function_services(in_inputs_list):
     except Exception as e:
         arcpy.AddMessage(e)
         arcpy.AddMessage("TOP LEVEL ERROR")
+
+        #Get ObjID string and number
+        if(curr_multiprocess == "Secondary"):
+            curr_aoi_fc_path_split = curr_aoi_fc_path.split("_")
+            curr_objid = curr_aoi_fc_path_split[len(curr_aoi_fc_path_split)-1]
+            curr_objid_number = curr_objid.replace("OBJID", "")
+        if(curr_multiprocess == "Tertiary"):
+            curr_aoi_fc_path_split = curr_aoi_fc_path.split("_")
+            curr_objid = curr_aoi_fc_path_split[len(curr_aoi_fc_path_split)-1]
+            curr_objid_number = curr_objid.replace("OBJID", "")
+
+        #Get feature layer and feature service shortnames
+        curr_featurelayer_name_short = curr_featurelayer_name_input.replace(" ", "")
+        curr_featurelayer_name_short = curr_featurelayer_name_short.replace("_", "")
+        curr_featurelayer_name_short = curr_featurelayer_name_short.replace("-", "")
+        curr_featurelayer_name_short = curr_featurelayer_name_short.replace("&", "")
+        curr_featureservice_name_short = curr_featureservice_name.replace(" ", "")
+        curr_featureservice_name_short = curr_featureservice_name_short.replace("_", "")
+        curr_featureservice_name_short = curr_featureservice_name_short.replace("-", "")
+        curr_featureservice_name_short = curr_featureservice_name_short.replace("&", "")
+
+        #Get the hifld region
+        if("HIFLD" in curr_featureservice_name_short):
+            curr_hifld_region = curr_featureservice_name_short[-2:]
+
+
+        #Export CSV file containing information needed to retry query
+        if(curr_multiprocess == "Primary"):
+            csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+            toplevelfail_df = pandas.DataFrame(csvdata)
+            if("HIFLD" in curr_featureservice_name_short):
+                toplevelfail_csv_path = curr_outdir + "/primary_toplevelfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + ".csv"
+            else:
+                toplevelfail_csv_path = curr_outdir + "/primary_toplevelfail_" + curr_featurelayer_name_short + ".csv"
+            toplevelfail_df.to_csv(toplevelfail_csv_path, index=False)
+        if(curr_multiprocess == "Secondary"):
+            csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+            toplevelfail_df = pandas.DataFrame(csvdata)
+            if("HIFLD" in curr_featureservice_name_short):
+                toplevelfail_csv_path = curr_outdir + "/secondary_toplevelfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+            else:
+                toplevelfail_csv_path = curr_outdir + "/secondary_toplevelfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+            toplevelfail_df.to_csv(toplevelfail_csv_path, index=False)
+        if(curr_multiprocess == "Tertiary"):
+            csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+            toplevelfail_df = pandas.DataFrame(csvdata)
+            if("HIFLD" in curr_featureservice_name_short):
+                toplevelfail_csv_path = curr_outdir + "/tertiary_toplevelfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+            else:
+                toplevelfail_csv_path = curr_outdir + "/tertiary_toplevelfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+            toplevelfail_df.to_csv(toplevelfail_csv_path, index=False)
+
         time.sleep(60)
 
 
@@ -548,7 +720,8 @@ def worker_function_elevwetland(in_inputs_list):
                     urllib.request.urlcleanup()  ## Clear the download cache
                     download_check = True
                     download_path_list.append(curr_download_path)
-                except:
+                except Exception as e:
+                    arcpy.AddMessage(e)
                     download_attempt = download_attempt + 1
                     if(download_attempt < 6):
                         arcpy.AddMessage("......DOWNLOAD FAILED, RE-TRYING")
@@ -613,8 +786,22 @@ def worker_function_elevwetland(in_inputs_list):
                 elevcontour_wetland_fc_path_list.append(curr_elevcontour_wetland_fcpath)
 
 
+        #Determine if any GDBs are missing an Elev_Contour or Wetland feature class
+        nonexist_elevcontour_list = []
+        for i in range(0, len(elevcontour_wetland_fc_path_list)):
+            curr_elevcontour_wetland_fcpath = elevcontour_wetland_fc_path_list[i]
+            if(not arcpy.Exists(curr_elevcontour_wetland_fcpath)):
+                nonexist_elevcontour_list.append(curr_elevcontour_wetland_fcpath)
+        #If any GDBs are missing a Elev_Contour or Wetland feature class, remove their path from the list
+        if(len(nonexist_elevcontour_list) > 0):
+            elevcontour_wetland_fc_path_list_final = [x for x in elevcontour_wetland_fc_path_list if x not in nonexist_elevcontour_list]
+        else:
+            elevcontour_wetland_fc_path_list_final = elevcontour_wetland_fc_path_list
+
+
+
         #Merge all features together
-        if( len(elevcontour_wetland_fc_path_list) == 1 ):
+        if( len(elevcontour_wetland_fc_path_list_final) == 1 ):
             arcpy.AddMessage("..COPYING FEATURE CLASS")
 
             copy_check = False
@@ -623,19 +810,21 @@ def worker_function_elevwetland(in_inputs_list):
                     arcpy.Copy_management(curr_elevcontour_wetland_fcpath, elevcontour_wetland_fc_outpath)
                     copy_check = True
                     arcpy.AddMessage("..COPY COMPLETE")
-                except:
+                except Exception as e:
+                    arcpy.AddMessage(e)
                     arcpy.AddMessage("....FAILED TO COPY FEATURE CLASS, RE-TRYING")
                     time.sleep(5)
         else:
             #Else if multiple feature classes, merge all into a single SDF
-            arcpy.AddMessage("..MERGING " + str(len(elevcontour_wetland_fc_path_list)) + " FEATURE CLASSES")
+            arcpy.AddMessage("..MERGING " + str(len(elevcontour_wetland_fc_path_list_final)) + " FEATURE CLASSES")
             merge_check = False
             while(merge_check == False):
                 try:
-                    arcpy.Merge_management(elevcontour_wetland_fc_path_list, elevcontour_wetland_fc_outpath)
+                    arcpy.Merge_management(elevcontour_wetland_fc_path_list_final, elevcontour_wetland_fc_outpath)
                     merge_check = True
                     arcpy.AddMessage("....MERGE COMPLETE")
-                except:
+                except Exception as e:
+                    arcpy.AddMessage(e)
                     arcpy.AddMessage("....FAILED TO MERGE FEATURE CLASSES, RE-TRYING")
                     time.sleep(5)
 
@@ -718,7 +907,7 @@ if __name__=='__main__':
     password = arcpy.GetParameterAsText(3)
 
     #Path to AOI shapefile polygon
-    #aoi_shp_path = r"C:\Workspace\development\AOI_Shapefiles\AOI_3.shp"
+    #aoi_shp_path = r"C:\Workspace\development\PanunTools-main\AOI_SACC_webmerc_buffer.shp"
     aoi_shp_path = arcpy.GetParameterAsText(4)
 
     #AOI Subdivision Area (in square miles)
@@ -727,14 +916,15 @@ if __name__=='__main__':
 
     #User defined output projection
     #output_prj = "PROJCS['NAD_1983_UTM_Zone_12N',GEOGCS['GCS_North_American_1983',DATUM['D_North_American_1983',SPHEROID['GRS_1980',6378137.0,298.257222101]],PRIMEM['Greenwich',0.0],UNIT['Degree',0.0174532925199433]],PROJECTION['Transverse_Mercator'],PARAMETER['False_Easting',500000.0],PARAMETER['False_Northing',0.0],PARAMETER['Central_Meridian',-111.0],PARAMETER['Scale_Factor',0.9996],PARAMETER['Latitude_Of_Origin',0.0],UNIT['Meter',1.0]];-5120900 -9998100 10000;-100000 10000;-100000 10000;0.001;0.001;0.001;IsHighPrecision"
+    #output_prj = 'PROJCS["WGS_1984_Web_Mercator_Auxiliary_Sphere",GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137.0,298.257223563]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Mercator_Auxiliary_Sphere"],PARAMETER["False_Easting",0.0],PARAMETER["False_Northing",0.0],PARAMETER["Central_Meridian",0.0],PARAMETER["Standard_Parallel_1",0.0],PARAMETER["Auxiliary_Sphere_Type",0.0],UNIT["Meter",1.0]];-20037700 -30241100 10000;-100000 10000;-100000 10000;0.001;0.001;0.001;IsHighPrecision'
     output_prj = arcpy.GetParameterAsText(6)
 
     #Output GDB Directory
-    #outdir = r"C:\Workspace\development\PanunTools_All\output_FeatureLayerDownload"
+    #outdir = r"C:\Workspace\development\PanunTools-main\output_FeatureLayerDownload_v2"
     outdir = arcpy.GetParameterAsText(7)
 
     #Path to feature service ItemID CSV
-    #service_itemid_csv_path = r"C:\Workspace\development\PanunTools_All\FeatureLayerDownload.csv"
+    #service_itemid_csv_path = r"C:\Workspace\development\PanunTools-main\FeatureLayerDownload.csv"
     service_itemid_csv_path = arcpy.GetParameterAsText(8)
 
     #elevcontour_acquire = "Yes"
@@ -1023,7 +1213,8 @@ if __name__=='__main__':
                 usgstopovec_sdf = usgstopovec_query.sdf
                 usgstopovec_url_list = list(usgstopovec_sdf["URL"])
                 usgstopovec_sdf.spatial.to_featureclass(usgstopovec_index_aoi)
-        except:
+        except Exception as e:
+            arcpy.AddMessage(e)
             arcpy.AddMessage("..QUERY FAILED, ATTEMPTING QUERY VIA ARCPY" )
             #Reset environment settings
             arcpy.ResetEnvironments()
@@ -1135,7 +1326,8 @@ if __name__=='__main__':
             arcpy.AddMessage("..REMOVING DUPLICATE FEATURES")
             try:
                 arcpy.DeleteIdentical_management(elevcontour_final_out, fields=["Shape"])
-            except:
+            except Exception as e:
+                arcpy.AddMessage(e)
                 arcpy.AddMessage("....FAILED TO REMOVE DUPLICATE FEATURES, SKIPPING")
 
             #Delete individual multiprocessor outputs and scratch files
@@ -1228,7 +1420,8 @@ if __name__=='__main__':
                 huc8_sdf = huc8_query.sdf
                 huc8_url_list = list(huc8_sdf["URL"])
                 huc8_sdf.spatial.to_featureclass(huc8_index_path)
-        except:
+        except Exception as e:
+            arcpy.AddMessage(e)
             arcpy.AddMessage("..QUERY FAILED, ATTEMPTING QUERY VIA ARCPY" )
             #Reset environment settings
             arcpy.ResetEnvironments()
@@ -1369,7 +1562,7 @@ if __name__=='__main__':
 
 
     ############################################################################
-    ## PREP VARIABLES FOR MULTIPROCESSOR
+    ## PREP VARIABLES FOR FEATURE LAYER PROCESSING
     ############################################################################
 
 
@@ -1381,10 +1574,12 @@ if __name__=='__main__':
     arcpy.AddMessage("\u200B")
     arcpy.AddMessage("\u200B")
     arcpy.AddMessage("CONNECTING TO FEATURE SERVICES")
-    featureservice_name_list_primary = []
-    featureservice_name_list_secondary = []
     featurelayerurl_list_primary = []
     featurelayerurl_list_secondary = []
+    featurelayer_name_list_primary = []
+    featurelayer_name_list_secondary = []
+    featureservice_name_list_primary = []
+    featureservice_name_list_secondary = []
     curr_iter = 0
     for i in range(0, len(service_itemid_list)):
         curr_itemid = service_itemid_list[i]
@@ -1393,7 +1588,8 @@ if __name__=='__main__':
             #Get service and service name
             try:
                 curr_service = gis.content.get(curr_itemid)
-            except:
+            except Exception as e:
+                arcpy.AddMessage(e)
                 arcpy.AddMessage("..UNABLE TO CONNECT TO SERVICE, CHECK ACCESS PERMISSIONS (ItemID = " + curr_itemid + ")" )
                 continue
             curr_service_name = curr_service.name
@@ -1452,9 +1648,11 @@ if __name__=='__main__':
                         #Append URLs to lists. If they are high-density datasets, send them through the secondary multiprocessor instead
                         if(curr_featurelayer_name in ["Roads", "Forest Service Roads", "NHDFlowline", "NHDWaterbody", "BLM PLSS Sections"]):
                             featurelayerurl_list_secondary.append(curr_featurelayer_url)
+                            featurelayer_name_list_secondary.append(curr_featurelayer_name)
                             featureservice_name_list_secondary.append(curr_service_name)
                         else:
                             featurelayerurl_list_primary.append(curr_featurelayer_url)
+                            featurelayer_name_list_primary.append(curr_featurelayer_name)
                             featureservice_name_list_primary.append(curr_service_name)
 
                         curr_iter = curr_iter + 1
@@ -1477,11 +1675,11 @@ if __name__=='__main__':
     gdb_outdir_list_primary = [outdir] * featurelayer_count_primary
     multiprocess_list_primary = ["Primary"] * featurelayer_count_primary
     multiprocess_toggle_list_primary = [multiprocess_toggle] * featurelayer_count_primary
-    inputs_list_primary = list(map(list, zip(pro_portal_toggle_list_primary, portalurl_list_primary, username_list_primary, password_list_primary, aoi_path_list_primary, output_prj_list_primary, gdb_outdir_list_primary, featurelayerurl_list_primary, featureservice_name_list_primary, multiprocess_list_primary, multiprocess_toggle_list_primary)))
+    inputs_list_primary = list(map(list, zip(pro_portal_toggle_list_primary, portalurl_list_primary, username_list_primary, password_list_primary, aoi_path_list_primary, output_prj_list_primary, gdb_outdir_list_primary, featurelayerurl_list_primary, featurelayer_name_list_primary, featureservice_name_list_primary, multiprocess_list_primary, multiprocess_toggle_list_primary)))
 
 
     ############################################################################
-    ## BEGIN MULTIPROCESSOR
+    ## PRIMARY FEATURE LAYER PROCESSING
     ############################################################################
     arcpy.AddMessage("\u200B")
     arcpy.AddMessage("\u200B")
@@ -1495,53 +1693,70 @@ if __name__=='__main__':
 
     #Run FeatureLayerDownload function
     if(multiprocess_toggle == "true"):
-        arcpy.AddMessage("..BEGIN MULTIPROCESSING")
+        arcpy.AddMessage("..BEGIN MULTIPROCESSING: " + str(len(inputs_list_primary)) + " FEATURE LAYER QUERIES TO PROCESS")
         FeatureLayerDownload.execute_services(inputs_list_primary)
         arcpy.AddMessage("..FINISHED MULTIPROCESSING")
 
     else:
         for i in range(0, len(inputs_list_primary)):
-            arcpy.AddMessage("..FEATURE LAYER " + str(i+1) + " OUT OF " + str(len(inputs_list_primary)))
+            arcpy.AddMessage("..FEATURE LAYER QUERY " + str(i+1) + " OUT OF " + str(len(inputs_list_primary)))
             curr_inputs_list = inputs_list_primary[i]
             worker_function_services(curr_inputs_list)
 
 
-    #Now test to see if any queries, selections, or exports failed during the primary multiprocessing
+    ############################################################################
+    ## SECONDARY FEATURE LAYER PROCESSING
+    ############################################################################
+
+    #Now test to see if any queries, projections, selections, or exports failed during the primary multiprocessing
     filelist = os.listdir(outdir)
-    queryfailcsv_list = []
-    selectfailcsv_list = []
-    exportfailcsv_list = []
-    failcsv_list = []
+    primary_toplevelfailcsv_list = []
+    primary_queryfailcsv_list = []
+    primary_projectfailcsv_list = []
+    primary_selectfailcsv_list = []
+    primary_exportcountfail_list = []
+    primary_exportfailcsv_list = []
     for i in range(0, len(filelist)):
         curr_file = filelist[i]
-        if(curr_file[0:17] == "queryfail_primary"):
-            queryfailcsv_list.append(curr_file)
-        if(curr_file[0:18] == "selectfail_primary"):
-            selectfailcsv_list.append(curr_file)
-        if(curr_file[0:18] == "exportfail_primary"):
-            exportfailcsv_list.append(curr_file)
-    failcsv_list = queryfailcsv_list + selectfailcsv_list + exportfailcsv_list
+        if(curr_file[0:22] == "primary_toplevelfail"):
+            primary_toplevelfailcsv_list.append(curr_file)
+        if(curr_file[0:17] == "primary_queryfail"):
+            primary_queryfailcsv_list.append(curr_file)
+        if(curr_file[0:19] == "primary_projectfail"):
+            primary_projectfailcsv_list.append(curr_file)
+        if(curr_file[0:18] == "primary_selectfail"):
+            primary_selectfailcsv_list.append(curr_file)
+        if(curr_file[0:23] == "primary_exportcountfail"):
+            primary_exportcountfail_list.append(curr_file)
+        if(curr_file[0:18] == "primary_exportfail"):
+            primary_exportfailcsv_list.append(curr_file)
+    primary_failcsv_list = primary_toplevelfailcsv_list + primary_queryfailcsv_list + primary_projectfailcsv_list + primary_selectfailcsv_list + primary_exportcountfail_list+ primary_exportfailcsv_list
 
     #If any secondary featurelayerurls, or if any queries, selections, or exports failed, run secondary multiprocessor
-    if((len(featurelayerurl_list_secondary) > 0) or (len(failcsv_list) > 0)):
+    if((len(featurelayerurl_list_secondary) > 0) or (len(primary_failcsv_list) > 0)):
 
         #Get list of feature layer URLs from failed items
-        failcsv_urllist = []
-        failcsv_featureservicenamelist = []
-        for i in range(0, len(failcsv_list)):
-            curr_csv = failcsv_list[i]
+        primary_failcsv_urllist = []
+        primary_failcsv_featurelayernamelist = []
+        primary_failcsv_featureservicenamelist = []
+        for i in range(0, len(primary_failcsv_list)):
+            curr_csv = primary_failcsv_list[i]
             curr_csv_path = outdir + "/" + curr_csv
             curr_df = pandas.read_csv(curr_csv_path)
             curr_featurelayer_url = curr_df["URL"][0]
+            curr_featurelayer = arcgis.features.FeatureLayer(curr_featurelayer_url)
+            curr_featurelayer_name = curr_featurelayer.properties.name
             curr_featureservice = gis.content.get(curr_featurelayer.properties.serviceItemId)
             curr_featureservice_name = curr_featureservice.name
-            failcsv_urllist.append(curr_featurelayer_url)
-            failcsv_featureservicenamelist.append(curr_featureservice_name)
+            primary_failcsv_urllist.append(curr_featurelayer_url)
+            primary_failcsv_featurelayernamelist.append(curr_featurelayer_name)
+            primary_failcsv_featureservicenamelist.append(curr_featureservice_name)
 
         #If any feature layers failed during the primary multiprocessing, append them to the secondary list
-        if(len(failcsv_urllist)>0):
-            featurelayerurl_list_secondary = featurelayerurl_list_secondary + failcsv_urllist
-            featureservice_name_list_secondary = featureservice_name_list_secondary + failcsv_featureservicenamelist
+        if(len(primary_failcsv_urllist)>0):
+            featurelayerurl_list_secondary = featurelayerurl_list_secondary + primary_failcsv_urllist
+            featurelayer_name_list_secondary = featurelayer_name_list_secondary + primary_failcsv_featurelayernamelist
+            featureservice_name_list_secondary = featureservice_name_list_secondary + primary_failcsv_featureservicenamelist
 
         #Create input lists for secondary multiprocessing
         objid_count = len(objid_list)
@@ -1555,10 +1770,11 @@ if __name__=='__main__':
         output_prj_list_secondary = [output_prj] * (objid_count * featurelayer_count_secondary)
         gdb_outdir_list_secondary = [outdir] * (objid_count * featurelayer_count_secondary)
         featurelayerurl_list_secondary_all = featurelayerurl_list_secondary * objid_count
+        featurelayer_name_list_secondary_all = featurelayer_name_list_secondary * objid_count
         featureservice_name_list_secondary_all = featureservice_name_list_secondary * objid_count
         multiprocess_list_secondary = ["Secondary"] * (objid_count * featurelayer_count_secondary)
         multiprocess_toggle_list_secondary = [multiprocess_toggle] * (objid_count * featurelayer_count_secondary)
-        inputs_list_secondary = list(zip(pro_portal_toggle_list_secondary, portalurl_list_secondary, username_list_secondary, password_list_secondary, aoi_path_list_secondary, output_prj_list_secondary, gdb_outdir_list_secondary, featurelayerurl_list_secondary_all, featureservice_name_list_secondary_all, multiprocess_list_secondary, multiprocess_toggle_list_secondary))
+        inputs_list_secondary = list(zip(pro_portal_toggle_list_secondary, portalurl_list_secondary, username_list_secondary, password_list_secondary, aoi_path_list_secondary, output_prj_list_secondary, gdb_outdir_list_secondary, featurelayerurl_list_secondary_all, featurelayer_name_list_secondary_all, featureservice_name_list_secondary_all, multiprocess_list_secondary, multiprocess_toggle_list_secondary))
 
         #Run secondary multiprocessor
         arcpy.AddMessage("\u200B")
@@ -1573,17 +1789,107 @@ if __name__=='__main__':
 
         #Run FeatureLayerDownload function
         if(multiprocess_toggle == "true"):
-            arcpy.AddMessage("..BEGIN MULTIPROCESSING")
+            arcpy.AddMessage("..BEGIN MULTIPROCESSING: " + str(len(inputs_list_secondary)) + " FEATURE LAYER QUERIES TO PROCESS")
             FeatureLayerDownload.execute_services(inputs_list_secondary)
             arcpy.AddMessage("..FINISHED MULTIPROCESSING")
 
         else:
             for i in range(0, len(inputs_list_secondary)):
-                arcpy.AddMessage("..FEATURE LAYER " + str(i+1) + " OUT OF " + str(len(inputs_list_secondary)))
+                arcpy.AddMessage("..FEATURE LAYER QUERY " + str(i+1) + " OUT OF " + str(len(inputs_list_secondary)))
                 curr_inputs_list = inputs_list_secondary[i]
                 worker_function_services(curr_inputs_list)
 
 
+    ############################################################################
+    ## TERTIARY FEATURE LAYER PROCESSING
+    ############################################################################
+
+    #Now test to see if any queries, projections, selections, or exports failed during the secondary multiprocessing
+    filelist = os.listdir(outdir)
+    secondary_toplevelfailcsv_list = []
+    secondary_queryfailcsv_list = []
+    secondary_projectfailcsv_list = []
+    secondary_selectfailcsv_list = []
+    secondary_exportcountfailcsv_list = []
+    secondary_exportfailcsv_list = []
+    secondary_failcsv_list = []
+    for i in range(0, len(filelist)):
+        curr_file = filelist[i]
+        if(curr_file[0:22] == "secondary_toplevelfail"):
+            secondary_toplevelfailcsv_list.append(curr_file)
+        if(curr_file[0:19] == "secondary_queryfail"):
+            secondary_queryfailcsv_list.append(curr_file)
+        if(curr_file[0:21] == "secondary_projectfail"):
+            secondary_projectfailcsv_list.append(curr_file)
+        if(curr_file[0:20] == "secondary_selectfail"):
+            secondary_selectfailcsv_list.append(curr_file)
+        if(curr_file[0:25] == "secondary_exportcountfail"):
+            secondary_exportcountfailcsv_list.append(curr_file)
+        if(curr_file[0:20] == "secondary_exportfail"):
+            secondary_exportfailcsv_list.append(curr_file)
+    secondary_failcsv_list = secondary_toplevelfailcsv_list + secondary_queryfailcsv_list + secondary_projectfailcsv_list + secondary_selectfailcsv_list + secondary_exportcountfailcsv_list + secondary_exportfailcsv_list
+
+    #If any secondary featurelayerurls, or if any queries, selections, or exports failed, run tertiary processing
+    if(len(secondary_failcsv_list) > 0):
+
+        #Get list of feature layer URLs from failed items
+        pro_portal_toggle_list_tertiary = []
+        portalurl_list_tertiary = []
+        username_list_tertiary = []
+        password_list_tertiary = []
+        aoi_path_list_tertiary = []
+        output_prj_list_tertiary = []
+        gdb_outdir_list_tertiary = []
+        featurelayerurl_list_tertiary_all = []
+        featurelayer_name_list_tertiary_all = []
+        featureservice_name_list_tertiary_all = []
+        multiprocess_list_tertiary = []
+        multiprocess_toggle_list_tertiary = []
+        for i in range(0, len(secondary_failcsv_list)):
+            curr_csv = secondary_failcsv_list[i]
+            curr_csv_path = outdir + "/" + curr_csv
+            curr_df = pandas.read_csv(curr_csv_path)
+            curr_featurelayer_name = curr_df["SHORTNAME"][0]
+            curr_featurelayer_url = curr_df["URL"][0]
+            curr_aoi_fc_path = curr_df["AOIFCPATH"][0]
+            curr_featurelayer = arcgis.features.FeatureLayer(curr_featurelayer_url)
+            curr_featureservice = gis.content.get(curr_featurelayer.properties.serviceItemId)
+            curr_featureservice_name = curr_featureservice.name
+
+            #Append to input lists for tertiary processing
+            pro_portal_toggle_list_tertiary.append(pro_portal_toggle)
+            portalurl_list_tertiary.append(portalurl)
+            username_list_tertiary.append(username)
+            password_list_tertiary.append(password)
+            aoi_path_list_tertiary.append(curr_aoi_fc_path)
+            output_prj_list_tertiary.append(output_prj)
+            gdb_outdir_list_tertiary.append(outdir)
+            featurelayerurl_list_tertiary_all.append(curr_featurelayer_url)
+            featurelayer_name_list_tertiary_all.append(curr_featurelayer_name)
+            featureservice_name_list_tertiary_all.append(curr_featureservice_name)
+            multiprocess_list_tertiary.append("Tertiary")
+            multiprocess_toggle_list_tertiary.append(multiprocess_toggle)
+
+
+        #Create inputs list for tertiary processing
+        inputs_list_tertiary = list(zip(pro_portal_toggle_list_tertiary, portalurl_list_tertiary, username_list_tertiary, password_list_tertiary, aoi_path_list_tertiary, output_prj_list_tertiary, gdb_outdir_list_tertiary, featurelayerurl_list_tertiary_all, featurelayer_name_list_tertiary_all, featureservice_name_list_tertiary_all, multiprocess_list_tertiary, multiprocess_toggle_list_tertiary))
+
+        #Run tertiary processing
+        arcpy.AddMessage("\u200B")
+        arcpy.AddMessage("\u200B")
+        arcpy.AddMessage("TERTIARY FEATURE LAYER PROCESSING")
+
+        #Re-establish connection to the ArcGIS Online Org incase the token expired
+        if(pro_portal_toggle == "Yes"):
+            gis = GIS("pro")
+        else:
+            gis = GIS(portalurl, username, password, verify_cert=False)
+
+        #Run FeatureLayerDownload function
+        for i in range(0, len(inputs_list_tertiary)):
+            arcpy.AddMessage("..FEATURE LAYER QUERY " + str(i+1) + " OUT OF " + str(len(inputs_list_tertiary)))
+            curr_inputs_list = inputs_list_tertiary[i]
+            worker_function_services(curr_inputs_list)
 
 
     ############################################################################
@@ -1663,111 +1969,138 @@ if __name__=='__main__':
         ########################################################################
         ## CREATE OUTPUT FEATURE CLASSES
         ########################################################################
-        #I first tried to simply use merge via arcpy to pull all the corresponding feature classes together, but
-        #for some reason it wasn't merging all features. There would be holes in the output datasets. I wonder if
-        #I was hitting a feature count limitation for the merge tool. Not sure.
-        #So, I came up with a way to do it using Pandas SpatialDataFrames, which is what I'm doing here. I'm concatenating
-        #all feature class features into a single dataframe, then exporting as a feature class.
 
-        #If just one GDB/FC simply copy it over
+        #If just one GDB/FC just copy it over
         if( len(fc_path_list) == 1 ):
             arcpy.AddMessage("....CREATING OUTPUT FEATURE CLASS")
             arcpy.Copy_management(curr_fcpath, target_fc_path)
 
         else:
-            #Else if multiple feature classes, concatenate all into a single SDF
-            arcpy.AddMessage("....MERGING " + str(len(fc_path_list)) + " FEATURE CLASSES")
-            sdf_concat_list = []
+
+            #Build list of feature class counts
+            arcpy.AddMessage("....CREATING LIST OF FEATURE CLASS COUNTS ")
+            merge_count_list = []
             for j in range(0, len(fc_path_list)):
 
-                #Create SDF for current iteration
-                iter_sdf = arcgis.GeoAccessor.from_featureclass(fc_path_list[j])
+                #Get counts
+                curr_fc = fc_path_list[j]
+                merge_count_list.append(int(str(arcpy.GetCount_management(curr_fc))))
 
-                #If it's the first ieration, create the output SDF. Else concatenate to it.
-                if(j == 0):
-                    output_sdf = iter_sdf
-                if(j > 0):
-                    sdf_concat_list = [output_sdf, iter_sdf]
-                    output_sdf = pandas.concat(sdf_concat_list)
+            #Perform Merge
+            arcpy.AddMessage("....MERGING " + str(len(fc_path_list)) + " FEATURE CLASSES")
+            arcpy.Merge_management(fc_path_list, target_fc_path)
 
-            #Now export concatenated SDF to feature class
-            try:
-                arcpy.AddMessage("....CREATING OUTPUT FEATURE CLASS")
+            #Get count of merge product
+            target_fc_count = int(str(arcpy.GetCount_management(target_fc_path)))
 
-                #For certain datasets, first drop fields that are known to be cause errors when exporting to feature classes
-                if(curr_fcname == "FSOffices"):
-                    output_sdf = output_sdf.drop(["LAST_CONDITION_SURVEY", "FACILITY_MASTER_PLAN_DATE", "PRELIM_PROJECT_ANALYSIS_DATE", "REV_DATE"], axis=1)
-                if(curr_fcname == "FSNationalRecreationSites"):
-                    output_sdf = output_sdf.drop(["CONDITION_SURVEY_DATE"], axis=1)
-                if(curr_fcname == "InfrastructureBridgeEDWDeckType"):
-                    output_sdf = output_sdf.drop(["INSPECTION_DATE"], axis=1)
-                if(curr_fcname == "InfrastructureDamEDW"):
-                    output_sdf = output_sdf.drop(["INSPECTION_DATE", "REV_DATE"], axis=1)
-                if(curr_fcname == "NPSNationalRecreationSites"):
-                    output_sdf = output_sdf.drop(["SOURCEDATE"], axis=1)
-                if(curr_fcname == "USFSFirePerimeters"):
-                    output_sdf = output_sdf.drop(["DISCOVERYDATETIME", "PERIMETERDATETIME"], axis=1)
+            #I first tried to simply use merge via arcpy to pull all the corresponding feature classes together, but
+            #for some reason it wasn't merging all features. There would be gaps in the output datasets. I wonder if
+            #I was hitting some feature class or feature count limitation for the merge tool. Not sure.
+            #So, I came up with a way to do it using Pandas SpatialDataFrames, which is what I'm doing here. I'm concatenating
+            #all feature class features into a single dataframe, then exporting as a feature class.
+            #Do this only if the arcpy merge doesn't work, as in, the feature counts don't add up
+            if(target_fc_count != sum(merge_count_list)):
 
-                #Export to feature class
-                output_sdf.spatial.to_featureclass(target_fc_path, sanitize_columns=False)
+                arcpy.AddMessage("....ARCPY MERGE HAS DATA GAPS, RETRYING WITH SPATIAL DATAFRAMES")
+                arcpy.Delete_management(target_fc_path)
 
+                #Else if multiple feature classes, concatenate all into a single SDF
+                arcpy.AddMessage("....MERGING " + str(len(fc_path_list)) + " FEATURE CLASSES")
+                sdf_concat_list = []
+                for j in range(0, len(fc_path_list)):
 
-            #FSOffices (and possibly others) were giving me problems when exporting to feature class.
-            #Looks like its something related to the field data types? Though in my experience, the problematic fields seem to be all date related.
-            #See here: https://community.esri.com/t5/arcgis-api-for-python-questions/system-error-when-exporting-spatially-enabled-dataframe-to/td-p/1044880
-            #In an attempt to get around this, if the export fails, try to determine if there are any problematic fields. If so, drop them, and try again.
-            except:
-                arcpy.AddMessage("......FEATURE CLASS EXPORT FAILED, TESTING IF ANY PROBLEMATIC FIELDS EXIST")
+                    #Create SDF for current iteration
+                    iter_sdf = arcgis.GeoAccessor.from_featureclass(fc_path_list[j])
 
-                #Create list of column names
-                output_sdf_cols = list(output_sdf.columns)
-
-                #Now iterate through columns, and determine if there are any problematic ones
-                good_cols = []
-                bad_cols = []
-                for k in range(0, len(output_sdf_cols)):
-
-                    #Create fresh SDF and column variable
-                    output_sdf = pandas.concat(sdf_concat_list)
-                    curr_col = output_sdf_cols[k]
-                    arcpy.AddMessage("........" + curr_col + " (" + str(k + 1) + " out of " + str(len(output_sdf_cols)) + ")")
-
-                    #Skip if the current column is SHAPE
-                    if(curr_col == "SHAPE"):
-                        continue
-
-                    #Try isolating current column, and re-exporting. If success, record it in a list. If fail, also record it in a list.
-                    try:
-                        output_sdf = output_sdf[[curr_col,"SHAPE"]]
-                        output_sdf.spatial.to_featureclass(target_fc_path, sanitize_columns=False)
-                        good_cols.append(curr_col)
-                    except:
-                        bad_cols.append(curr_col)
-                        arcpy.AddMessage("..........!!!PROBLEMATIC!!!")
-                        continue
-
-                #If bad columns were identified, try dropping them and re-export. If none found, or if export fails again after dropping columns, skip dataset
-                if(len(bad_cols) > 0):
-                    arcpy.AddMessage("......DROPPING PROBLEMATIC FIELDS, AND RE-ATTEMPTING FEATURE CLASS EXPORT")
-                    try:
+                    #If it's the first ieration, create the output SDF. Else concatenate to it.
+                    if(j == 0):
+                        output_sdf = iter_sdf
+                    if(j > 0):
+                        sdf_concat_list = [output_sdf, iter_sdf]
                         output_sdf = pandas.concat(sdf_concat_list)
-                        output_sdf = output_sdf.drop(bad_cols, axis=1)
-                        output_sdf.spatial.to_featureclass(target_fc_path, sanitize_columns=False)
-                        arcpy.AddMessage("......EXPORT SUCCESS")
-                    except:
-                        arcpy.AddMessage("......FEATURE CLASS EXPORT STILL FAILING, SKIPPING DATASET")
+
+                #Now export concatenated SDF to feature class
+                try:
+                    arcpy.AddMessage("....CREATING OUTPUT FEATURE CLASS")
+
+                    #For certain datasets, first drop fields that are known to be cause errors when exporting to feature classes
+                    if(curr_fcname == "FSOffices"):
+                        output_sdf = output_sdf.drop(["LAST_CONDITION_SURVEY", "FACILITY_MASTER_PLAN_DATE", "PRELIM_PROJECT_ANALYSIS_DATE", "REV_DATE"], axis=1)
+                    if(curr_fcname == "FSNationalRecreationSites"):
+                        output_sdf = output_sdf.drop(["CONDITION_SURVEY_DATE"], axis=1)
+                    if(curr_fcname == "InfrastructureBridgeEDWDeckType"):
+                        output_sdf = output_sdf.drop(["INSPECTION_DATE"], axis=1)
+                    if(curr_fcname == "InfrastructureDamEDW"):
+                        output_sdf = output_sdf.drop(["INSPECTION_DATE", "REV_DATE"], axis=1)
+                    if(curr_fcname == "NPSNationalRecreationSites"):
+                        output_sdf = output_sdf.drop(["SOURCEDATE"], axis=1)
+                    if(curr_fcname == "USFSFirePerimeters"):
+                        output_sdf = output_sdf.drop(["DISCOVERYDATETIME", "PERIMETERDATETIME"], axis=1)
+
+                    #Export to feature class
+                    output_sdf.spatial.to_featureclass(target_fc_path, sanitize_columns=False)
+
+
+                #FSOffices (and possibly others) were giving me problems when exporting to feature class.
+                #Looks like its something related to the field data types? Though in my experience, the problematic fields seem to be all date related.
+                #See here: https://community.esri.com/t5/arcgis-api-for-python-questions/system-error-when-exporting-spatially-enabled-dataframe-to/td-p/1044880
+                #In an attempt to get around this, if the export fails, try to determine if there are any problematic fields. If so, drop them, and try again.
+                except Exception as e:
+                    arcpy.AddMessage(e)
+                    arcpy.AddMessage("......FEATURE CLASS EXPORT FAILED, TESTING IF ANY PROBLEMATIC FIELDS EXIST")
+
+                    #Create list of column names
+                    output_sdf_cols = list(output_sdf.columns)
+
+                    #Now iterate through columns, and determine if there are any problematic ones
+                    good_cols = []
+                    bad_cols = []
+                    for k in range(0, len(output_sdf_cols)):
+
+                        #Create fresh SDF and column variable
+                        output_sdf = pandas.concat(sdf_concat_list)
+                        curr_col = output_sdf_cols[k]
+                        arcpy.AddMessage("........" + curr_col + " (" + str(k + 1) + " out of " + str(len(output_sdf_cols)) + ")")
+
+                        #Skip if the current column is SHAPE
+                        if(curr_col == "SHAPE"):
+                            continue
+
+                        #Try isolating current column, and re-exporting. If success, record it in a list. If fail, also record it in a list.
+                        try:
+                            output_sdf = output_sdf[[curr_col,"SHAPE"]]
+                            output_sdf.spatial.to_featureclass(target_fc_path, sanitize_columns=False)
+                            good_cols.append(curr_col)
+                        except Exception as e:
+                            arcpy.AddMessage(e)
+                            bad_cols.append(curr_col)
+                            arcpy.AddMessage("..........!!!PROBLEMATIC!!!")
+                            continue
+
+                    #If bad columns were identified, try dropping them and re-export. If none found, or if export fails again after dropping columns, skip dataset
+                    if(len(bad_cols) > 0):
+                        arcpy.AddMessage("......DROPPING PROBLEMATIC FIELDS, AND RE-ATTEMPTING FEATURE CLASS EXPORT")
+                        try:
+                            output_sdf = pandas.concat(sdf_concat_list)
+                            output_sdf = output_sdf.drop(bad_cols, axis=1)
+                            output_sdf.spatial.to_featureclass(target_fc_path, sanitize_columns=False)
+                            arcpy.AddMessage("......EXPORT SUCCESS")
+                        except Exception as e:
+                            arcpy.AddMessage(e)
+                            arcpy.AddMessage("......FEATURE CLASS EXPORT STILL FAILING, SKIPPING DATASET")
+                            continue
+                    else:
+                        arcpy.AddMessage("......NO PROBLEMATIC FIELDS IDENTIFIED, SKIPPING DATASET")
                         continue
-                else:
-                    arcpy.AddMessage("......NO PROBLEMATIC FIELDS IDENTIFIED, SKIPPING DATASET")
-                    continue
+
+                #Clear output_sdf from memory
+                del output_sdf
+                del sdf_concat_list
+                gc.collect()
 
             #Remove identical features in output feature class
             arcpy.AddMessage("....REMOVING DUPLICATE FEATURES")
             arcpy.DeleteIdentical_management(target_fc_path, fields=["Shape"])
-
-            #Clear output_sdf from memory
-            del output_sdf
-            del sdf_concat_list
 
         #Delete GDBs
         arcpy.AddMessage("....DELETING SCRATCH GDBs")
@@ -1789,32 +2122,60 @@ if __name__=='__main__':
 
         arcpy.AddMessage("..PROCESSING: HIFLDRoads")
 
-        #Create PrimaryHighway/SecondaryHighway/Roads SDFs
-        sdf_concat_list = []
+        #Create hifld_merge_list
+        hifld_merge_list = []
+        hifld_count_list = []
         if(arcpy.Exists(primaryhwy_target_fc_path)):
-            primaryhwy_sdf = arcgis.GeoAccessor.from_featureclass(primaryhwy_target_fc_path)
-            sdf_concat_list.append(primaryhwy_sdf)
+            hifld_merge_list.append(primaryhwy_target_fc_path)
+            primaryhwy_count = int(str(arcpy.GetCount_management(primaryhwy_target_fc_path)))
+            hifld_count_list.append(primaryhwy_count)
         if(arcpy.Exists(secondaryhwy_target_fc_path)):
-            secondaryhwy_sdf = arcgis.GeoAccessor.from_featureclass(secondaryhwy_target_fc_path)
-            sdf_concat_list.append(secondaryhwy_sdf)
+            hifld_merge_list.append(secondaryhwy_target_fc_path)
+            secondaryhwy_count = int(str(arcpy.GetCount_management(secondaryhwy_target_fc_path)))
+            hifld_count_list.append(secondaryhwy_count)
         if(arcpy.Exists(roads_target_fc_path)):
-            roads_sdf = arcgis.GeoAccessor.from_featureclass(roads_target_fc_path)
-            sdf_concat_list.append(roads_sdf)
+            hifld_merge_list.append(roads_target_fc_path)
+            roads_count = int(str(arcpy.GetCount_management(roads_target_fc_path)))
+            hifld_count_list.append(roads_count)
 
-        #Concatenate PrimaryHighway/SecondaryHighway/Roads SDFs together
-        if( len(sdf_concat_list) > 1):
-            arcpy.AddMessage("....MERGING PrimaryHighway/SecondaryHighway/Roads FEATURE CLASSES")
-            output_sdf = pandas.concat(sdf_concat_list)
-        else:
-            output_sdf = sdf_concat_list[0]
+        #Perform Merge
+        arcpy.AddMessage("....MERGING PrimaryHighway/SecondaryHighway/Roads FEATURE CLASSES")
+        arcpy.Merge_management(hifld_merge_list, hifldroads_fc_outpath)
+        hifld_merge_count = int(str(arcpy.GetCount_management(hifldroads_fc_outpath)))
 
-        #Create output feature class
-        arcpy.AddMessage("....CREATING OUTPUT FEATURE CLASS")
-        output_sdf.spatial.to_featureclass(hifldroads_fc_outpath, sanitize_columns=False)
+        #If the feature counts don't match, retry with the Spatial Dataframe method
+        if(hifld_merge_count != sum(hifld_count_list)):
 
-        #Remove identical features
-        arcpy.AddMessage("....REMOVING DUPLICATE FEATURES")
-        arcpy.DeleteIdentical_management(hifldroads_fc_outpath, fields=["Shape"])
+            arcpy.AddMessage("....ARCPY MERGE HAS DATA GAPS, RETRYING WITH SPATIAL DATAFRAMES")
+            arcpy.Delete_management(hifldroads_fc_outpath)
+
+            #Create PrimaryHighway/SecondaryHighway/Roads SDFs
+            sdf_concat_list = []
+            if(arcpy.Exists(primaryhwy_target_fc_path)):
+                primaryhwy_sdf = arcgis.GeoAccessor.from_featureclass(primaryhwy_target_fc_path)
+                sdf_concat_list.append(primaryhwy_sdf)
+            if(arcpy.Exists(secondaryhwy_target_fc_path)):
+                secondaryhwy_sdf = arcgis.GeoAccessor.from_featureclass(secondaryhwy_target_fc_path)
+                sdf_concat_list.append(secondaryhwy_sdf)
+            if(arcpy.Exists(roads_target_fc_path)):
+                roads_sdf = arcgis.GeoAccessor.from_featureclass(roads_target_fc_path)
+                sdf_concat_list.append(roads_sdf)
+
+            #Concatenate PrimaryHighway/SecondaryHighway/Roads SDFs together
+            if( len(sdf_concat_list) > 1):
+                arcpy.AddMessage("....MERGING PrimaryHighway/SecondaryHighway/Roads FEATURE CLASSES")
+                output_sdf = pandas.concat(sdf_concat_list)
+            else:
+                output_sdf = sdf_concat_list[0]
+
+            #Create output feature class
+            arcpy.AddMessage("....CREATING OUTPUT FEATURE CLASS")
+            output_sdf.spatial.to_featureclass(hifldroads_fc_outpath, sanitize_columns=False)
+
+            #Clear output_sdf from memory
+            del output_sdf
+            del sdf_concat_list
+            gc.collect()
 
 
     ############################################################################
@@ -1858,18 +2219,27 @@ if __name__=='__main__':
     arcpy.AddMessage("\u200B")
     arcpy.AddMessage("DELETING SCRATCH FILES")
 
-    #Delete scratch directory
-    arcpy.Delete_management(scratchdir)
+    #KEEPING SCRATCH FOLDER FOR NOW
+    #Get list of files in the scratch directory
+    #Delete everything except the AOI.gdb
+    #scratchdir_files = os.listdir(scratchdir)
+    #scratchdir_files.remove("AOI.gdb")
+    #if(len(scratchdir_files) > 0):
+        #for i in range(0, len(scratchdir_files)):
+            #curr_file_path = scratchdir + "/" + scratchdir_files[i]
+            #os.remove(curr_file_path)
 
     #Get list of files in the output directory
+    #Delete everything except the FeatureLayerDownload.gdb and the failure CSV files
     outdir_files = os.listdir(outdir)
     outdir_files.remove("FeatureLayerDownload.gdb")
+    outdir_files.remove("_scratch")
     if(len(outdir_files) > 0):
         for i in range(0, len(outdir_files)):
             curr_file_path = outdir + "/" + outdir_files[i]
-            os.remove(curr_file_path)
-
-
+            curr_file_ext = curr_file_path[-3:]
+            if(not curr_file_ext == "csv"):
+                os.remove(curr_file_path)
 
 
     arcpy.AddMessage("\u200B")
