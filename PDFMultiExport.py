@@ -80,13 +80,13 @@ def worker_function(in_inputs_list):
         ftp_user_specified_val = curr_in_inputs_list[25]
         ftpuploaddir_val = curr_in_inputs_list[26]
 
-        clipgraphics_val = curr_in_inputs_list[27]
+        clipgraphics_val = str(curr_in_inputs_list[27]) == "True"
         imagecompress_val = curr_in_inputs_list[28]
         imagecompressquality_val = int(curr_in_inputs_list[29])
-        compressvectorgraphics_val = curr_in_inputs_list[30]
+        compressvectorgraphics_val = str(curr_in_inputs_list[30])  == "True"
         vectorresolution_val = int(curr_in_inputs_list[31])
         rasterresample_val = curr_in_inputs_list[32]
-        embedfonts_val = curr_in_inputs_list[33]
+        embedfonts_val = str(curr_in_inputs_list[33]) == "True"
         layersattributes_val = curr_in_inputs_list[34]
 
         layoutname = curr_in_inputs_list[35]
@@ -722,11 +722,11 @@ if __name__=="__main__":
     incident_id = arcpy.GetParameterAsText(1)
 
     #Specify the products directory
-    #products_dir = r"C:\Workspace\FireNet\2021_CATIA_Windy - GIS Data\2021_Windy\products"
+    #products_dir = r"C:\Workspace\OneDrive - FireNet\2021_Windy\products"
     products_dir = arcpy.GetParameterAsText(2)
 
     #Specify the path to the "ExportPDFtable.xlsx" file
-    #export_table_xlsx_path = r"C:\Workspace\development\PanunTools-main\PDFMultiExport_Test2.xlsx"
+    #export_table_xlsx_path = r"C:\Workspace\OneDrive - FireNet\2021_Windy\tools\PanunTools-main_new\PDFMultiExport.xlsx"
     export_table_xlsx_path = arcpy.GetParameterAsText(3)
 
     #Toggle for FTP Upload
