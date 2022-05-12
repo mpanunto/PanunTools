@@ -27,6 +27,7 @@ Here is a sample of what the spreadsheet looks like:
     - NIFC FTP Username
     - NIFC FTP Password
     - Toggle for using Multiprocessor
+    - Toggle for performing Offline License Check
 5. Run tool
 
 ![screenshot_PDFMultiExport_2.png](/docs/screenshot_PDFMultiExport_2.png?raw=true)
