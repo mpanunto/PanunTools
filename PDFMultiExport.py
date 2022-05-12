@@ -11,7 +11,7 @@
 #Import libraries
 print("Importing Libraries")
 print(" ")
-import arcpy, pandas, time, datetime, os, sys, multiprocessing, random, ftplib, glob
+import arcpy, pandas, time, datetime, os, sys, multiprocessing, random, ftplib, glob, shutil
 from urllib.request import urlopen
 from multiprocessing import Pool, freeze_support
 
@@ -80,13 +80,13 @@ def worker_function(in_inputs_list):
         ftp_user_specified_val = curr_in_inputs_list[25]
         ftpuploaddir_val = curr_in_inputs_list[26]
 
-        clipgraphics_val = str(curr_in_inputs_list[27]) == "True"
+        clipgraphics_val = curr_in_inputs_list[27]
         imagecompress_val = curr_in_inputs_list[28]
         imagecompressquality_val = int(curr_in_inputs_list[29])
-        compressvectorgraphics_val = str(curr_in_inputs_list[30])  == "True"
+        compressvectorgraphics_val = curr_in_inputs_list[30]
         vectorresolution_val = int(curr_in_inputs_list[31])
         rasterresample_val = curr_in_inputs_list[32]
-        embedfonts_val = str(curr_in_inputs_list[33]) == "True"
+        embedfonts_val = curr_in_inputs_list[33]
         layersattributes_val = curr_in_inputs_list[34]
 
         layoutname = curr_in_inputs_list[35]
@@ -726,7 +726,7 @@ if __name__=="__main__":
     products_dir = arcpy.GetParameterAsText(2)
 
     #Specify the path to the "ExportPDFtable.xlsx" file
-    #export_table_xlsx_path = r"C:\Workspace\OneDrive - FireNet\2021_Windy\tools\PanunTools-main_new\PDFMultiExport.xlsx"
+    #export_table_xlsx_path = r"C:\Workspace\development\PanunTools-main\PDFMultiExport_Test2.xlsx"
     export_table_xlsx_path = arcpy.GetParameterAsText(3)
 
     #Toggle for FTP Upload
@@ -742,6 +742,9 @@ if __name__=="__main__":
     #Toggle for Multiprocessor use
     #multiprocess_toggle = "true"
     multiprocess_toggle = arcpy.GetParameterAsText(7)
+
+    #offline_license_check = "Yes"
+    offline_license_check = arcpy.GetParameterAsText(8)
 
 
 
@@ -769,6 +772,80 @@ if __name__=="__main__":
             arcpy.AddWarning("New version of PanunTools available (" + github_version + ") at https://github.com/mpanunto/PanunTools")
     except:
         "skip"
+
+
+    #Test if user's license is offline
+    if(multiprocess_toggle == "true" and offline_license_check == "Yes"):
+        arcpy.AddMessage("\u200B")
+        arcpy.AddMessage("PERFORMING OFFLINE LICENSE CHECK")
+        try:
+            #Create Scratch Directory
+            now = datetime.datetime.now()
+            computername = os.getenv('COMPUTERNAME')
+            scratchdir_datetime_str = now.strftime("%Y%m%d_%H%M")
+            scratchdir = products_dir + "/" + scratchdir_datetime_str + "_" + computername + "_licensecheck"
+            if(os.path.isdir(scratchdir)):
+                shutil.rmtree(scratchdir)
+            os.mkdir(scratchdir)
+
+            appdata_path = os.getenv('LOCALAPPDATA')
+            license_txt_path = appdata_path + "/ESRI_Licensing/Logs/License.log"
+            license_txt_copy_path = scratchdir + "/License.log"
+            shutil.copyfile(license_txt_path, license_txt_copy_path)
+
+            offline_true_list = []
+            offline_false_list = []
+            offline_request_list = []
+            line_number = 0
+            with open(license_txt_copy_path, 'r') as read_obj:
+                for line in read_obj:
+                    line_number += 1
+                    if "Offline mode = false" in line:
+                        offline_false_list.append(line_number)
+                    if "Offline mode = true" in line:
+                        offline_true_list.append(line_number)
+                    if "Application requesting to go in offline mode" in line:
+                        offline_request_list.append(line_number)
+
+
+            #Determine the highest line number (aka the latest occurence) for "Offline mode = false"
+            if(len(offline_false_list) > 0):
+                offline_false_maxline = max(offline_false_list)
+            else:
+                offline_false_maxline = 0
+
+            #Determine the highest line number (aka the latest occurence) for "Offline mode = true"
+            if(len(offline_true_list) > 0):
+                offline_true_maxline = max(offline_true_list)
+            else:
+                offline_true_maxline = 0
+
+            #Determine the highest line number (aka the latest occurence) for "Application requesting to go in offline mode"
+            if(len(offline_request_list) > 0):
+                offline_request_maxline = max(offline_request_list)
+            else:
+                offline_request_maxline = 0
+
+            #Delete Scratch Directory
+            if(os.path.isdir(scratchdir)):
+                shutil.rmtree(scratchdir)
+
+        except Exception as e:
+            arcpy.AddMessage(e)
+            arcpy.AddError("UNABLE TO VERIFY IF ARCGIS PRO LICENSE IS ENABLED FOR OFFLINE USE")
+            arcpy.AddError("DUE TO RISK OF LICENSE CORRUPTION, IT IS RECOMMENDED TO RETURN AN OFFLINE LICENSE WHEN RUNNING THIS TOOL")
+            arcpy.AddError("TO PROCEED WITH AN OFFLINE LICENSE, SET INPUT VALUE 'Perform Offline License Check' TO 'No' AND RE-RUN TOOL")
+            #Delete Scratch Directory
+            if(os.path.isdir(scratchdir)):
+                shutil.rmtree(scratchdir)
+            raise arcpy.ExecuteError
+
+        if( (offline_true_maxline > offline_false_maxline) or (offline_request_maxline > offline_false_maxline)):
+            #Compare the two highest numbers, whichever is higher is the current license status
+            arcpy.AddError("ARCGIS PRO LICENSE IS ENABLED FOR OFFLINE USE")
+            arcpy.AddError("DUE TO RISK OF LICENSE CORRUPTION, IT IS RECOMMENDED TO RETURN AN OFFLINE LICENSE WHEN RUNNING THIS TOOL")
+            arcpy.AddError("TO PROCEED WITH AN OFFLINE LICENSE, SET INPUT VALUE 'Perform Offline License Check' TO 'No' AND RE-RUN TOOL")
+            raise arcpy.ExecuteError
 
 
     #Convert Incident Name to CamelCase
