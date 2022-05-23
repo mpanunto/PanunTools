@@ -4,7 +4,7 @@ Tool that automates the Inviting/Removal of ArcGIS Online users across a series 
 
 ### How does it work?
 
-Using the 'InviteRemoveUser.csv' file, specify a series of ArcGIS Online groups, and usernames that are to be invited or removed. The tool uses this information to automate these tasks via the ArcGIS API for Python.
+Using the 'InviteRemoveUsersAGOL.csv' file, specify a series of ArcGIS Online groups, and usernames that are to be invited or removed. The tool uses this information to automate these tasks via the ArcGIS API for Python.
 
 - The usernames and group names in the default CSV file are simply placeholders, and should be replaced with the actual usernames and group names of interest.
 - Do not rename the 'AGOLUsername' CSV field.
