@@ -1,0 +1,11 @@
+AGOLUsername,GroupName1,GroupName2,GroupName3,GroupName4,GroupName5,GroupName6
+user1_nifc,Invite,Invite,Invite,Invite,Invite,Invite
+user2_nifc,Invite,Invite,,Invite,,
+user3_nifc,,Invite,Invite,,Invite,Invite
+user4_nifc,,,Invite,,,
+user5_nifc,Remove,Remove,Remove,Invite,Invite,Invite
+user6_nifc,Remove,Remove,Remove,Remove,Remove,Remove
+user7_nifc,Remove,Invite,Invite,Invite,Remove,Remove
+user8_nifc,Remove,Remove,Remove,Remove,Remove,Remove
+user9_nifc,Remove,Remove,Remove,Remove,Remove,Remove
+user10_nifc,Remove,Remove,Remove,Remove,Remove,Remove
