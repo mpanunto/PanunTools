@@ -3,16 +3,17 @@
 To improve quality of life while performing the GISS Workflow, this tool does the following:
 1. Calculates geometry for all Event feature classes (optional, and only if geometries have changed)
 2. Inserts missing IrwinIDs and CpxNames, or replaces if incorrect (optional)
-3. Checks for null values in IncidentName field (optional)
-4. Checks for case sensitivity issues and hidden spaces in IncidentName fields (optional)
-5. Checks for proper attribution so that Wildfire Daily Fire Perimeters are accessible to public (optional)
-6. Checks for features with values of DeleteThis = Yes (optional) 
-7. Checks for missing Drop Point and Helispot labels (optional)
-8. Checks for features with FeatureStatus = Proposed (optional)
-9. Checks for features with FeatureStatus = In Review (optional)
-10. Checks for features with Duplicate Geometry (optional)
-11. Creates a new Master Incident GDB and Backup GDB (optional)
-12. Deletes all features in the newly created GDBs that do not match the user specified IncidentName(s) (optional)
+3. Extracts elevations from DEMs, and inserts into Event Point ElevationFeet field (optional)
+4. Checks for null values in IncidentName field (optional)
+5. Checks for case sensitivity issues and hidden spaces in IncidentName fields (optional)
+6. Checks for proper attribution so that Wildfire Daily Fire Perimeters are accessible to public (optional)
+7. Checks for features with values of DeleteThis = Yes (optional) 
+8. Checks for missing Drop Point and Helispot labels (optional)
+9. Checks for features with FeatureStatus = Proposed (optional)
+10. Checks for features with FeatureStatus = In Review (optional)
+11. Checks for features with Duplicate Geometry (optional)
+12. Creates a new Master Incident GDB and Backup GDB (optional)
+13. Deletes all features in the newly created GDBs that do not match the user specified IncidentName(s) (optional)
   
   
 ### How does it work?
@@ -34,21 +35,24 @@ The main idea behind this tool is that once all manual feature and attribute edi
 ### User inputs
 1. Specify Incident Name(s), IrwinID(s), and CpxName(s)
 2. Toggle to calculate geometries, and insert missing/bad IrwinIDs and CpxNames
-3. Path to Mobile GDB (aka local copy)
-4. Specify Coordinate System to use for GISAcres and LengthFeet Calculations
+3. Toggle to insert extracted elevations into Event Point ElevationFeet field
+4. Path to DEM raster
+5. Specify if the DEM's elevation units are in meters or feet
+6. Path to Mobile GDB (aka local copy)
+7. Specify Coordinate System to use for GISAcres and LengthFeet Calculations
     - Point feature geometries are always calculated in WGS84
-5. Specify desired geometry measurement type
-6. Toggle to check for IncidentName issues (case sensitivity and hidden spaces)
-7. Toggle to check for public access to Wildfire Daily Fire Perimeters
-8. Toggle to check for features with values of DeleteThis = Yes
-9. Toggle to check for missing Drop Point and Helispot Labels
-10. Toggle to check for Proposed features
-11. Toggle to check for In Review features
-12. Toggle for Duplicate Geometries (Advanced License Only)
-13. Toggle for creating new Master Incident and Backup GDBs
-14. Path to Master Incident GDB
-15. Specify Incident GDB Backup directory
-16. Toggle to only keep features with user specified IncidentNames(s)
+8. Specify desired geometry measurement type
+9. Toggle to check for IncidentName issues (case sensitivity and hidden spaces)
+10. Toggle to check for public access to Wildfire Daily Fire Perimeters
+11. Toggle to check for features with values of DeleteThis = Yes
+12. Toggle to check for missing Drop Point and Helispot Labels
+13. Toggle to check for Proposed features
+14. Toggle to check for In Review features
+15. Toggle for Duplicate Geometries (Advanced License Only)
+16. Toggle for creating new Master Incident and Backup GDBs
+17. Path to Master Incident GDB
+18. Specify Incident GDB Backup directory
+19. Toggle to only keep features with user specified IncidentNames(s)
     - All other features will be deleted from the new Master Incident GDB
 
 ![screenshot_GISSWorkflowAssistant_1.png](/docs/screenshot_GISSWorkflowAssistant_1.png?raw=true)
