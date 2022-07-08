@@ -12,6 +12,7 @@ Using the ArcGIS API for Python, the tool will attempt to connect to the user sp
 - Last Name
 - Group Role
 - Org Role
+- Last Login
 - Email
 
 This information is then compiled into a dataframe and exported to a CSV file.
