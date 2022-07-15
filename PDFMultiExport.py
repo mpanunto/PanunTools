@@ -92,6 +92,20 @@ def worker_function(in_inputs_list):
         layoutname = curr_in_inputs_list[35]
         aprxpath = curr_in_inputs_list[36]
 
+        #For some reason, the multiprocessor doesn't like the boolean values read from the spreadsheet, it seems
+        #to be reading them in as strings instead of bools. Ensuring the values are bool here.
+        if(clipgraphics_val == "True"):
+            clipgraphics_val = True
+        if(clipgraphics_val == "False"):
+            clipgraphics_val = False
+        if(compressvectorgraphics_val == "True"):
+            compressvectorgraphics_val = True
+        if(compressvectorgraphics_val == "False"):
+            compressvectorgraphics_val = False
+        if(embedfonts_val == "True"):
+            embedfonts_val = True
+        if(embedfonts_val == "False"):
+            embedfonts_val = False
 
         #If export was requested, proceed
         if export == "YES":
@@ -715,22 +729,22 @@ def execute(inputs):
 if __name__=="__main__":
 
     #Specify incident name, unit id, and incident number
-    #incident_name = "Windy"
+    #incident_name = "Jacob City"
     incident_name = arcpy.GetParameterAsText(0)
 
-    #incident_id = "CA-TIA-003058"
+    #incident_id = "UT-NWS-000342"
     incident_id = arcpy.GetParameterAsText(1)
 
     #Specify the products directory
-    #products_dir = r"C:\Workspace\OneDrive - FireNet\2021_Windy\products"
+    #products_dir = r"C:\Workspace\FireNet\2022_UTNWS_JacobCity - GIS Data\2022_JacobCity\products"
     products_dir = arcpy.GetParameterAsText(2)
 
     #Specify the path to the "ExportPDFtable.xlsx" file
-    #export_table_xlsx_path = r"C:\Workspace\development\PanunTools-main\PDFMultiExport_Test2.xlsx"
+    #export_table_xlsx_path = r"C:\Workspace\FireNet\2022_UTNWS_JacobCity - GIS Data\2022_JacobCity\tools\PanunTools-main\PDFMultiExport.xlsx"
     export_table_xlsx_path = arcpy.GetParameterAsText(3)
 
     #Toggle for FTP Upload
-    #ftpupload_toggle = "Yes"
+    #ftpupload_toggle = "No"
     ftpupload_toggle = arcpy.GetParameterAsText(4)
 
     #ftp_username = "mpanunto"
