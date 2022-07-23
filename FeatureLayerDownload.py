@@ -787,35 +787,42 @@ def worker_function_elevwetland(in_inputs_list):
 
 
         #Determine if any GDBs are missing an Elev_Contour or Wetland feature class
-        nonexist_elevcontour_list = []
+        nonexist_elevcontour_wetland_list = []
         for i in range(0, len(elevcontour_wetland_fc_path_list)):
             curr_elevcontour_wetland_fcpath = elevcontour_wetland_fc_path_list[i]
             if(not arcpy.Exists(curr_elevcontour_wetland_fcpath)):
-                nonexist_elevcontour_list.append(curr_elevcontour_wetland_fcpath)
+                nonexist_elevcontour_wetland_list.append(curr_elevcontour_wetland_fcpath)
+                arcpy.AddMessage("..GDB MISSING FEATURE CLASS")
         #If any GDBs are missing a Elev_Contour or Wetland feature class, remove their path from the list
-        if(len(nonexist_elevcontour_list) > 0):
-            elevcontour_wetland_fc_path_list_final = [x for x in elevcontour_wetland_fc_path_list if x not in nonexist_elevcontour_list]
+        if(len(nonexist_elevcontour_wetland_list) > 0):
+            elevcontour_wetland_fc_path_list_final = [x for x in elevcontour_wetland_fc_path_list if x not in nonexist_elevcontour_wetland_list]
         else:
             elevcontour_wetland_fc_path_list_final = elevcontour_wetland_fc_path_list
 
 
+        #If no wetland feature classes, skip copy/merge, and delete GDB
+        if( len(elevcontour_wetland_fc_path_list_final) == 0 ):
+            arcpy.AddMessage("..NO FEATURE CLASSES FOUND IN GDBs, SKIPPING COPY/MERGE")
+            arcpy.Delete_management(elevcontour_wetland_gdb_path)
 
-        #Merge all features together
+
+        #If single feature class, just copy over
         if( len(elevcontour_wetland_fc_path_list_final) == 1 ):
             arcpy.AddMessage("..COPYING FEATURE CLASS")
 
             copy_check = False
             while(copy_check == False):
                 try:
-                    arcpy.Copy_management(curr_elevcontour_wetland_fcpath, elevcontour_wetland_fc_outpath)
+                    arcpy.Copy_management(elevcontour_wetland_fc_path_list_final[0], elevcontour_wetland_fc_outpath)
                     copy_check = True
                     arcpy.AddMessage("..COPY COMPLETE")
                 except Exception as e:
                     arcpy.AddMessage(e)
                     arcpy.AddMessage("....FAILED TO COPY FEATURE CLASS, RE-TRYING")
                     time.sleep(5)
-        else:
-            #Else if multiple feature classes, merge all into a single SDF
+
+        #If multiple feature classes, merge all into a single SDF
+        if( len(elevcontour_wetland_fc_path_list_final) > 1 ):
             arcpy.AddMessage("..MERGING " + str(len(elevcontour_wetland_fc_path_list_final)) + " FEATURE CLASSES")
             merge_check = False
             while(merge_check == False):
@@ -907,7 +914,7 @@ if __name__=='__main__':
     password = arcpy.GetParameterAsText(3)
 
     #Path to AOI shapefile polygon
-    #aoi_shp_path = r"C:\Workspace\development\PanunTools-main\AOI_SACC_webmerc_buffer.shp"
+    #aoi_shp_path = r"C:\Workspace\Trash\SouTesting\BeanComplex_AOI_AlaskaAlbers.shp"
     aoi_shp_path = arcpy.GetParameterAsText(4)
 
     #AOI Subdivision Area (in square miles)
@@ -915,16 +922,17 @@ if __name__=='__main__':
     aoi_subdivision_area = arcpy.GetParameterAsText(5)
 
     #User defined output projection
+    #output_prj = 'PROJCS["NAD_1983_Alaska_Albers",GEOGCS["GCS_North_American_1983",DATUM["D_North_American_1983",SPHEROID["GRS_1980",6378137.0,298.257222101]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Albers"],PARAMETER["False_Easting",0.0],PARAMETER["False_Northing",0.0],PARAMETER["Central_Meridian",-154.0],PARAMETER["Standard_Parallel_1",55.0],PARAMETER["Standard_Parallel_2",65.0],PARAMETER["Latitude_Of_Origin",50.0],UNIT["Meter",1.0]];-13752200 -8948200 327482121.214823;-100000 10000;-100000 10000;0.001;0.001;0.001;IsHighPrecision'
     #output_prj = "PROJCS['NAD_1983_UTM_Zone_12N',GEOGCS['GCS_North_American_1983',DATUM['D_North_American_1983',SPHEROID['GRS_1980',6378137.0,298.257222101]],PRIMEM['Greenwich',0.0],UNIT['Degree',0.0174532925199433]],PROJECTION['Transverse_Mercator'],PARAMETER['False_Easting',500000.0],PARAMETER['False_Northing',0.0],PARAMETER['Central_Meridian',-111.0],PARAMETER['Scale_Factor',0.9996],PARAMETER['Latitude_Of_Origin',0.0],UNIT['Meter',1.0]];-5120900 -9998100 10000;-100000 10000;-100000 10000;0.001;0.001;0.001;IsHighPrecision"
     #output_prj = 'PROJCS["WGS_1984_Web_Mercator_Auxiliary_Sphere",GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137.0,298.257223563]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Mercator_Auxiliary_Sphere"],PARAMETER["False_Easting",0.0],PARAMETER["False_Northing",0.0],PARAMETER["Central_Meridian",0.0],PARAMETER["Standard_Parallel_1",0.0],PARAMETER["Auxiliary_Sphere_Type",0.0],UNIT["Meter",1.0]];-20037700 -30241100 10000;-100000 10000;-100000 10000;0.001;0.001;0.001;IsHighPrecision'
     output_prj = arcpy.GetParameterAsText(6)
 
     #Output GDB Directory
-    #outdir = r"C:\Workspace\development\PanunTools-main\output_FeatureLayerDownload_v2"
+    #outdir = r"C:\Workspace\Trash\SouTesting\output2"
     outdir = arcpy.GetParameterAsText(7)
 
     #Path to feature service ItemID CSV
-    #service_itemid_csv_path = r"C:\Workspace\development\PanunTools-main\FeatureLayerDownload.csv"
+    #service_itemid_csv_path = r"C:\Workspace\OneDrive - FireNet\2022_Busby\tools\PanunTools-main\FeatureLayerDownload.csv"
     service_itemid_csv_path = arcpy.GetParameterAsText(8)
 
     #elevcontour_acquire = "Yes"
