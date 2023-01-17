@@ -16,7 +16,7 @@ For a user-specified list of feature services, the tool downloads vector dataset
 
 If enabled, this tool will harness the Python multiprocessing module to run several instances of Python simultaneously. When running, several command prompt windows will appear on your screen. Just leave them be, as they should disappear once all datasets have been downloaded. However, if you run into an error, you may have to terminate ArcGIS Pro in order to manually close them.
 
-A demonstration of this tool can be viewed [at this link](https://youtu.be/ReyW6eprs18)
+A demonstration of this tool can be viewed [at this link](https://youtu.be/ReyW6eprs18).
 
 ## User Inputs:
 1.	Toggle for using ArcGIS Pro’s Active Portal to make feature service connections
