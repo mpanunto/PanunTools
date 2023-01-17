@@ -24,4 +24,4 @@ The below screenshot shows what the output attribute table looks like. Users can
 
 ![screenshot_CreateFireProgression_3.png](/docs/screenshot_CreateFireProgression_3.png?raw=true)
 
-A demonstration of this tool can be viewed [at this link]([/docs/screenshot_CreateFireProgression_3.png?raw=true](https://youtu.be/0jUqQ8PP4Ek?t=282)), with more in depth documentation beggining on [Page 8 of this document](https://wildlandfirelearningportal.net/pluginfile.php/211584/mod_resource/content/1/Progression%20Methods%20of%20Work.pdf).
+A demonstration of this tool can be viewed [at this link](https://youtu.be/0jUqQ8PP4Ek?t=282), with more in depth documentation beggining on [Page 8 of this document](https://wildlandfirelearningportal.net/pluginfile.php/211584/mod_resource/content/1/Progression%20Methods%20of%20Work.pdf).
