@@ -23,3 +23,5 @@ The tool builds a fire progression by iteratively projecting, clipping, erasing,
 The below screenshot shows what the output attribute table looks like. Users can opt to either reference one of the label fields to quickly apply a symbology, or they can create their own symbology field using the parsed datetime information and acreage values.
 
 ![screenshot_CreateFireProgression_3.png](/docs/screenshot_CreateFireProgression_3.png?raw=true)
+
+A demonstration of this tool can be viewed [at this link]([/docs/screenshot_CreateFireProgression_3.png?raw=true](https://youtu.be/0jUqQ8PP4Ek?t=282)), with more in depth documentation beggining on [Page 8 of this document](https://wildlandfirelearningportal.net/pluginfile.php/211584/mod_resource/content/1/Progression%20Methods%20of%20Work.pdf).
