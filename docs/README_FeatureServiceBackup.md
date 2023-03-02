@@ -4,7 +4,9 @@ Tool that downloads feature service data by exporting feature layers to GDB feat
 
 ### How does it work?
 
-The tool uses the ArcGIS API for Python to tap into the ArcGIS Online Organization of interest and download data from user specified feature services.
+The tool's primary purpose is to simplify the cumbersome "Export Data" process within the ArcGIS Online browser interface. Normally, for a user to be able to export an entire feature service to a GDB, they must either be owner of the service, or the owner must have "Export Data" enabled for the service. This tool however allows users to download entire features services with only read access to the services.
+
+The tool uses the ArcGIS API for Python to tap into the ArcGIS Online Organization of interest and backup/download data from user specified feature services. The tool will iterate through all feature layers within a service, and attempts to download each in entirety. Though similar to the [Feature Layer Download] tool in the fact that it downloads data from feature services, this tool was designed to be a more simplistic and lightweight option when users only need to backup a handful of services. It requires no accompanying files, no AOI specification, and does not use the Python Multiprocessing library. Unlike the Feature Layer Download tool, it also provides a toggle for including attachments, and the option to apply GeoOps file naming standards the outputs.
 
 ### User Inputs:
 1.	Toggle for using ArcGIS Pro’s Active Portal to make feature service connections
@@ -19,11 +21,11 @@ The tool uses the ArcGIS API for Python to tap into the ArcGIS Online Organizati
 10.	Specify Incident ID
 11.	Specify ArcGIS Pro version
 
-![screenshot_FeatureServiceAttachmentDownload_1.png](/docs/screenshot_FeatureServiceAttachmentDownload_1.png?raw=true)
+![screenshot_FeatureServiceBackup_1.png](/docs/screenshot_FeatureServiceBackup_1.png?raw=true)
 
-![screenshot_FeatureServiceAttachmentDownload_2.png](/docs/screenshot_FeatureServiceAttachmentDownload_2.png?raw=true)
+![screenshot_FeatureServiceBackup_2.png](/docs/screenshot_FeatureServiceBackup_2.png?raw=true)
 
-![screenshot_FeatureServiceAttachmentDownload_3.png](/docs/screenshot_FeatureServiceAttachmentDownload_3.png?raw=true)
+![screenshot_FeatureServiceBackup_3.png](/docs/screenshot_FeatureServiceBackup_3.png?raw=true)
 
 
 
