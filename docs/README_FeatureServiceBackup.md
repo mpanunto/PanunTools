@@ -21,11 +21,9 @@ The tool uses the ArcGIS API for Python to tap into the ArcGIS Online Organizati
 10.	Specify Incident ID
 11.	Specify ArcGIS Pro version
 
-![screenshot_FeatureServiceBackup_1.PNG](/docs/screenshot_FeatureServiceBackup_1.PNG?raw=true)
+![screenshot_FeatureServiceBackup_1.png](/docs/screenshot_FeatureServiceBackup_1.png?raw=true)
 
-![screenshot_FeatureServiceBackup_2.PNG](/docs/screenshot_FeatureServiceBackup_2.PNG?raw=true)
-
-![screenshot_FeatureServiceBackup_3.PNG](/docs/screenshot_FeatureServiceBackup_3.PNG?raw=true)
+![screenshot_FeatureServiceBackup_2.png](/docs/screenshot_FeatureServiceBackup_2.png?raw=true)
 
 
 
