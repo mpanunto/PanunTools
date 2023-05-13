@@ -4,7 +4,7 @@ Tool that generates a CSV summary of a user's ArcGIS Online content.
 
 ### How does it work?
 
-Using the ArcGIS API for Python, the tool will cycle through each content item that the user owns, and will pull together a variety of descriptive information. This information is then compiled into a dataframe and exported to a CSV file.
+Using the ArcGIS API for Python, the tool will first connect to the user's specified ArcGIS Online Portal. It will then cycle through each content item that the user owns, and will pull together a variety of descriptive information. This information is then compiled into a dataframe and exported to a CSV file.
 
 ![screenshot_CreateContentSummaryAGOL_1.png](/docs/screenshot_CreateContentSummaryAGOL_1.png?raw=true)
 
