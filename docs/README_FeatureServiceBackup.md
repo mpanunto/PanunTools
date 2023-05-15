@@ -20,6 +20,8 @@ The tool uses the ArcGIS API for Python to tap into the ArcGIS Online Organizati
 9.	Specify Incident Name
 10.	Specify Incident ID
 11.	Specify ArcGIS Pro version
+12.	Toggle for clipping services to AOI
+13.	Specify path to AOI feature class
 
 ![screenshot_FeatureServiceBackup_1.png](/docs/screenshot_FeatureServiceBackup_1.png?raw=true)
 
