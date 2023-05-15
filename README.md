@@ -19,6 +19,7 @@ PanunTools is a ***very*** cleverly named toolbox created for GISS on wildfire i
 1. [Base Data Acquisition](docs/README_BaseDataAcquisition.md)
 2. [Feature Layer Download](docs/README_FeatureLayerDownload.md)
 3. [Feature Service Attachment Download](docs/README_FeatureServiceAttachmentDownload.md)
+4. [Feature Service Backup](docs/README_FeatureServiceBackup.md)
 
 #### Incident Setup Toolset
 1. [Incident Setup AGOL](docs/README_IncidentSetupAGOL.md)
