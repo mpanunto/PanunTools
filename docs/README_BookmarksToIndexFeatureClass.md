@@ -9,4 +9,4 @@ To run, Users will need to:
 
 ![screenshot_BookmarksToIndexFeatureClass_1.png](/docs/screenshot_BookmarksToIndexFeatureClass_1.png?raw=true)
 
-This tool was originally created by by GitHub user [roirboya](https://github.com/roirboya/Bookmark2FC_Pro). Many thanks to [Ben Zank](https://community.esri.com/t5/user/viewprofilepage/user-id/90921) for wrangling the originally code into a more digestible form.
+This tool was originally created by by GitHub user [roirboya](https://github.com/roirboya/Bookmark2FC_Pro). Many thanks to [Ben Zank](https://community.esri.com/t5/user/viewprofilepage/user-id/90921) for wrangling the original code into a more digestible form.
