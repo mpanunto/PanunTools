@@ -1,14 +1,37 @@
-print("IMPORTING LIBRARIES")
-import arcpy, arcgis, pandas, datetime, time, os, sys, multiprocessing, inspect, urllib, zipfile, glob, shutil, warnings, contextlib, gc
-from urllib.request import urlopen
-from arcgis.gis import GIS
-from arcgis.features import FeatureLayerCollection
-from arcgis.geometry import filters
-from multiprocessing import Pool, freeze_support
-warnings.filterwarnings("ignore")
-if(sys.version_info[0] == 3):
-    import urllib.request
-arcpy.env.overwriteOutput = True
+libraries_check = False
+libraries_attempt = 1
+while(libraries_check == False):
+    try:
+
+        #Need to use print() here, because the arcpy library may not have been imported
+        print("IMPORTING LIBRARIES")
+
+        import pandas, datetime, time, os, sys, multiprocessing, inspect, urllib, zipfile, glob, shutil, warnings, contextlib, gc, ssl
+        import arcpy, arcgis
+        from urllib.request import urlopen
+        from arcgis.gis import GIS
+        from arcgis.features import FeatureLayerCollection
+        from arcgis.geometry import filters
+        from multiprocessing import Pool, freeze_support
+        ssl._create_default_https_context = ssl._create_unverified_context
+        warnings.filterwarnings("ignore")
+        if(sys.version_info[0] == 3):
+            import urllib.request
+        arcpy.env.overwriteOutput = True
+        libraries_check = True
+
+
+    except Exception as e:
+
+        #Need to use print() here, because the arcpy library may not have been imported
+        print(e)
+        libraries_attempt = libraries_attempt + 1
+        if(libraries_attempt < 6):
+            print("........LIBRARY IMPORT FAILED, RE-TRYING")
+            time.sleep(5)
+        if(libraries_attempt >= 6):
+            print("........LIBRARY IMPORT FAILED 5 TIMES, SKIPPING DATASET")
+            time.sleep(60)
 
 
 #Define worker function that performs data download
@@ -105,7 +128,7 @@ def worker_function_services(in_inputs_list):
                 if(curr_pro_portal_toggle == "Yes"):
                     gis = GIS("pro")
                 else:
-                    gis = GIS(curr_portalurl, curr_username, curr_password, verify_cert=False)
+                    gis = GIS(curr_portalurl, curr_username, curr_password)
                 token_check = True
             except Exception as e:
                 arcpy.AddMessage(e)
@@ -131,10 +154,14 @@ def worker_function_services(in_inputs_list):
         curr_featurelayer_name_short = curr_featurelayer_name_short.replace("_", "")
         curr_featurelayer_name_short = curr_featurelayer_name_short.replace("-", "")
         curr_featurelayer_name_short = curr_featurelayer_name_short.replace("&", "")
+        curr_featurelayer_name_short = curr_featurelayer_name_short.replace(")", "")
+        curr_featurelayer_name_short = curr_featurelayer_name_short.replace("(", "")
         curr_featureservice_name_short = curr_featureservice_name.replace(" ", "")
         curr_featureservice_name_short = curr_featureservice_name_short.replace("_", "")
         curr_featureservice_name_short = curr_featureservice_name_short.replace("-", "")
         curr_featureservice_name_short = curr_featureservice_name_short.replace("&", "")
+        curr_featureservice_name_short = curr_featureservice_name_short.replace(")", "")
+        curr_featureservice_name_short = curr_featureservice_name_short.replace("(", "")
         curr_featurelayer_uniqueidfield = curr_featurelayer.properties.uniqueIdField["name"]
         curr_featurelayer_maxrecordcount = curr_featurelayer.properties.maxRecordCount
         curr_featurelayer_standardmaxrecordcount = curr_featurelayer.properties.standardMaxRecordCount
@@ -144,19 +171,9 @@ def worker_function_services(in_inputs_list):
 
         #Print the name of the current feature layer
         if(curr_multiprocess == "Primary"):
-            if("HIFLD" in curr_featureservice_name_short):
-                curr_hifld_region = curr_featureservice_name_short[-2:]
-                arcpy.AddMessage("....PROCESSING FEATURE LAYER: " + "R" + curr_hifld_region + "_" + curr_featurelayer_name)
-            else:
-                arcpy.AddMessage("....PROCESSING FEATURE LAYER: " + curr_featurelayer_name)
-
+            arcpy.AddMessage("....PROCESSING FEATURE LAYER: " + curr_featurelayer_name)
         else:
-            if("HIFLD" in curr_featureservice_name_short):
-                curr_hifld_region = curr_featureservice_name_short[-2:]
-                arcpy.AddMessage("....PROCESSING FEATURE LAYER: " + "R" + curr_hifld_region + "_" + curr_featurelayer_name + " (ObjID " + str(curr_objid_number) + ")")
-            else:
-                arcpy.AddMessage("....PROCESSING FEATURE LAYER: " + curr_featurelayer_name + " (ObjID " + str(curr_objid_number) + ")")
-
+            arcpy.AddMessage("....PROCESSING FEATURE LAYER: " + curr_featurelayer_name + " (ObjID " + str(curr_objid_number) + ")")
 
 
 
@@ -170,13 +187,7 @@ def worker_function_services(in_inputs_list):
         project_attempt = 1
         while(project_check == False):
             try:
-                #The Transportation HIFLD services all have the same feature layer names, need to parse out the region number from the service name here
-                if("HIFLD" in curr_featureservice_name_short):
-                    curr_hifld_service_name = "HIFLD" + curr_hifld_region
-                    curr_aoi_prj_fc_name = curr_aoi_fc_basename + "_prj_" + str(curr_featurelayer_wkid) + "_" + curr_hifld_service_name + curr_featurelayer_name_short
-                else:
-                    curr_aoi_prj_fc_name = curr_aoi_fc_basename + "_prj_" + str(curr_featurelayer_wkid) + "_" + curr_featurelayer_name_short
-
+                curr_aoi_prj_fc_name = curr_aoi_fc_basename + "_prj_" + str(curr_featurelayer_wkid) + "_" + curr_featurelayer_name_short
                 aoi_proj_gdb_name = curr_aoi_prj_fc_name
                 aoi_proj_gdb_path = curr_scratchdir + "/" + aoi_proj_gdb_name + ".gdb"
                 arcpy.CreateFileGDB_management(curr_scratchdir, aoi_proj_gdb_name)
@@ -211,28 +222,18 @@ def worker_function_services(in_inputs_list):
                     if(curr_multiprocess == "Primary"):
                         csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                         projectfail_df = pandas.DataFrame(csvdata)
-                        if("HIFLD" in curr_featureservice_name_short):
-                            projectfail_csv_path = curr_outdir + "/primary_projectfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + ".csv"
-                        else:
-                            projectfail_csv_path = curr_outdir + "/primary_projectfail_" + curr_featurelayer_name_short + ".csv"
+                        projectfail_csv_path = curr_outdir + "/primary_projectfail_" + curr_featurelayer_name_short + ".csv"
                         projectfail_df.to_csv(projectfail_csv_path, index=False)
                     if(curr_multiprocess == "Secondary"):
                         csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                         projectfail_df = pandas.DataFrame(csvdata)
-                        if("HIFLD" in curr_featureservice_name_short):
-                            projectfail_csv_path = curr_outdir + "/secondary_projectfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
-                        else:
-                            projectfail_csv_path = curr_outdir + "/secondary_projectfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                        projectfail_csv_path = curr_outdir + "/secondary_projectfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
                         projectfail_df.to_csv(projectfail_csv_path, index=False)
                     if(curr_multiprocess == "Tertiary"):
                         csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                         projectfail_df = pandas.DataFrame(csvdata)
-                        if("HIFLD" in curr_featureservice_name_short):
-                            projectfail_csv_path = curr_outdir + "/tertiary_projectfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
-                        else:
-                            projectfail_csv_path = curr_outdir + "/tertiary_projectfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                        projectfail_csv_path = curr_outdir + "/tertiary_projectfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
                         projectfail_df.to_csv(projectfail_csv_path, index=False)
-
 
 
         #Reset environments
@@ -323,26 +324,17 @@ def worker_function_services(in_inputs_list):
                         if(curr_multiprocess == "Primary"):
                             csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                             selectfail_df = pandas.DataFrame(csvdata)
-                            if("HIFLD" in curr_featureservice_name_short):
-                                selectfail_csv_path = curr_outdir + "/primary_selectfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + ".csv"
-                            else:
-                                selectfail_csv_path = curr_outdir + "/primary_selectfail_" + curr_featurelayer_name_short + ".csv"
+                            selectfail_csv_path = curr_outdir + "/primary_selectfail_" + curr_featurelayer_name_short + ".csv"
                             selectfail_df.to_csv(selectfail_csv_path, index=False)
                         if(curr_multiprocess == "Secondary"):
                             csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                             selectfail_df = pandas.DataFrame(csvdata)
-                            if("HIFLD" in curr_featureservice_name_short):
-                                selectfail_csv_path = curr_outdir + "/secondary_selectfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
-                            else:
-                                selectfail_csv_path = curr_outdir + "/secondary_selectfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                            selectfail_csv_path = curr_outdir + "/secondary_selectfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
                             selectfail_df.to_csv(selectfail_csv_path, index=False)
                         if(curr_multiprocess == "Tertiary"):
                             csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                             selectfail_df = pandas.DataFrame(csvdata)
-                            if("HIFLD" in curr_featureservice_name_short):
-                                selectfail_csv_path = curr_outdir + "/tertiary_selectfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
-                            else:
-                                selectfail_csv_path = curr_outdir + "/tertiary_selectfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                            selectfail_csv_path = curr_outdir + "/tertiary_selectfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
                             selectfail_df.to_csv(selectfail_csv_path, index=False)
 
 
@@ -494,26 +486,17 @@ def worker_function_services(in_inputs_list):
                             if(curr_multiprocess == "Primary"):
                                 csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                                 exportcountfail_df = pandas.DataFrame(csvdata)
-                                if("HIFLD" in curr_featureservice_name_short):
-                                    exportcountfail_csv_path = curr_outdir + "/primary_exportcountfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + ".csv"
-                                else:
-                                    exportcountfail_csv_path = curr_outdir + "/primary_exportcountfail_" + curr_featurelayer_name_short + ".csv"
+                                exportcountfail_csv_path = curr_outdir + "/primary_exportcountfail_" + curr_featurelayer_name_short + ".csv"
                                 exportcountfail_df.to_csv(exportcountfail_csv_path, index=False)
                             if(curr_multiprocess == "Secondary"):
                                 csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                                 exportcountfail_df = pandas.DataFrame(csvdata)
-                                if("HIFLD" in curr_featureservice_name_short):
-                                    exportcountfail_csv_path = curr_outdir + "/secondary_exportcountfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
-                                else:
-                                    exportcountfail_csv_path = curr_outdir + "/secondary_exportcountfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                                exportcountfail_csv_path = curr_outdir + "/secondary_exportcountfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
                                 exportcountfail_df.to_csv(exportcountfail_csv_path, index=False)
                             if(curr_multiprocess == "Tertiary"):
                                 csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                                 exportcountfail_df = pandas.DataFrame(csvdata)
-                                if("HIFLD" in curr_featureservice_name_short):
-                                    exportcountfail_csv_path = curr_outdir + "/tertiary_exportcountfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
-                                else:
-                                    exportcountfail_csv_path = curr_outdir + "/tertiary_exportcountfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                                exportcountfail_csv_path = curr_outdir + "/tertiary_exportcountfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
                                 exportcountfail_df.to_csv(exportcountfail_csv_path, index=False)
 
 
@@ -534,26 +517,17 @@ def worker_function_services(in_inputs_list):
                         if(curr_multiprocess == "Primary"):
                             csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                             exportfail_df = pandas.DataFrame(csvdata)
-                            if("HIFLD" in curr_featureservice_name_short):
-                                exportfail_csv_path = curr_outdir + "/primary_exportfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + ".csv"
-                            else:
-                                exportfail_csv_path = curr_outdir + "/primary_exportfail_" + curr_featurelayer_name_short + ".csv"
+                            exportfail_csv_path = curr_outdir + "/primary_exportfail_" + curr_featurelayer_name_short + ".csv"
                             exportfail_df.to_csv(exportfail_csv_path, index=False)
                         if(curr_multiprocess == "Secondary"):
                             csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                             exportfail_df = pandas.DataFrame(csvdata)
-                            if("HIFLD" in curr_featureservice_name_short):
-                                exportfail_csv_path = curr_outdir + "/secondary_exportfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
-                            else:
-                                exportfail_csv_path = curr_outdir + "/secondary_exportfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                            exportfail_csv_path = curr_outdir + "/secondary_exportfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
                             exportfail_df.to_csv(exportfail_csv_path, index=False)
                         if(curr_multiprocess == "Tertiary"):
                             csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                             exportfail_df = pandas.DataFrame(csvdata)
-                            if("HIFLD" in curr_featureservice_name_short):
-                                exportfail_csv_path = curr_outdir + "/tertiary_exportfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
-                            else:
-                                exportfail_csv_path = curr_outdir + "/tertiary_exportfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                            exportfail_csv_path = curr_outdir + "/tertiary_exportfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
                             exportfail_df.to_csv(exportfail_csv_path, index=False)
 
             #PROJECT OUTPUT IF THE COORDINATE SYSTEM DOES NOT MATCH THE USER SPECIFIED PROJECTION
@@ -637,35 +611,22 @@ def worker_function_services(in_inputs_list):
         curr_featureservice_name_short = curr_featureservice_name_short.replace("-", "")
         curr_featureservice_name_short = curr_featureservice_name_short.replace("&", "")
 
-        #Get the hifld region
-        if("HIFLD" in curr_featureservice_name_short):
-            curr_hifld_region = curr_featureservice_name_short[-2:]
-
 
         #Export CSV file containing information needed to retry query
         if(curr_multiprocess == "Primary"):
             csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
             toplevelfail_df = pandas.DataFrame(csvdata)
-            if("HIFLD" in curr_featureservice_name_short):
-                toplevelfail_csv_path = curr_outdir + "/primary_toplevelfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + ".csv"
-            else:
-                toplevelfail_csv_path = curr_outdir + "/primary_toplevelfail_" + curr_featurelayer_name_short + ".csv"
+            toplevelfail_csv_path = curr_outdir + "/primary_toplevelfail_" + curr_featurelayer_name_short + ".csv"
             toplevelfail_df.to_csv(toplevelfail_csv_path, index=False)
         if(curr_multiprocess == "Secondary"):
             csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
             toplevelfail_df = pandas.DataFrame(csvdata)
-            if("HIFLD" in curr_featureservice_name_short):
-                toplevelfail_csv_path = curr_outdir + "/secondary_toplevelfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
-            else:
-                toplevelfail_csv_path = curr_outdir + "/secondary_toplevelfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+            toplevelfail_csv_path = curr_outdir + "/secondary_toplevelfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
             toplevelfail_df.to_csv(toplevelfail_csv_path, index=False)
         if(curr_multiprocess == "Tertiary"):
             csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
             toplevelfail_df = pandas.DataFrame(csvdata)
-            if("HIFLD" in curr_featureservice_name_short):
-                toplevelfail_csv_path = curr_outdir + "/tertiary_toplevelfail_" + "R" + curr_hifld_region + "_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
-            else:
-                toplevelfail_csv_path = curr_outdir + "/tertiary_toplevelfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+            toplevelfail_csv_path = curr_outdir + "/tertiary_toplevelfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
             toplevelfail_df.to_csv(toplevelfail_csv_path, index=False)
 
         time.sleep(60)
@@ -850,21 +811,26 @@ def worker_function_elevwetland(in_inputs_list):
 #Define function that applies multiprocessing to inputs
 def execute_services(inputs):
 
-    #Set multiprocessing python exe path
-    multiprocessing.set_executable(os.path.join(sys.exec_prefix, 'python.exe'))
+    try:
+        #Set multiprocessing python exe path
+        multiprocessing.set_executable(os.path.join(sys.exec_prefix, 'python.exe'))
 
-    #Get cpu count
-    #cpucount = multiprocessing.cpu_count() - 1
+        #Get cpu count
+        #cpucount = multiprocessing.cpu_count() - 1
 
-    #Create pool of workers
-    pool = multiprocessing.Pool()
+        #Create pool of workers
+        pool = multiprocessing.Pool()
 
-    #Submit jobs to workers
-    for curr_input in inputs:
-        pool.imap_unordered(worker_function_services, [curr_input]) # args are passed as a list
+        #Submit jobs to workers
+        for curr_input in inputs:
+            pool.imap_unordered(worker_function_services, [curr_input]) # args are passed as a list
 
-    pool.close()
-    pool.join()
+        pool.close()
+        pool.join()
+
+    except Exception as e:
+        arcpy.AddMessage(e)
+        arcpy.AddMessage("EXECUTE_SERVICES ERROR")
 
 
 
@@ -914,7 +880,7 @@ if __name__=='__main__':
     password = arcpy.GetParameterAsText(3)
 
     #Path to AOI shapefile polygon
-    #aoi_shp_path = r"C:\Workspace\Trash\SouTesting\BeanComplex_AOI_AlaskaAlbers.shp"
+    #aoi_shp_path = r"C:\Workspace\development\AOI_Shapefiles\AOI_UT2.shp"
     aoi_shp_path = arcpy.GetParameterAsText(4)
 
     #AOI Subdivision Area (in square miles)
@@ -928,21 +894,21 @@ if __name__=='__main__':
     output_prj = arcpy.GetParameterAsText(6)
 
     #Output GDB Directory
-    #outdir = r"C:\Workspace\Trash\SouTesting\output2"
+    #outdir = r"C:\Workspace\development\PanunTools-main\output_FeatureLayerDownload3"
     outdir = arcpy.GetParameterAsText(7)
 
     #Path to feature service ItemID CSV
-    #service_itemid_csv_path = r"C:\Workspace\OneDrive - FireNet\2022_Busby\tools\PanunTools-main\FeatureLayerDownload.csv"
+    #service_itemid_csv_path = r"C:\Workspace\development\PanunTools-main\FeatureLayerDownload.csv"
     service_itemid_csv_path = arcpy.GetParameterAsText(8)
 
-    #elevcontour_acquire = "Yes"
+    #elevcontour_acquire = "No"
     elevcontour_acquire = arcpy.GetParameterAsText(9)
 
-    #wetland_acquire = "Yes"
+    #wetland_acquire = "No"
     wetland_acquire = arcpy.GetParameterAsText(10)
 
     #Toggle for Multiprocessor use
-    #multiprocess_toggle = "true"
+    #multiprocess_toggle = "false"
     multiprocess_toggle = arcpy.GetParameterAsText(11)
 
     #offline_license_check = "Yes"
@@ -995,7 +961,7 @@ if __name__=='__main__':
     if(pro_portal_toggle == "Yes"):
         gis = GIS("pro")
     else:
-        gis = GIS(portalurl, username, password, verify_cert=False)
+        gis = GIS(portalurl, username, password)
 
     #Test if output folder is empty, if not, throw error
     if len(os.listdir(outdir)) != 0:
@@ -1210,7 +1176,7 @@ if __name__=='__main__':
         if(pro_portal_toggle == "Yes"):
             gis = GIS("pro")
         else:
-            gis = GIS(portalurl, username, password, verify_cert=False)
+            gis = GIS(portalurl, username, password)
 
         #Try querying via ArcGIS API first, if it fails, try again via arcpy
         try:
@@ -1417,7 +1383,7 @@ if __name__=='__main__':
         if(pro_portal_toggle == "Yes"):
             gis = GIS("pro")
         else:
-            gis = GIS(portalurl, username, password, verify_cert=False)
+            gis = GIS(portalurl, username, password)
 
         #Try querying HUC8 index via ArcGIS API first, if it fails, try again via arcpy
         try:
@@ -1654,7 +1620,7 @@ if __name__=='__main__':
                         #curr_featurelayer_credits = curr_featurelayer.properties.copyrightText
 
                         #Append URLs to lists. If they are high-density datasets, send them through the secondary multiprocessor instead
-                        if(curr_featurelayer_name in ["Roads", "Forest Service Roads", "NHDFlowline", "NHDWaterbody", "BLM PLSS Sections"]):
+                        if(curr_featurelayer_name in ["HIFLD Plus GTAC", "Gap Roads GTAC", "Forest Service Roads", "NHDFlowline", "NHDWaterbody", "BLM PLSS Sections", "FSVeg - Stands", "USA_Structures"]):
                             featurelayerurl_list_secondary.append(curr_featurelayer_url)
                             featurelayer_name_list_secondary.append(curr_featurelayer_name)
                             featureservice_name_list_secondary.append(curr_service_name)
@@ -1697,7 +1663,7 @@ if __name__=='__main__':
     if(pro_portal_toggle == "Yes"):
         gis = GIS("pro")
     else:
-        gis = GIS(portalurl, username, password, verify_cert=False)
+        gis = GIS(portalurl, username, password)
 
     #Run FeatureLayerDownload function
     if(multiprocess_toggle == "true"):
@@ -1793,7 +1759,7 @@ if __name__=='__main__':
         if(pro_portal_toggle == "Yes"):
             gis = GIS("pro")
         else:
-            gis = GIS(portalurl, username, password, verify_cert=False)
+            gis = GIS(portalurl, username, password)
 
         #Run FeatureLayerDownload function
         if(multiprocess_toggle == "true"):
@@ -1891,7 +1857,7 @@ if __name__=='__main__':
         if(pro_portal_toggle == "Yes"):
             gis = GIS("pro")
         else:
-            gis = GIS(portalurl, username, password, verify_cert=False)
+            gis = GIS(portalurl, username, password)
 
         #Run FeatureLayerDownload function
         for i in range(0, len(inputs_list_tertiary)):
@@ -2116,74 +2082,74 @@ if __name__=='__main__':
 
 
 
-    ############################################################################
-    ## PROCESS HIFLDRoads FEATURE CLASSES
-    ############################################################################
-    #Now merge PrimaryHighway/SecondaryHighway/Roads feature classes into a single feature class
-    primaryhwy_target_fc_path = master_gbd_outpath + "/PrimaryHighway"
-    secondaryhwy_target_fc_path = master_gbd_outpath + "/SecondaryHighway"
-    roads_target_fc_path = master_gbd_outpath + "/Roads"
-    hifldroads_fc_outpath = master_gbd_outpath + "/HIFLDRoads"
-
-    #If any of the PrimaryHighway/SecondaryHighway/Roads feature classes exist, continue
-    if(arcpy.Exists(primaryhwy_target_fc_path) or arcpy.Exists(secondaryhwy_target_fc_path) or arcpy.Exists(roads_target_fc_path)):
-
-        arcpy.AddMessage("..PROCESSING: HIFLDRoads")
-
-        #Create hifld_merge_list
-        hifld_merge_list = []
-        hifld_count_list = []
-        if(arcpy.Exists(primaryhwy_target_fc_path)):
-            hifld_merge_list.append(primaryhwy_target_fc_path)
-            primaryhwy_count = int(str(arcpy.GetCount_management(primaryhwy_target_fc_path)))
-            hifld_count_list.append(primaryhwy_count)
-        if(arcpy.Exists(secondaryhwy_target_fc_path)):
-            hifld_merge_list.append(secondaryhwy_target_fc_path)
-            secondaryhwy_count = int(str(arcpy.GetCount_management(secondaryhwy_target_fc_path)))
-            hifld_count_list.append(secondaryhwy_count)
-        if(arcpy.Exists(roads_target_fc_path)):
-            hifld_merge_list.append(roads_target_fc_path)
-            roads_count = int(str(arcpy.GetCount_management(roads_target_fc_path)))
-            hifld_count_list.append(roads_count)
-
-        #Perform Merge
-        arcpy.AddMessage("....MERGING PrimaryHighway/SecondaryHighway/Roads FEATURE CLASSES")
-        arcpy.Merge_management(hifld_merge_list, hifldroads_fc_outpath)
-        hifld_merge_count = int(str(arcpy.GetCount_management(hifldroads_fc_outpath)))
-
-        #If the feature counts don't match, retry with the Spatial Dataframe method
-        if(hifld_merge_count != sum(hifld_count_list)):
-
-            arcpy.AddMessage("....ARCPY MERGE HAS DATA GAPS, RETRYING WITH SPATIAL DATAFRAMES")
-            arcpy.Delete_management(hifldroads_fc_outpath)
-
-            #Create PrimaryHighway/SecondaryHighway/Roads SDFs
-            sdf_concat_list = []
-            if(arcpy.Exists(primaryhwy_target_fc_path)):
-                primaryhwy_sdf = arcgis.GeoAccessor.from_featureclass(primaryhwy_target_fc_path)
-                sdf_concat_list.append(primaryhwy_sdf)
-            if(arcpy.Exists(secondaryhwy_target_fc_path)):
-                secondaryhwy_sdf = arcgis.GeoAccessor.from_featureclass(secondaryhwy_target_fc_path)
-                sdf_concat_list.append(secondaryhwy_sdf)
-            if(arcpy.Exists(roads_target_fc_path)):
-                roads_sdf = arcgis.GeoAccessor.from_featureclass(roads_target_fc_path)
-                sdf_concat_list.append(roads_sdf)
-
-            #Concatenate PrimaryHighway/SecondaryHighway/Roads SDFs together
-            if( len(sdf_concat_list) > 1):
-                arcpy.AddMessage("....MERGING PrimaryHighway/SecondaryHighway/Roads FEATURE CLASSES")
-                output_sdf = pandas.concat(sdf_concat_list)
-            else:
-                output_sdf = sdf_concat_list[0]
-
-            #Create output feature class
-            arcpy.AddMessage("....CREATING OUTPUT FEATURE CLASS")
-            output_sdf.spatial.to_featureclass(hifldroads_fc_outpath, sanitize_columns=False)
-
-            #Clear output_sdf from memory
-            del output_sdf
-            del sdf_concat_list
-            gc.collect()
+##    ############################################################################
+##    ## PROCESS HIFLDRoads FEATURE CLASSES
+##    ############################################################################
+##    #Now merge PrimaryHighway/SecondaryHighway/Roads feature classes into a single feature class
+##    primaryhwy_target_fc_path = master_gbd_outpath + "/PrimaryHighway"
+##    secondaryhwy_target_fc_path = master_gbd_outpath + "/SecondaryHighway"
+##    roads_target_fc_path = master_gbd_outpath + "/Roads"
+##    hifldroads_fc_outpath = master_gbd_outpath + "/HIFLDRoads"
+##
+##    #If any of the PrimaryHighway/SecondaryHighway/Roads feature classes exist, continue
+##    if(arcpy.Exists(primaryhwy_target_fc_path) or arcpy.Exists(secondaryhwy_target_fc_path) or arcpy.Exists(roads_target_fc_path)):
+##
+##        arcpy.AddMessage("..PROCESSING: HIFLDRoads")
+##
+##        #Create hifld_merge_list
+##        hifld_merge_list = []
+##        hifld_count_list = []
+##        if(arcpy.Exists(primaryhwy_target_fc_path)):
+##            hifld_merge_list.append(primaryhwy_target_fc_path)
+##            primaryhwy_count = int(str(arcpy.GetCount_management(primaryhwy_target_fc_path)))
+##            hifld_count_list.append(primaryhwy_count)
+##        if(arcpy.Exists(secondaryhwy_target_fc_path)):
+##            hifld_merge_list.append(secondaryhwy_target_fc_path)
+##            secondaryhwy_count = int(str(arcpy.GetCount_management(secondaryhwy_target_fc_path)))
+##            hifld_count_list.append(secondaryhwy_count)
+##        if(arcpy.Exists(roads_target_fc_path)):
+##            hifld_merge_list.append(roads_target_fc_path)
+##            roads_count = int(str(arcpy.GetCount_management(roads_target_fc_path)))
+##            hifld_count_list.append(roads_count)
+##
+##        #Perform Merge
+##        arcpy.AddMessage("....MERGING PrimaryHighway/SecondaryHighway/Roads FEATURE CLASSES")
+##        arcpy.Merge_management(hifld_merge_list, hifldroads_fc_outpath)
+##        hifld_merge_count = int(str(arcpy.GetCount_management(hifldroads_fc_outpath)))
+##
+##        #If the feature counts don't match, retry with the Spatial Dataframe method
+##        if(hifld_merge_count != sum(hifld_count_list)):
+##
+##            arcpy.AddMessage("....ARCPY MERGE HAS DATA GAPS, RETRYING WITH SPATIAL DATAFRAMES")
+##            arcpy.Delete_management(hifldroads_fc_outpath)
+##
+##            #Create PrimaryHighway/SecondaryHighway/Roads SDFs
+##            sdf_concat_list = []
+##            if(arcpy.Exists(primaryhwy_target_fc_path)):
+##                primaryhwy_sdf = arcgis.GeoAccessor.from_featureclass(primaryhwy_target_fc_path)
+##                sdf_concat_list.append(primaryhwy_sdf)
+##            if(arcpy.Exists(secondaryhwy_target_fc_path)):
+##                secondaryhwy_sdf = arcgis.GeoAccessor.from_featureclass(secondaryhwy_target_fc_path)
+##                sdf_concat_list.append(secondaryhwy_sdf)
+##            if(arcpy.Exists(roads_target_fc_path)):
+##                roads_sdf = arcgis.GeoAccessor.from_featureclass(roads_target_fc_path)
+##                sdf_concat_list.append(roads_sdf)
+##
+##            #Concatenate PrimaryHighway/SecondaryHighway/Roads SDFs together
+##            if( len(sdf_concat_list) > 1):
+##                arcpy.AddMessage("....MERGING PrimaryHighway/SecondaryHighway/Roads FEATURE CLASSES")
+##                output_sdf = pandas.concat(sdf_concat_list)
+##            else:
+##                output_sdf = sdf_concat_list[0]
+##
+##            #Create output feature class
+##            arcpy.AddMessage("....CREATING OUTPUT FEATURE CLASS")
+##            output_sdf.spatial.to_featureclass(hifldroads_fc_outpath, sanitize_columns=False)
+##
+##            #Clear output_sdf from memory
+##            del output_sdf
+##            del sdf_concat_list
+##            gc.collect()
 
 
     ############################################################################
