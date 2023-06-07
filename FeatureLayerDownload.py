@@ -31,7 +31,9 @@ while(libraries_check == False):
             time.sleep(5)
         if(libraries_attempt >= 6):
             print("........LIBRARY IMPORT FAILED 5 TIMES, SKIPPING DATASET")
+            libraries_check = True
             time.sleep(60)
+
 
 
 #Define worker function that performs data download
