@@ -30,8 +30,7 @@ while(libraries_check == False):
             print("........LIBRARY IMPORT FAILED, RE-TRYING")
             time.sleep(5)
         if(libraries_attempt >= 6):
-            print("........LIBRARY IMPORT FAILED 5 TIMES, SKIPPING DATASET")
-            libraries_check = True
+            print("........LIBRARY IMPORT FAILED 5 TIMES, QUITTING")
             time.sleep(60)
 
 
