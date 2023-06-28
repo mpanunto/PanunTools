@@ -881,7 +881,7 @@ if __name__=='__main__':
     password = arcpy.GetParameterAsText(3)
 
     #Path to AOI shapefile polygon
-    #aoi_shp_path = r"C:\Workspace\development\AOI_Shapefiles\AOI_UT2.shp"
+    #aoi_shp_path = r"C:\Workspace\development\AOI_Shapefiles\AOI_UT.shp"
     aoi_shp_path = arcpy.GetParameterAsText(4)
 
     #AOI Subdivision Area (in square miles)
@@ -895,7 +895,7 @@ if __name__=='__main__':
     output_prj = arcpy.GetParameterAsText(6)
 
     #Output GDB Directory
-    #outdir = r"C:\Workspace\development\PanunTools-main\output_FeatureLayerDownload3"
+    #outdir = r"C:\Workspace\development\PanunTools-main\output_FeatureLayerDownload"
     outdir = arcpy.GetParameterAsText(7)
 
     #Path to feature service ItemID CSV
@@ -1567,7 +1567,13 @@ if __name__=='__main__':
                 arcpy.AddMessage(e)
                 arcpy.AddMessage("..UNABLE TO CONNECT TO SERVICE, CHECK ACCESS PERMISSIONS (ItemID = " + curr_itemid + ")" )
                 continue
+
             curr_service_name = curr_service.name
+
+            #If there is no service name, use the service title instead
+            if(curr_service_name == None):
+                curr_service_name = curr_service.title
+
             arcpy.AddMessage(".." + curr_service_name)
 
             #Get a list of layers in the service
