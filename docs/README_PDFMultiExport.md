@@ -8,6 +8,8 @@ If enabled, this tool will harness the Python multiprocessing module to run seve
 
 The "PDFMultiExport.xlsx" spreadsheet is used to control your export settings for each map product. It may seem a bit daunting, but the export settings only need to be specified one time for each product. After that, users only need to enter their export request, products date, and operational period prior to running the tool. For each map product, a user’s export request can be GEO, IMAGE, GEOIMAGE, GEO AND IMAGE, or GEO AND GEOIMAGE. The script will then use the information entered into the spreadsheet to export the requested PDFs.
 
+Users can either specify the incident's projects directory that contains each of the APRX filenames as listed in the "PDFMultiExport.xlsx" spreadsheet, or they can have the tool reference the APRX_PATH column within the spreadsheet. The option to specify an incident's project directory gives all GISS the ability to reference the same PDFMultiExport.xlsx spreadsheet, assuming all the APRX's are in the specified directory.
+
 Additionally, this tool provides users with the ability to immediately upload the exported PDFs to the NIFC FTP. For the upload to function properly, users must either specify an FTP directory that already exists, or an FTP directory that does not exist but is an immediate subdirectory of one that does. Any immediate subdirectories that do not exist will be created. However, if the parent directory does not already exist, they will not be created. This logic is to prevent users from inadvertently creating lengthly sets of FTP directories.
 
 Here is a sample of what the spreadsheet looks like:
@@ -23,6 +25,7 @@ Here is a sample of what the spreadsheet looks like:
     - Incident ID
     - Products directory
     - Path to the PDFMultiExport.xlsx spreadsheet
+    - Option for specifying APRX locations
     - Toggle for uploading exports to FTP
     - NIFC FTP Username
     - NIFC FTP Password
