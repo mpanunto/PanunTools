@@ -10,7 +10,7 @@ This tool allows users to acquire/process the following datasets for an area of 
 4. USFS Topo Vector
 5. USFS Topo Raster 24K
 6. NAIP Imagery
-7. Surface Management Agency (Land Ownership)
+7. Surface Management Agency
 8. DEM 10 Meter (1/3rd Arc Second)
 9. Hillshade Raster 10 Meter
 10. Vector Hillshade 10 Meter
