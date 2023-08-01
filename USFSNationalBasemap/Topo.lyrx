@@ -19,7 +19,7 @@
       "description" : "The Geographic Names Information System (GNIS) is the Federal standard for geographic nomenclature. The U.S. Geological Survey developed the GNIS for the U.S. Board on Geographic Names, a Federal inter-agency body chartered by public law to maintain uniform feature name usage throughout the Government and to promulgate standard names to the public. The GNIS is the official repository of domestic geographic names data; the official vehicle for geographic names use by all departments of the Federal Government; and the source for applying geographic names to Federal electronic and printed products of all types. See http://geonames.usgs.gov for additional information.",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 250000,
@@ -93,7 +93,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "GNISMountainFeatureUSGS",
           "datasetType" : "esriDTFeatureClass"
@@ -1201,7 +1201,7 @@
       "useSourceMetadata" : false,
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -1318,7 +1318,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "USFSLandformsLabelsONLY",
           "datasetType" : "esriDTFeatureClass"
@@ -2132,7 +2132,7 @@
       "useSourceMetadata" : false,
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -2328,7 +2328,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "LandformAreaUSGSLabelsONLY",
           "datasetType" : "esriDTFeatureClass"
@@ -4233,7 +4233,7 @@
       "useSourceMetadata" : false,
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 250000,
@@ -4497,7 +4497,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "GNISPopulatedPlacesSome",
           "datasetType" : "esriDTFeatureClass"
@@ -4899,7 +4899,7 @@
       "description" : "The Building Feature Class provides descriptive and location information about existing Forest Service owned buildings and existing non-FS owned buildings that are located on Forest Service lands. The descriptive information includes: The type and current use of buildings and the planned future use, the buildings containing a system (electrical, mechanical, plumbing), the replacement cost of the building in current dollars, the facility condition rating describing the building's condition. The location information includes: The region, forest, and district on which the building sits, the type of Forest Service land unit on which it resides (e.g. recreation site, administrative site, etc), the latitude/longitude, the state, county, and congressional district. This is a published feature class and is constructed by reformatting data stored in the Infra database and managed by the individual administrative units. This feature class is not used for data entry or editing.",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -5379,7 +5379,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "USFSOffice",
           "datasetType" : "esriDTFeatureClass"
@@ -7092,7 +7092,27 @@
       "description" : "The USGS National Hydrography Dataset (NHD) Downloadable Data Collection from The National Map (TNM) is a comprehensive set of digital spatial data that encodes information about naturally occurring and constructed bodies of surface water (lakes, ponds, and reservoirs), paths through which water flows (canals, ditches, streams, and rivers), and related entities such as point features (springs, wells, stream gages, and dams). The information encoded about these features includes classification and other characteristics, delineation, geographic name, position and related measures, a \"reach code\" through which other information can be related to the NHD, and the direction of water flow. The network of reach codes delineating water and transported material flow allows users to trace movement in upstream and downstream directions. In addition to this geographic information, the dataset contains metadata that supports the exchange of future updates and improvements to the data. The NHD supports many applications, such as making maps, geocoding observations, flow modeling, data maintenance, and stewardship. For additional information on NHD, go to http://nhd.usgs.gov/.",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
+      },
+      "layer3DProperties" : {
+        "type" : "CIM3DLayerProperties",
+        "castShadows" : true,
+        "isLayerLit" : true,
+        "layerFaceCulling" : "None",
+        "maxDistance" : -1,
+        "minDistance" : -1,
+        "preloadTextureCutoffHigh" : 0,
+        "preloadTextureCutoffLow" : 0.25,
+        "textureCutoffHigh" : 0.25,
+        "textureCutoffLow" : 1,
+        "useCompressedTextures" : true,
+        "verticalExaggeration" : 1,
+        "exaggerationMode" : "ScaleZ",
+        "verticalUnit" : {
+          "uwkid" : 9001
+        },
+        "lighting" : "OneSideDataNormal",
+        "optimizeMarkerTransparency" : true
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -7107,7 +7127,7 @@
       "blendingMode" : "Alpha",
       "allowDrapingOnIntegratedMesh" : true,
       "autoGenerateFeatureTemplates" : true,
-      "featureElevationExpression" : "0",
+      "featureElevationExpression" : "Shape.Z",
       "featureTable" : {
         "type" : "CIMFeatureTable",
         "displayField" : "GNIS_NAME",
@@ -7244,7 +7264,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "NHDPoint",
           "datasetType" : "esriDTFeatureClass"
@@ -7258,7 +7278,6 @@
         "htmlUseCodedDomainValues" : true,
         "htmlPresentationStyle" : "TwoColumnTable"
       },
-      "isFlattened" : true,
       "selectable" : false,
       "selectionSymbol" : {
         "type" : "CIMSymbolReference",
@@ -8904,7 +8923,7 @@
       "description" : "A recreation site is a discrete area on a Forest that provides recreation opportunities, receives recreational use, and requires a management investment to operate and/or maintain to standard under the direction of an administrative unit in the National Forest System. Recreation sites range in development from relatively undeveloped areas, with little to no improvements (Development Scale 0 and 1), to concentrations of facilities and services evidencing a range of amenities and investment (Development Scale 2 through 5).",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -9552,7 +9571,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "FSNationalRecreationSites",
           "datasetType" : "esriDTFeatureClass"
@@ -18898,7 +18917,7 @@
       "description" : "This data is intended for read-only use. The purpose of the data is to provide display, identification, and analysis tools for determining locations of designated communications sites located on National Forest System lands, for Forest Service managers and other interested parties.",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -19125,7 +19144,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "USFSCommunicationSite",
           "datasetType" : "esriDTFeatureClass"
@@ -19513,7 +19532,7 @@
       "useSourceMetadata" : false,
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -19777,7 +19796,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "StructureUSGS",
           "datasetType" : "esriDTFeatureClass"
@@ -24097,7 +24116,7 @@
       "useSourceMetadata" : false,
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 250000,
@@ -24503,7 +24522,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "HIFLDPlusGTAC",
           "datasetType" : "esriDTFeatureClass"
@@ -26999,7 +27018,7 @@
       "useSourceMetadata" : false,
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 250000,
@@ -27502,7 +27521,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "ForestServiceRoads",
           "datasetType" : "esriDTFeatureClass"
@@ -30478,7 +30497,7 @@
       "useSourceMetadata" : false,
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 250000,
@@ -30870,7 +30889,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "GapRoadsGTAC",
           "datasetType" : "esriDTFeatureClass"
@@ -33320,7 +33339,7 @@
       "useSourceMetadata" : false,
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -34131,7 +34150,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "LinkByways",
           "datasetType" : "esriDTFeatureClass"
@@ -34460,7 +34479,7 @@
       "useSourceMetadata" : false,
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -35193,7 +35212,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "NationalHistoricScenicTrailGTAC",
           "datasetType" : "esriDTFeatureClass"
@@ -60661,7 +60680,7 @@
       "description" : "This dataset includes only existing National Forest System Trails that are under the jurisdiction of the Forest Service. Each feature represents a segment of a trail, along which all of the attributes are the same. Segments are created by generating linear events from trail feature classes and the Infra II_TRAIL_VISITOR_INFO_MAP_V table. Infrastructure (Infra) is a collection of applications which house information related to an assets managed by the Forest Service (including but not limited to, Roads, Bridges, Buildings, Water Systems, Waste Water Systems, Dams, Trails, and Recreation Sites). The II_TRAIL_VISITOR_INFO_MAP_V table contains fields representing trail characteristics. This published data is updated nightly from transactional tabular and GIS data maintained by the individual administrative units. This data is intended for internal Forest Service use only.",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -61355,7 +61374,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "FSTrailsInternal",
           "datasetType" : "esriDTFeatureClass"
@@ -61919,7 +61938,7 @@
       "useSourceMetadata" : false,
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -62113,7 +62132,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "NationalTrailUSGS",
           "datasetType" : "esriDTFeatureClass"
@@ -62664,7 +62683,7 @@
       "useSourceMetadata" : false,
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 126720,
@@ -62846,7 +62865,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "StreetsFerrySomeRail",
           "datasetType" : "esriDTFeatureClass"
@@ -63246,7 +63265,7 @@
       "useSourceMetadata" : false,
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -63455,7 +63474,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "RailroadFeatures",
           "datasetType" : "esriDTFeatureClass"
@@ -63848,7 +63867,27 @@
       "useSourceMetadata" : false,
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
+      },
+      "layer3DProperties" : {
+        "type" : "CIM3DLayerProperties",
+        "castShadows" : true,
+        "isLayerLit" : true,
+        "layerFaceCulling" : "None",
+        "maxDistance" : -1,
+        "minDistance" : -1,
+        "preloadTextureCutoffHigh" : 0,
+        "preloadTextureCutoffLow" : 0.25,
+        "textureCutoffHigh" : 0.25,
+        "textureCutoffLow" : 1,
+        "useCompressedTextures" : true,
+        "verticalExaggeration" : 1,
+        "exaggerationMode" : "ScaleZ",
+        "verticalUnit" : {
+          "uwkid" : 9001
+        },
+        "lighting" : "OneSideDataNormal",
+        "optimizeMarkerTransparency" : true
       },
       "layerType" : "Operational",
       "minScale" : 500000,
@@ -63862,7 +63901,7 @@
       "refreshRateUnit" : "esriTimeUnitsSeconds",
       "blendingMode" : "Alpha",
       "allowDrapingOnIntegratedMesh" : true,
-      "featureElevationExpression" : "0",
+      "featureElevationExpression" : "Shape.Z",
       "featureTable" : {
         "type" : "CIMFeatureTable",
         "displayField" : "GLOBAL_ID",
@@ -64120,7 +64159,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "Runways",
           "datasetType" : "esriDTFeatureClass"
@@ -64147,7 +64186,6 @@
         "htmlUseCodedDomainValues" : true,
         "htmlPresentationStyle" : "TwoColumnTable"
       },
-      "isFlattened" : true,
       "selectable" : false,
       "selectionSymbol" : {
         "type" : "CIMSymbolReference",
@@ -64970,7 +65008,7 @@
       "description" : "This layer includes both Proclaimed Forest and National Grassland boundary areas. A Proclaimed Forest boundary is the boundary encompassing National Forest System land within a national forest that is set aside and reserved from the public domain by executive order or proclamation; congressional action is required to terminate a proclaimed boundary; if, at some point in time, no National Forest System land remains within the proclaimed boundary, then there is no legal significance to the proclaimed boundary, however, its legal status remains. National Grasslands are lands designated \"National Grasslands\" by the Secretary of Agriculture and permanently held by the Department of Agriculture for administration under Title III of the Bankhead-Jones Farm Tenant Act.",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "showLegends" : true,
@@ -65093,7 +65131,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "FSProclaimedForestGrassland",
           "datasetType" : "esriDTFeatureClass"
@@ -65424,7 +65462,7 @@
       "description" : "An area encompassing all the National Forest System lands administered by an administrative unit. The area encompasses private lands, other governmental agency lands, and may contain National Forest System lands within the proclaimed boundaries of another administrative unit. All National Forest System lands fall within one and only one Administrative Forest Area.",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -65562,7 +65600,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "FSAdministrativeForest",
           "datasetType" : "esriDTFeatureClass"
@@ -65926,7 +65964,7 @@
       "description" : "A depiction of the boundary that encompasses a Ranger District.",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -66078,7 +66116,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "FSRangerDistricts",
           "datasetType" : "esriDTFeatureClass"
@@ -66409,7 +66447,7 @@
       "description" : "A boundary depicting an area that has been designated as a National Wilderness in the National Wilderness Preservation System.",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -66554,7 +66592,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "FSWilderness",
           "datasetType" : "esriDTFeatureClass"
@@ -67200,7 +67238,7 @@
       "description" : "A boundary within which National Forest System land parcels have managment or use limits placed on them by legal authority. Examples are: National Recreation Area, National Monument, and National Game Refuge.",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -67346,7 +67384,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "FSOtherNationalDesignations",
           "datasetType" : "esriDTFeatureClass"
@@ -70784,7 +70822,7 @@
       "description" : "A boundary depicting an area that has been designated as a National Wild, Scenic or Recreational River in the National Wild and Scenic River System.",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -70929,7 +70967,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "FSWildScenicRivers",
           "datasetType" : "esriDTFeatureClass"
@@ -71337,7 +71375,7 @@
       "description" : "The USGS Protected Areas Database of the United States (PAD-US) is the nation's inventory of protected areas, including public land and voluntarily provided private protected areas, identified as an A-16 National Geospatial Data Asset in the Cadastre Theme (https://communities.geoplatform.gov/ngda-cadastre/). The PAD-US is an ongoing project with several published versions of a spatial database including areas dedicated to the preservation of biological diversity, and other natural (including extraction), recreational, or cultural uses, managed for these purposes through legal or other effective means. The database was originally designed to support biodiversity assessments; however, its scope expanded in recent years to include all public and nonprofit lands and waters. Most are public lands owned in fee; however, long-term easements, leases, agreements, Congressional (e.g. 'Wilderness Area'), Executive (e.g. 'National Monument'), and administrative designations (e.g. 'Area of Critical Environmental Concern') documented in agency management plans are also included. The PAD-US strives to be a complete inventory of public land and other protected areas, compiling “best available” data provided by managing agencies and organizations. The PAD-US geodatabase maps and describes areas with over twenty-five attributes in nine feature classes to support data management, queries, web mapping services, and analyses. This PAD-US Version 2.0 dataset includes a variety of updates and changes from the previous Version 1.4 dataset. The following list summarizes major updates and changes: 1) Expanded database structure with new layers: the geodatabase feature class structure now includes nine feature classes separating fee owned lands, conservation (and other) easements, management designations overlapping fee lands, marine areas, proclamation boundaries and various 'Combined' feature classes (e.g. 'Fee' + 'Easement' + 'Designation' feature classes); 2) Major update of the Federal estate including data from 8 agencies, developed in collaboration with the Federal Geographic Data Committee (FGDC) Federal Lands Working Group (FLWG, https://communities.geoplatform.gov/ngda-govunits/federal-lands-workgroup/); 3) Major updates to 30 States and limited additions to 16 other States; 4) Integration of The Nature Conservancy's (TNC) Secured Lands geodatabase; 5) Integration of Ducks Unlimited's (DU) Conservation and Recreation Lands (CARL) database; 6) Integration of The Trust for Public Land's (TPL) Conservation Almanac database; 7) The Nature Conservancy (TNC) Lands database update: the national source of lands owned in fee or managed by TNC; 8) National Conservation Easement Database (NCED) update: complete update of non-sensitive (suitable for publication in the public domain) easements; 9) Complete National Marine Protected Areas (MPA) update: from the NOAA MPA Inventory, including conservation measure ('GAP Status Code', 'IUCN Category') review by NOAA; 10) First integration of Bureau of Energy Ocean Management (BOEM) managed marine lands: BOEM submitted Outer Continental Shelf Area lands managed for natural resources (minerals, oil and gas), a significant and new addition to PAD-US; 11) Fee boundary overlap assessment: topology overlaps in the PAD-US 2.0 'Fee' feature class have been identified and are available for user and data-steward reference (See Logical_Consistency_Report Section). For more information regarding the PAD-US dataset please visit, https://usgs.gov/gapanalysis/PAD-US/. For more information about data aggregation please review the “Data Manual for PAD-US” available at https://www.usgs.gov/core-science-systems/science-analytics-and-synthesis/gap/pad-us-data-manual .",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -71651,7 +71689,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "PADUSOwnershipUSGS",
           "datasetType" : "esriDTFeatureClass"
@@ -73950,7 +73988,7 @@
       "description" : "The state_international_boundary_gtac data is a cartographic representation of international boundaries. The state_international_boundary_gtac data is derived from Census State data and converted from polygons to line data. The data is generalized and edited to exclude all state boundaries and leaving the Canadian and Mexico international boundary lines.",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 500000,
@@ -74009,7 +74047,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "StateInternationalBoundaryGTAC",
           "datasetType" : "esriDTFeatureClass"
@@ -75970,7 +76008,7 @@
       "description" : "The State feature class is the spatial representation of the United States, the District of Columbia, Puerto Rico, American Samoa, Guam, Northern Mariana Islands, and Virgin Islands. The data are an extract of the Census codes and boundaries from the following Census FTP site: ftp://ftp2.census.gov/geo/tiger/TIGER2015/. Since the Census data do not include the coastline detail, the coastal boundaries have been included through a spatial erase using the Census Hydrography data from the Census FTP site: ftp://ftp2.census.gov/geo/tiger/TIGER2015/AREAWATER/. The State feature class is a US Forest Service Standard Reference Dataset and is the preferred spatial representation of US States.",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "showLegends" : true,
@@ -76100,7 +76138,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "StateCENSUS",
           "datasetType" : "esriDTFeatureClass"
@@ -76456,7 +76494,7 @@
       "description" : "The County feature class is the spatial representation of the United States Counties and equivalent governmental units. The data are an extract of the Census codes and boundaries from the following Census FTP site: ftp://ftp2.census.gov/geo/tiger/TIGER2015/. Since the Census data do not include the coastline detail, the coastal boundaries have been included through a spatial erase using the Census Hydrography data from the Census FTP site: ftp://ftp2.census.gov/geo/tiger/TIGER2015/AREAWATER/. The County feature class is a US Forest Service Standard Reference Dataset and is the preferred spatial representation of counties.",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -76636,7 +76674,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "CountyCENSUS",
           "datasetType" : "esriDTFeatureClass"
@@ -76997,7 +77035,7 @@
       "description" : "The TIGER/Line Files are shapefiles and related database files (.dbf) that are an extract of selected geographic and cartographic information from the U.S. Census Bureau's Master Address File / Topologically Integrated Geographic Encoding and Referencing (MAF/TIGER) Database (MTDB). The MTDB represents a seamless national file with no overlaps or gaps between parts, however, each TIGER/Line File is designed to stand alone as an independent data set, or they can be combined to cover the entire nation. County subdivisions are the primary divisions of counties and their equivalent entities for the reporting of Census Bureau data, and they include legally minor civil divisions (MCDs) and statistical census county divisions (CCDs), and unorganized territories. For the 2010 Census, the legal MCDs are the primary governmental and/or administrative divisions of counties in 29 States and Puerto Rico; Tennessee changed from having CCDs for Census 2000 to having MCDs for the 2010 Census. In MCD States where no MCD exists or is not defined, the Census Bureau creates statistical unorganized territories to complete coverage. The entire area of the United States, Puerto Rico, and the Island Areas is covered by county subdivisions. The boundaries of all 2010 Census legal MCDs are as of January 1, 2010 as reported through the Census Bureau's Boundary and Annexation Survey (BAS). For the 2010 Census, CCDs or their equivalents are delineated in 21 States. The boundaries of all 2010 Census statistical CCDs were delineated as part of the Census Bureau's Participant Statistical Areas Program (PSAP).",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -77072,7 +77110,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "CountySubdivisionCENSUS",
           "datasetType" : "esriDTFeatureClass"
@@ -77453,7 +77491,7 @@
       "description" : "The TIGER/Line shapefiles and related database files (.dbf) are an extract of selected geographic and cartographic information from the U.S. Census Bureau's Master Address File / Topologically Integrated Geographic Encoding and Referencing (MAF/TIGER) Database (MTDB). The MTDB represents a seamless national file with no overlaps or gaps between parts, however, each TIGER/Line shapefile is designed to stand alone as an independent data set, or they can be combined to cover the entire nation. The TIGER/Line shapefiles include both incorporated places (legal entities) and census designated places or CDPs (statistical entities). An incorporated place is established to provide governmental functions for a concentration of people as opposed to a minor civil division (MCD), which generally is created to provide services or administer an area without regard, necessarily, to population. Places always nest within a state, but may extend across county and county subdivision boundaries. An incorporated place usually is a city, town, village, or borough, but can have other legal descriptions. CDPs are delineated for the decennial census as the statistical counterparts of incorporated places. CDPs are delineated to provide data for settled concentrations of population that are identifiable by name, but are not legally incorporated under the laws of the state in which they are located. The boundaries for CDPs often are defined in partnership with state, local, and/or tribal officials and usually coincide with visible features or the boundary of an adjacent incorporated place or another legal entity. CDP boundaries often change from one decennial census to the next with changes in the settlement pattern and development; a CDP with the same name as in an earlier census does not necessarily have the same boundary. The only population/housing size requirement for CDPs is that they must contain some housing and population. The boundaries of most incorporated places in this shapefile are as of January 1, 2015, as reported through the Census Bureau's Boundary and Annexation Survey (BAS). The boundaries of all CDPs were delineated as part of the Census Bureau's Participant Statistical Areas Program (PSAP) for the 2010 Census.",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -77619,7 +77657,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "PlaceCENSUS",
           "datasetType" : "esriDTFeatureClass"
@@ -78014,7 +78052,27 @@
       "description" : "The USGS National Hydrography Dataset (NHD) Downloadable Data Collection from The National Map (TNM) is a comprehensive set of digital spatial data that encodes information about naturally occurring and constructed bodies of surface water (lakes, ponds, and reservoirs), paths through which water flows (canals, ditches, streams, and rivers), and related entities such as point features (springs, wells, stream gages, and dams). The information encoded about these features includes classification and other characteristics, delineation, geographic name, position and related measures, a \"reach code\" through which other information can be related to the NHD, and the direction of water flow. The network of reach codes delineating water and transported material flow allows users to trace movement in upstream and downstream directions. In addition to this geographic information, the dataset contains metadata that supports the exchange of future updates and improvements to the data. The NHD supports many applications, such as making maps, geocoding observations, flow modeling, data maintenance, and stewardship. For additional information on NHD, go to http://nhd.usgs.gov/.",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
+      },
+      "layer3DProperties" : {
+        "type" : "CIM3DLayerProperties",
+        "castShadows" : true,
+        "isLayerLit" : true,
+        "layerFaceCulling" : "None",
+        "maxDistance" : -1,
+        "minDistance" : -1,
+        "preloadTextureCutoffHigh" : 0,
+        "preloadTextureCutoffLow" : 0.25,
+        "textureCutoffHigh" : 0.25,
+        "textureCutoffLow" : 1,
+        "useCompressedTextures" : true,
+        "verticalExaggeration" : 1,
+        "exaggerationMode" : "ScaleZ",
+        "verticalUnit" : {
+          "uwkid" : 9001
+        },
+        "lighting" : "OneSideDataNormal",
+        "optimizeMarkerTransparency" : true
       },
       "layerType" : "Operational",
       "minScale" : 250000,
@@ -78029,7 +78087,7 @@
       "blendingMode" : "Alpha",
       "allowDrapingOnIntegratedMesh" : true,
       "autoGenerateFeatureTemplates" : true,
-      "featureElevationExpression" : "0",
+      "featureElevationExpression" : "Shape.Z",
       "featureTable" : {
         "type" : "CIMFeatureTable",
         "displayField" : "GNIS_NAME",
@@ -78202,7 +78260,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "NHDLine",
           "datasetType" : "esriDTFeatureClass"
@@ -78216,7 +78274,6 @@
         "htmlUseCodedDomainValues" : true,
         "htmlPresentationStyle" : "TwoColumnTable"
       },
-      "isFlattened" : true,
       "selectable" : false,
       "selectionSymbol" : {
         "type" : "CIMSymbolReference",
@@ -78735,6 +78792,11 @@
                       {
                         "type" : "CIMVectorMarker",
                         "enable" : true,
+                        "anchorPoint" : {
+                          "x" : 0,
+                          "y" : 0,
+                          "z" : -0.5
+                        },
                         "anchorPointUnits" : "Relative",
                         "dominantSizeAxis3D" : "Z",
                         "rotation" : 90,
@@ -78928,6 +78990,11 @@
                       {
                         "type" : "CIMVectorMarker",
                         "enable" : true,
+                        "anchorPoint" : {
+                          "x" : 0,
+                          "y" : 0,
+                          "z" : -0.5
+                        },
                         "anchorPointUnits" : "Relative",
                         "dominantSizeAxis3D" : "Z",
                         "rotation" : 90,
@@ -79020,6 +79087,11 @@
                       {
                         "type" : "CIMCharacterMarker",
                         "enable" : true,
+                        "anchorPoint" : {
+                          "x" : 0,
+                          "y" : 0,
+                          "z" : -0.5
+                        },
                         "anchorPointUnits" : "Relative",
                         "dominantSizeAxis3D" : "Y",
                         "size" : 3.8879999999999999,
@@ -79200,6 +79272,11 @@
                       {
                         "type" : "CIMVectorMarker",
                         "enable" : true,
+                        "anchorPoint" : {
+                          "x" : 0,
+                          "y" : 0,
+                          "z" : -0.5
+                        },
                         "anchorPointUnits" : "Relative",
                         "dominantSizeAxis3D" : "Z",
                         "rotation" : 90,
@@ -79302,7 +79379,27 @@
       "description" : "The USGS National Hydrography Dataset (NHD) Downloadable Data Collection from The National Map (TNM) is a comprehensive set of digital spatial data that encodes information about naturally occurring and constructed bodies of surface water (lakes, ponds, and reservoirs), paths through which water flows (canals, ditches, streams, and rivers), and related entities such as point features (springs, wells, stream gages, and dams). The information encoded about these features includes classification and other characteristics, delineation, geographic name, position and related measures, a \"reach code\" through which other information can be related to the NHD, and the direction of water flow. The network of reach codes delineating water and transported material flow allows users to trace movement in upstream and downstream directions. In addition to this geographic information, the dataset contains metadata that supports the exchange of future updates and improvements to the data. The NHD supports many applications, such as making maps, geocoding observations, flow modeling, data maintenance, and stewardship. For additional information on NHD, go to http://nhd.usgs.gov/.",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
+      },
+      "layer3DProperties" : {
+        "type" : "CIM3DLayerProperties",
+        "castShadows" : true,
+        "isLayerLit" : true,
+        "layerFaceCulling" : "None",
+        "maxDistance" : -1,
+        "minDistance" : -1,
+        "preloadTextureCutoffHigh" : 0,
+        "preloadTextureCutoffLow" : 0.25,
+        "textureCutoffHigh" : 0.25,
+        "textureCutoffLow" : 1,
+        "useCompressedTextures" : true,
+        "verticalExaggeration" : 1,
+        "exaggerationMode" : "ScaleZ",
+        "verticalUnit" : {
+          "uwkid" : 9001
+        },
+        "lighting" : "OneSideDataNormal",
+        "optimizeMarkerTransparency" : true
       },
       "layerType" : "Operational",
       "minScale" : 250000,
@@ -79317,7 +79414,7 @@
       "blendingMode" : "Alpha",
       "allowDrapingOnIntegratedMesh" : true,
       "autoGenerateFeatureTemplates" : true,
-      "featureElevationExpression" : "0",
+      "featureElevationExpression" : "Shape.Z",
       "featureTable" : {
         "type" : "CIMFeatureTable",
         "displayField" : "GNIS_NAME",
@@ -79519,7 +79616,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "NHDAreasUSGS",
           "datasetType" : "esriDTFeatureClass"
@@ -79533,7 +79630,6 @@
         "htmlUseCodedDomainValues" : true,
         "htmlPresentationStyle" : "TwoColumnTable"
       },
-      "isFlattened" : true,
       "selectable" : false,
       "selectionSymbol" : {
         "type" : "CIMSymbolReference",
@@ -81100,6 +81196,11 @@
                         "type" : "CIMCharacterMarker",
                         "enable" : true,
                         "name" : "Level_5",
+                        "anchorPoint" : {
+                          "x" : 0,
+                          "y" : 0,
+                          "z" : -0.5
+                        },
                         "anchorPointUnits" : "Relative",
                         "dominantSizeAxis3D" : "Y",
                         "size" : 32,
@@ -81391,6 +81492,11 @@
                         "type" : "CIMCharacterMarker",
                         "enable" : true,
                         "name" : "Level_14",
+                        "anchorPoint" : {
+                          "x" : 0,
+                          "y" : 0,
+                          "z" : -0.5
+                        },
                         "anchorPointUnits" : "Relative",
                         "dominantSizeAxis3D" : "Y",
                         "size" : 32,
@@ -81479,6 +81585,11 @@
                         "type" : "CIMCharacterMarker",
                         "enable" : true,
                         "name" : "Level_19",
+                        "anchorPoint" : {
+                          "x" : 0,
+                          "y" : 0,
+                          "z" : -0.5
+                        },
                         "anchorPointUnits" : "Relative",
                         "dominantSizeAxis3D" : "Y",
                         "size" : 36,
@@ -81678,6 +81789,11 @@
                         "type" : "CIMCharacterMarker",
                         "enable" : true,
                         "name" : "Level_50",
+                        "anchorPoint" : {
+                          "x" : 0,
+                          "y" : 0,
+                          "z" : -0.5
+                        },
                         "anchorPointUnits" : "Relative",
                         "dominantSizeAxis3D" : "Y",
                         "size" : 72,
@@ -82014,6 +82130,11 @@
                         "type" : "CIMCharacterMarker",
                         "enable" : true,
                         "name" : "Level_15",
+                        "anchorPoint" : {
+                          "x" : 0,
+                          "y" : 0,
+                          "z" : -0.5
+                        },
                         "anchorPointUnits" : "Relative",
                         "dominantSizeAxis3D" : "Y",
                         "size" : 36,
@@ -82109,6 +82230,11 @@
                         "type" : "CIMCharacterMarker",
                         "enable" : true,
                         "name" : "Level_4",
+                        "anchorPoint" : {
+                          "x" : 0,
+                          "y" : 0,
+                          "z" : -0.5
+                        },
                         "anchorPointUnits" : "Relative",
                         "dominantSizeAxis3D" : "Y",
                         "size" : 32,
@@ -82339,7 +82465,27 @@
       "description" : "The USGS National Hydrography Dataset (NHD) Downloadable Data Collection from The National Map (TNM) is a comprehensive set of digital spatial data that encodes information about naturally occurring and constructed bodies of surface water (lakes, ponds, and reservoirs), paths through which water flows (canals, ditches, streams, and rivers), and related entities such as point features (springs, wells, stream gages, and dams). The information encoded about these features includes classification and other characteristics, delineation, geographic name, position and related measures, a \"reach code\" through which other information can be related to the NHD, and the direction of water flow. The network of reach codes delineating water and transported material flow allows users to trace movement in upstream and downstream directions. In addition to this geographic information, the dataset contains metadata that supports the exchange of future updates and improvements to the data. The NHD supports many applications, such as making maps, geocoding observations, flow modeling, data maintenance, and stewardship. For additional information on NHD, go to http://nhd.usgs.gov/.",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
+      },
+      "layer3DProperties" : {
+        "type" : "CIM3DLayerProperties",
+        "castShadows" : true,
+        "isLayerLit" : true,
+        "layerFaceCulling" : "None",
+        "maxDistance" : -1,
+        "minDistance" : -1,
+        "preloadTextureCutoffHigh" : 0,
+        "preloadTextureCutoffLow" : 0.25,
+        "textureCutoffHigh" : 0.25,
+        "textureCutoffLow" : 1,
+        "useCompressedTextures" : true,
+        "verticalExaggeration" : 1,
+        "exaggerationMode" : "ScaleZ",
+        "verticalUnit" : {
+          "uwkid" : 9001
+        },
+        "lighting" : "OneSideDataNormal",
+        "optimizeMarkerTransparency" : true
       },
       "layerType" : "Operational",
       "minScale" : 250000,
@@ -82354,7 +82500,7 @@
       "blendingMode" : "Alpha",
       "allowDrapingOnIntegratedMesh" : true,
       "autoGenerateFeatureTemplates" : true,
-      "featureElevationExpression" : "0",
+      "featureElevationExpression" : "Shape.Z",
       "featureTable" : {
         "type" : "CIMFeatureTable",
         "displayField" : "GNIS_NAME",
@@ -82563,7 +82709,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "NHDWaterbody",
           "datasetType" : "esriDTFeatureClass"
@@ -82577,7 +82723,6 @@
         "htmlUseCodedDomainValues" : true,
         "htmlPresentationStyle" : "TwoColumnTable"
       },
-      "isFlattened" : true,
       "selectable" : false,
       "selectionSymbol" : {
         "type" : "CIMSymbolReference",
@@ -83889,6 +84034,11 @@
                       {
                         "type" : "CIMCharacterMarker",
                         "enable" : true,
+                        "anchorPoint" : {
+                          "x" : 0,
+                          "y" : 0,
+                          "z" : -0.5
+                        },
                         "anchorPointUnits" : "Relative",
                         "dominantSizeAxis3D" : "Y",
                         "size" : 36,
@@ -83986,6 +84136,11 @@
                       {
                         "type" : "CIMCharacterMarker",
                         "enable" : true,
+                        "anchorPoint" : {
+                          "x" : 0,
+                          "y" : 0,
+                          "z" : -0.5
+                        },
                         "anchorPointUnits" : "Relative",
                         "dominantSizeAxis3D" : "Y",
                         "size" : 72,
@@ -84158,6 +84313,11 @@
                       {
                         "type" : "CIMCharacterMarker",
                         "enable" : true,
+                        "anchorPoint" : {
+                          "x" : 0,
+                          "y" : 0,
+                          "z" : -0.5
+                        },
                         "anchorPointUnits" : "Relative",
                         "dominantSizeAxis3D" : "Y",
                         "size" : 36,
@@ -84514,6 +84674,11 @@
                       {
                         "type" : "CIMCharacterMarker",
                         "enable" : true,
+                        "anchorPoint" : {
+                          "x" : 0,
+                          "y" : 0,
+                          "z" : -0.5
+                        },
                         "anchorPointUnits" : "Relative",
                         "dominantSizeAxis3D" : "Y",
                         "size" : 36,
@@ -84592,7 +84757,7 @@
       "description" : "The USGS National Hydrography Dataset (NHD) Downloadable Data Collection from The National Map (TNM) is a comprehensive set of digital spatial data that encodes information about naturally occurring and constructed bodies of surface water (lakes, ponds, and reservoirs), paths through which water flows (canals, ditches, streams, and rivers), and related entities such as point features (springs, wells, stream gages, and dams). The information encoded about these features includes classification and other characteristics, delineation, geographic name, position and related measures, a \"reach code\" through which other information can be related to the NHD, and the direction of water flow. The network of reach codes delineating water and transported material flow allows users to trace movement in upstream and downstream directions. In addition to this geographic information, the dataset contains metadata that supports the exchange of future updates and improvements to the data. The NHD supports many applications, such as making maps, geocoding observations, flow modeling, data maintenance, and stewardship. For additional information on NHD, go to http://nhd.usgs.gov/.",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 250000,
@@ -84615,207 +84780,23 @@
         "fieldDescriptions" : [
           {
             "type" : "CIMFieldDescription",
-            "alias" : "OBJECTID",
-            "fieldName" : "objectid",
-            "numberFormat" : {
-              "type" : "CIMNumericFormat",
-              "alignmentOption" : "esriAlignRight",
-              "alignmentWidth" : 12,
-              "roundingOption" : "esriRoundNumberOfDecimals",
-              "roundingValue" : 0
-            },
+            "alias" : "GlobalID",
+            "fieldName" : "GlobalID",
             "readOnly" : true,
             "visible" : true,
             "searchMode" : "Exact"
           },
           {
             "type" : "CIMFieldDescription",
-            "alias" : "Shape",
-            "fieldName" : "shape",
-            "visible" : true,
-            "searchMode" : "Exact"
-          },
-          {
-            "type" : "CIMFieldDescription",
-            "alias" : "PERMANENT_IDENTIFIER",
-            "fieldName" : "permanent_identifier",
-            "visible" : true,
-            "searchMode" : "Exact"
-          },
-          {
-            "type" : "CIMFieldDescription",
-            "alias" : "FDATE",
-            "fieldName" : "fdate",
-            "visible" : true,
-            "searchMode" : "Exact"
-          },
-          {
-            "type" : "CIMFieldDescription",
-            "alias" : "Resolution",
-            "fieldName" : "resolution",
+            "alias" : "Shape_Length",
+            "fieldName" : "Shape_Length",
             "numberFormat" : {
               "type" : "CIMNumericFormat",
               "alignmentOption" : "esriAlignRight",
-              "alignmentWidth" : 12,
-              "roundingOption" : "esriRoundNumberOfDecimals",
-              "roundingValue" : 0
-            },
-            "visible" : true,
-            "searchMode" : "Exact"
-          },
-          {
-            "type" : "CIMFieldDescription",
-            "alias" : "GNIS_ID",
-            "fieldName" : "gnis_id",
-            "visible" : true,
-            "searchMode" : "Exact"
-          },
-          {
-            "type" : "CIMFieldDescription",
-            "alias" : "GNIS_NAME",
-            "fieldName" : "gnis_name",
-            "visible" : true,
-            "searchMode" : "Exact"
-          },
-          {
-            "type" : "CIMFieldDescription",
-            "alias" : "LENGTHKM",
-            "fieldName" : "lengthkm",
-            "numberFormat" : {
-              "type" : "CIMNumericFormat",
-              "alignmentOption" : "esriAlignRight",
-              "alignmentWidth" : 12,
+              "alignmentWidth" : 0,
               "roundingOption" : "esriRoundNumberOfDecimals",
               "roundingValue" : 6
             },
-            "visible" : true,
-            "searchMode" : "Exact"
-          },
-          {
-            "type" : "CIMFieldDescription",
-            "alias" : "REACHCODE",
-            "fieldName" : "reachcode",
-            "visible" : true,
-            "searchMode" : "Exact"
-          },
-          {
-            "type" : "CIMFieldDescription",
-            "alias" : "FlowDir",
-            "fieldName" : "flowdir",
-            "numberFormat" : {
-              "type" : "CIMNumericFormat",
-              "alignmentOption" : "esriAlignRight",
-              "alignmentWidth" : 12,
-              "roundingOption" : "esriRoundNumberOfDecimals",
-              "roundingValue" : 0
-            },
-            "visible" : true,
-            "searchMode" : "Exact"
-          },
-          {
-            "type" : "CIMFieldDescription",
-            "alias" : "WBAREA_PERMANENT_IDENTIFIER",
-            "fieldName" : "wbarea_permanent_identifier",
-            "visible" : true,
-            "searchMode" : "Exact"
-          },
-          {
-            "type" : "CIMFieldDescription",
-            "alias" : "FType",
-            "fieldName" : "ftype",
-            "numberFormat" : {
-              "type" : "CIMNumericFormat",
-              "alignmentOption" : "esriAlignRight",
-              "alignmentWidth" : 12,
-              "roundingOption" : "esriRoundNumberOfDecimals",
-              "roundingValue" : 0
-            },
-            "visible" : true,
-            "searchMode" : "Exact"
-          },
-          {
-            "type" : "CIMFieldDescription",
-            "alias" : "FCode",
-            "fieldName" : "fcode",
-            "numberFormat" : {
-              "type" : "CIMNumericFormat",
-              "alignmentOption" : "esriAlignRight",
-              "alignmentWidth" : 12,
-              "roundingOption" : "esriRoundNumberOfDecimals",
-              "roundingValue" : 0
-            },
-            "visible" : true,
-            "searchMode" : "Exact"
-          },
-          {
-            "type" : "CIMFieldDescription",
-            "alias" : "InNetwork",
-            "fieldName" : "innetwork",
-            "numberFormat" : {
-              "type" : "CIMNumericFormat",
-              "alignmentOption" : "esriAlignRight",
-              "alignmentWidth" : 12,
-              "roundingOption" : "esriRoundNumberOfDecimals",
-              "roundingValue" : 0
-            },
-            "visible" : true,
-            "searchMode" : "Exact"
-          },
-          {
-            "type" : "CIMFieldDescription",
-            "alias" : "MainPath",
-            "fieldName" : "mainpath",
-            "numberFormat" : {
-              "type" : "CIMNumericFormat",
-              "alignmentOption" : "esriAlignRight",
-              "alignmentWidth" : 12,
-              "roundingOption" : "esriRoundNumberOfDecimals",
-              "roundingValue" : 0
-            },
-            "visible" : true,
-            "searchMode" : "Exact"
-          },
-          {
-            "type" : "CIMFieldDescription",
-            "alias" : "VisibilityFilter",
-            "fieldName" : "visibilityfilter",
-            "numberFormat" : {
-              "type" : "CIMNumericFormat",
-              "alignmentOption" : "esriAlignRight",
-              "alignmentWidth" : 12,
-              "roundingOption" : "esriRoundNumberOfDecimals",
-              "roundingValue" : 0
-            },
-            "visible" : true,
-            "searchMode" : "Exact"
-          },
-          {
-            "type" : "CIMFieldDescription",
-            "alias" : "st_length(shape)",
-            "fieldName" : "st_length(shape)",
-            "numberFormat" : {
-              "type" : "CIMNumericFormat",
-              "alignmentOption" : "esriAlignRight",
-              "alignmentWidth" : 12,
-              "roundingOption" : "esriRoundNumberOfDecimals",
-              "roundingValue" : 6
-            },
-            "readOnly" : true,
-            "visible" : true,
-            "searchMode" : "Exact"
-          },
-          {
-            "type" : "CIMFieldDescription",
-            "alias" : "create_date",
-            "fieldName" : "create_date",
-            "readOnly" : true,
-            "visible" : true,
-            "searchMode" : "Exact"
-          },
-          {
-            "type" : "CIMFieldDescription",
-            "alias" : "rev_date",
-            "fieldName" : "rev_date",
             "readOnly" : true,
             "visible" : true,
             "searchMode" : "Exact"
@@ -84836,9 +84817,9 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
-          "dataset" : "NHDFlowline",
+          "dataset" : "NHDFlowlineGTAC",
           "datasetType" : "esriDTFeatureClass"
         },
         "studyAreaSpatialRel" : "esriSpatialRelUndefined",
@@ -86087,7 +86068,7 @@
       "description" : "This data set represents the extent, approximate location and type of wetlands and deepwater habitats in the United States and its Territories. These data delineate the areal extent of wetlands and surface waters as defined by Cowardin et al. (1979). The National Wetlands Inventory - Version 2, Surface Waters and Wetlands Inventory was derived by retaining the wetland and deepwater polygons that compose the NWI digital wetlands spatial data layer and reintroducing any linear wetland or surface water features that were orphaned from the original NWI hard copy maps by converting them to narrow polygonal features. Additionally, the data are supplemented with hydrography data, buffered to become polygonal features, as a secondary source for any single-line stream features not mapped by the NWI and to complete segmented connections. Wetland mapping conducted in WA, OR, CA, NV and ID after 2012 and most other projects mapped after 2015 were mapped to include all surface water features and are not derived data. The linear hydrography dataset used to derive Version 2 was the U.S. Geological Survey's National Hydrography Dataset (NHD). Specific information on the NHD version used to derive Version 2 and where Version 2 was mapped can be found in the 'comments' field of the Wetlands_Project_Metadata feature class. Certain wetland habitats are excluded from the National mapping program because of the limitations of aerial imagery as the primary data source used to detect wetlands. These habitats include seagrasses or submerged aquatic vegetation that are found in the intertidal and subtidal zones of estuaries and near shore coastal waters. Some deepwater reef communities (coral or tuberficid worm reefs) have also been excluded from the inventory. These habitats, because of their depth, go undetected by aerial imagery. By policy, the Service also excludes certain types of \"farmed wetlands\" as may be defined by the Food Security Act or that do not coincide with the Cowardin et al. definition. Contact the Service's Regional Wetland Coordinator for additional information on what types of farmed wetlands are included on wetland maps. This dataset should be used in conjunction with the Wetlands_Project_Metadata layer, which contains project specific wetlands mapping procedures and information on dates, scales and emulsion of imagery used to map the wetlands within specific project boundaries.",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 250000,
@@ -86212,7 +86193,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "Wetlands",
           "datasetType" : "esriDTFeatureClass"
@@ -86726,7 +86707,7 @@
       "description" : "This data set represents the extent, approximate location and type of wetlands and deepwater habitats in the United States and its Territories. These data delineate the areal extent of wetlands and surface waters as defined by Cowardin et al. (1979). The National Wetlands Inventory - Version 2, Surface Waters and Wetlands Inventory was derived by retaining the wetland and deepwater polygons that compose the NWI digital wetlands spatial data layer and reintroducing any linear wetland or surface water features that were orphaned from the original NWI hard copy maps by converting them to narrow polygonal features. Additionally, the data are supplemented with hydrography data, buffered to become polygonal features, as a secondary source for any single-line stream features not mapped by the NWI and to complete segmented connections. Wetland mapping conducted in WA, OR, CA, NV and ID after 2012 and most other projects mapped after 2015 were mapped to include all surface water features and are not derived data. The linear hydrography dataset used to derive Version 2 was the U.S. Geological Survey's National Hydrography Dataset (NHD). Specific information on the NHD version used to derive Version 2 and where Version 2 was mapped can be found in the 'comments' field of the Wetlands_Project_Metadata feature class. Certain wetland habitats are excluded from the National mapping program because of the limitations of aerial imagery as the primary data source used to detect wetlands. These habitats include seagrasses or submerged aquatic vegetation that are found in the intertidal and subtidal zones of estuaries and near shore coastal waters. Some deepwater reef communities (coral or tuberficid worm reefs) have also been excluded from the inventory. These habitats, because of their depth, go undetected by aerial imagery. By policy, the Service also excludes certain types of \"farmed wetlands\" as may be defined by the Food Security Act or that do not coincide with the Cowardin et al. definition. Contact the Service's Regional Wetland Coordinator for additional information on what types of farmed wetlands are included on wetland maps. This dataset should be used in conjunction with the Wetlands_Project_Metadata layer, which contains project specific wetlands mapping procedures and information on dates, scales and emulsion of imagery used to map the wetlands within specific project boundaries.",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -86842,7 +86823,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "Wetlands",
           "datasetType" : "esriDTFeatureClass"
@@ -87356,7 +87337,7 @@
       "description" : "In the Public Land Survey System a Township refers to a unit of land, that is nominally six miles on a side, usually containing 36 sections.",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -87564,7 +87545,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "BLMPLSSTownships",
           "datasetType" : "esriDTFeatureClass"
@@ -88119,7 +88100,7 @@
       "description" : "The PLSS First Division is commonly the section. This is the first set of divisions for a PLSS Township.",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -88301,7 +88282,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "BLMPLSSSections",
           "datasetType" : "esriDTFeatureClass"
@@ -89901,7 +89882,7 @@
       "useSourceMetadata" : false,
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -89924,8 +89905,275 @@
         "fieldDescriptions" : [
           {
             "type" : "CIMFieldDescription",
-            "alias" : "st_area(shape)",
-            "fieldName" : "st_area(shape)",
+            "alias" : "OBJECTID",
+            "fieldName" : "OBJECTID",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 0,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 0
+            },
+            "readOnly" : true,
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "Shape",
+            "fieldName" : "Shape",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "BUILD_ID",
+            "fieldName" : "BUILD_ID",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 0,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 0
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "OCC_CLS",
+            "fieldName" : "OCC_CLS",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "PRIM_OCC",
+            "fieldName" : "PRIM_OCC",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "SEC_OCC",
+            "fieldName" : "SEC_OCC",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "PROP_ADDR",
+            "fieldName" : "PROP_ADDR",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "PROP_CITY",
+            "fieldName" : "PROP_CITY",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "PROP_ST",
+            "fieldName" : "PROP_ST",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "PROP_ZIP",
+            "fieldName" : "PROP_ZIP",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "OUTBLDG",
+            "fieldName" : "OUTBLDG",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "HEIGHT",
+            "fieldName" : "HEIGHT",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 0,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 6
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "SQMETERS",
+            "fieldName" : "SQMETERS",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 0,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 6
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "SQFEET",
+            "fieldName" : "SQFEET",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 0,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 6
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "H_ADJ_ELEV",
+            "fieldName" : "H_ADJ_ELEV",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 0,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 6
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "L_ADJ_ELEV",
+            "fieldName" : "L_ADJ_ELEV",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 0,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 6
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "FIPS",
+            "fieldName" : "FIPS",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "CENSUSCODE",
+            "fieldName" : "CENSUSCODE",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "PROD_DATE",
+            "fieldName" : "PROD_DATE",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "SOURCE",
+            "fieldName" : "SOURCE",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "USNG",
+            "fieldName" : "USNG",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "LONGITUDE",
+            "fieldName" : "LONGITUDE",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 0,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 6
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "LATITUDE",
+            "fieldName" : "LATITUDE",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 0,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 6
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "IMAGE_NAME",
+            "fieldName" : "IMAGE_NAME",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "IMAGE_DATE",
+            "fieldName" : "IMAGE_DATE",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "VAL_METHOD",
+            "fieldName" : "VAL_METHOD",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "REMARKS",
+            "fieldName" : "REMARKS",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "UUID",
+            "fieldName" : "UUID",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "State FIPS",
+            "fieldName" : "STATE_FIPS",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "Shape_Length",
+            "fieldName" : "Shape_Length",
             "numberFormat" : {
               "type" : "CIMNumericFormat",
               "alignmentOption" : "esriAlignRight",
@@ -89939,8 +90187,8 @@
           },
           {
             "type" : "CIMFieldDescription",
-            "alias" : "st_perimeter(shape)",
-            "fieldName" : "st_perimeter(shape)",
+            "alias" : "Shape_Area",
+            "fieldName" : "Shape_Area",
             "numberFormat" : {
               "type" : "CIMNumericFormat",
               "alignmentOption" : "esriAlignRight",
@@ -89968,9 +90216,9 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
-          "dataset" : "USAStructures",
+          "dataset" : "USAStructuresA",
           "datasetType" : "esriDTFeatureClass"
         },
         "studyAreaSpatialRel" : "esriSpatialRelUndefined",
@@ -90283,7 +90531,27 @@
       "useSourceMetadata" : false,
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
+      },
+      "layer3DProperties" : {
+        "type" : "CIM3DLayerProperties",
+        "castShadows" : true,
+        "isLayerLit" : true,
+        "layerFaceCulling" : "None",
+        "maxDistance" : -1,
+        "minDistance" : -1,
+        "preloadTextureCutoffHigh" : 0,
+        "preloadTextureCutoffLow" : 0.25,
+        "textureCutoffHigh" : 0.25,
+        "textureCutoffLow" : 1,
+        "useCompressedTextures" : true,
+        "verticalExaggeration" : 1,
+        "exaggerationMode" : "ScaleZ",
+        "verticalUnit" : {
+          "uwkid" : 9001
+        },
+        "lighting" : "OneSideDataNormal",
+        "optimizeMarkerTransparency" : true
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -90297,7 +90565,7 @@
       "refreshRateUnit" : "esriTimeUnitsSeconds",
       "blendingMode" : "Alpha",
       "allowDrapingOnIntegratedMesh" : true,
-      "featureElevationExpression" : "0",
+      "featureElevationExpression" : "Shape.Z",
       "featureTable" : {
         "type" : "CIMFeatureTable",
         "displayField" : "PERMANENT_IDENTIFIER",
@@ -90518,7 +90786,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "ElevContour",
           "datasetType" : "esriDTFeatureClass"
@@ -90619,7 +90887,6 @@
         "htmlUseCodedDomainValues" : true,
         "htmlPresentationStyle" : "TwoColumnTable"
       },
-      "isFlattened" : true,
       "selectable" : false,
       "selectionSymbol" : {
         "type" : "CIMSymbolReference",
@@ -90965,6 +91232,11 @@
                       {
                         "type" : "CIMVectorMarker",
                         "enable" : true,
+                        "anchorPoint" : {
+                          "x" : 0,
+                          "y" : 0,
+                          "z" : -0.5
+                        },
                         "anchorPointUnits" : "Relative",
                         "dominantSizeAxis3D" : "Z",
                         "rotation" : 90,
@@ -91077,6 +91349,11 @@
                       {
                         "type" : "CIMVectorMarker",
                         "enable" : true,
+                        "anchorPoint" : {
+                          "x" : 0,
+                          "y" : 0,
+                          "z" : -0.5
+                        },
                         "anchorPointUnits" : "Relative",
                         "dominantSizeAxis3D" : "Z",
                         "rotation" : 90,
@@ -91321,7 +91598,7 @@
       "description" : "An area depicted as surface ownership parcels dissolved on the same ownership classification.",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 250000,
@@ -91453,7 +91730,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "FSBasicOwnership",
           "datasetType" : "esriDTFeatureClass"
@@ -91807,7 +92084,7 @@
       "description" : "SurfaceManagementAgency: The Surface Management Agency (SMA) Geographic Information System (GIS) dataset depicts Federal land for the United States and classifies this land by its active Federal surface managing agency. The SMA feature class covers the continental United States, Alaska, Hawaii, Puerto Rico, Guam, American Samoa and the Virgin Islands. A Federal SMA agency refers to a Federal agency with administrative jurisdiction over the surface of Federal lands. Jurisdiction over the land is defined when the land is either: Withdrawn by some administrative or legislative action, or Acquired or Exchanged by a Federal Agency. This layer is a dynamic assembly of spatial data layers maintained at various federal and local government offices. The GIS data contained in this dataset represents the polygon features that show the boundaries for Surface Management Agency and the surface extent of each Federal agency’s surface administrative jurisdiction. SMA data depicts current withdrawn areas for a particular agency and (when appropriate) includes land that was acquired or exchanged and is located outside of a withdrawal area for that agency. The SMA data do not illustrate land status ownership pattern boundaries or contain land ownership attribute details.",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 250000,
@@ -91988,7 +92265,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "AmericanIndianLandBLM",
           "datasetType" : "esriDTFeatureClass"
@@ -92654,7 +92931,7 @@
       "useSourceMetadata" : false,
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "layerType" : "Operational",
       "minScale" : 100000,
@@ -92855,7 +93132,7 @@
         },
         "dataConnection" : {
           "type" : "CIMStandardDataConnection",
-          "workspaceConnectionString" : "DATABASE=C:\\Workspace\\development\\PanunTools-main\\FeatureLayerDownload.gdb",
+          "workspaceConnectionString" : "DATABASE=..\\FeatureLayerDownload.gdb",
           "workspaceFactory" : "FileGDB",
           "dataset" : "UrbanAreaBuiltupArea",
           "datasetType" : "esriDTFeatureClass"
@@ -93171,7 +93448,7 @@
       "description" : "New Group Layer",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json"
       },
       "expanded" : true,
       "layerType" : "Operational",
@@ -93466,7 +93743,7 @@
     {
       "type" : "CIMElevationSurfaceLayer",
       "name" : "Ground",
-      "uRI" : "CIMPATH=Map/dbd3055b4f2d420d9ef54231fba4986c.json",
+      "uRI" : "CIMPATH=Map/3398dd72badd4992875013a4ade59253.json",
       "sourceModifiedTime" : {
         "type" : "TimeInstant"
       },
