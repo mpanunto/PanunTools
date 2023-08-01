@@ -1627,7 +1627,7 @@ if __name__=='__main__':
                         #curr_featurelayer_credits = curr_featurelayer.properties.copyrightText
 
                         #Append URLs to lists. If they are high-density datasets, send them through the secondary multiprocessor instead
-                        if(curr_featurelayer_name in ["HIFLD Plus GTAC", "Gap Roads GTAC", "Forest Service Roads", "NHDFlowline", "NHDWaterbody", "BLM PLSS Sections", "FSVeg - Stands", "USA_Structures"]):
+                        if(curr_featurelayer_name in ["HIFLD Plus GTAC", "Gap Roads GTAC", "Forest Service Roads", "NHDFlowline", "NHD Flowline GTAC", "NHDWaterbody", "BLM PLSS Sections", "FSVeg - Stands", "USA_Structures", "USA_Structures_A"]):
                             featurelayerurl_list_secondary.append(curr_featurelayer_url)
                             featurelayer_name_list_secondary.append(curr_featurelayer_name)
                             featureservice_name_list_secondary.append(curr_service_name)
