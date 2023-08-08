@@ -1,14 +1,8 @@
 # Incident Setup ArcGIS Pro
 
-Tool that automates the creation of the Pro Project Template, and Master Projects.
+Tool that automates much of the process to setup the Pro Project Template, create Master Projects, and create an Edit Project.
 
-### How does it work?
-
-
-
-### User inputs
-   
-
+### How does it work?  
 
 ![screenshot_IncidentSetupArcGISPro_1.png](/docs/screenshot_IncidentSetupArcGISPro_1.png?raw=true)
 
@@ -32,3 +26,4 @@ If "Create Master Projects" is selected, the tool will use the user provided inp
     - The GISS Edit Service will be added to the project map using the provided NIFC AGOL credentials
     - A broken Event Group Layer will be added to the project map
 
+### User inputs
