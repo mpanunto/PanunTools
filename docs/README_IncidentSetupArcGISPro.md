@@ -5,8 +5,6 @@ Tool that automates much of the process to setup the Pro Project Template, creat
 ### How does it work?
 </br>
 </br>
-</br>
-</br>
 
 ![screenshot_IncidentSetupArcGISPro_1.png](/docs/screenshot_IncidentSetupArcGISPro_1.png?raw=true)
 
