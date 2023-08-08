@@ -30,7 +30,7 @@ If "Create Master Projects" is selected, the tool will use the user provided inp
 4. If requested, apply definition queries to the Event layers
 5. If requested, create an Edit project for the user
     - The GISS Edit Service will be added to the project map using the provided NIFC AGOL credentials
-    - A broken Event Group Layer will be added to the project map
+    - A broken Event Group Layer will be added to the project map for quick resourcing to Mobile GDB
 </br>
 </br>
 </br>
