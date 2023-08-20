@@ -27,9 +27,9 @@ If "Create Master Projects" is selected, the tool will use the user provided inp
 1. Create copies of the Pro Project Template for each requested Master Project, and rename them accordingly
 2. Rename the project map type
 3. Insert the Title into the project map's metadata
-4. If the requested Master Project contains the text "Brief" or "brief"
+4. If the requested Master Project contains the text "Brief" or "brief":
     - The "Event Group BAM Large Symbols" group layer will be added to the project map
-5. If the requested Master Project contains the text "Repair" or "repair"
+5. If the requested Master Project contains the text "Repair" or "repair":
     - The "Event Group Repair Status" group layer will be added to the project map
 6. If requested, apply definition queries to the Event layers
 7. If requested, create an Edit project for the user
