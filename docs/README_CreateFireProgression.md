@@ -24,4 +24,4 @@ The below screenshot shows what the output attribute table looks like. Users can
 
 ![screenshot_CreateFireProgression_3.png](/docs/screenshot_CreateFireProgression_3.png?raw=true)
 
-A demonstration of this tool can be viewed [at this link](https://youtu.be/0jUqQ8PP4Ek?t=282).
+A demonstration of this tool can be viewed [at this link]([https://youtu.be/0jUqQ8PP4Ek?t=282](https://youtu.be/LGal9OCzmcc?t=305)https://youtu.be/LGal9OCzmcc?t=305).
