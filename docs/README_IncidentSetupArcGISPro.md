@@ -41,3 +41,10 @@ If "Create Master Projects" is selected, the tool will use the user provided inp
 7. If requested, create an Edit project for the user
     - The GISS Edit Service will be added to the project map using the provided NIFC AGOL credentials
     - A broken Event Group Layer will be added to the project map for quick resourcing to Mobile GDB
+</br>
+</br>
+Once the tool has finished, users will still need to:
+ -Create their offline area
+ -Resource the Event Group layer to their Mobile GDB
+ -Remove the GISS Edit service from their map
+ -Configure feature templates
