@@ -16,6 +16,11 @@ If "Setup Pro Project Template" is selected, the tool will use the user provided
 5. Resource the broken DynamicTextUpdate table
 6. Insert the IncidentName and UniqueFireID into the DynamicTextUpdate table
 7. Resource the broken event layers to the Master Incident GDB (only if the user requested it be created)
+  
+Once the tool has finished, users will still need to:
+    -Open the Pro Project Template and manually remove the broken incident GDBs from the project
+    -Add the correct named incident GDBs to the project
+    -Rename the project's home folder to the incident name
 </br>
 </br>
 </br>
