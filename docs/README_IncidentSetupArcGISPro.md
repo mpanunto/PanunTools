@@ -2,7 +2,7 @@
 
 Tool that automates much of the process to setup the Pro Project Template, create Master Projects, and create an Edit Project.
 
-## How does it work?
+### How does it work?
 </br>
 </br>
 
