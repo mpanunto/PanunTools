@@ -22,6 +22,7 @@ Once the tool has finished, users will still need to:
 * Open the Pro Project Template and manually remove the broken incident GDBs from the project
 * Add the correct named incident GDBs to the project
 * Rename the project's home folder to the incident name
+* Customize map layers, and layout logos/text
 </br>
 </br>
 </br>
