@@ -17,7 +17,6 @@ If "Setup Pro Project Template" is selected, the tool will use the user provided
 6. Insert the IncidentName and UniqueFireID into the DynamicTextUpdate table
 7. Resource the broken event layers to the Master Incident GDB (only if the user requested it be created)
 </br>
-</br>
 Once the tool has finished, users will still need to:
     -Open the Pro Project Template and manually remove the broken incident GDBs from the project
     -Add the correct named incident GDBs to the project
@@ -41,7 +40,6 @@ If "Create Master Projects" is selected, the tool will use the user provided inp
 7. If requested, create an Edit project for the user
     - The GISS Edit Service will be added to the project map using the provided NIFC AGOL credentials
     - A broken Event Group Layer will be added to the project map for quick resourcing to Mobile GDB
-</br>
 </br>
 Once the tool has finished, users will still need to:
  -Create their offline area
