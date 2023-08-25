@@ -2,13 +2,13 @@
 
 Tool that automates much of the process to setup the Pro Project Template, create Master Projects, and create an Edit Project.
 
-### How does it work?
+## How does it work?
 </br>
 </br>
 
 ![screenshot_IncidentSetupArcGISPro_1.png](/docs/screenshot_IncidentSetupArcGISPro_1.png?raw=true)
 
-If "Setup Pro Project Template" is selected, the tool will use the user provided input parameters to:
+### If "Setup Pro Project Template" is selected, the tool will use the user provided input parameters to:
 1. Rename the template GDBs to the incident name
 2. Rename the project map to the incident name
 3. Insert the Credits/Author into the project map's metadata
@@ -29,7 +29,7 @@ Once the tool has finished, users will still need to:
 
 ![screenshot_IncidentSetupArcGISPro_2.png](/docs/screenshot_IncidentSetupArcGISPro_2.png?raw=true)
 
-If "Create Master Projects" is selected, the tool will use the user provided input parameters to:
+### If "Create Master Projects" is selected, the tool will use the user provided input parameters to:
 1. Create copies of the Pro Project Template for each requested Master Project, and rename them accordingly
 2. Rename the project map type
 3. Insert the Title into the project map's metadata
