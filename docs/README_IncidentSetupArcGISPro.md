@@ -9,6 +9,7 @@ Tool that automates much of the process to setup the Pro Project Template, creat
 ![screenshot_IncidentSetupArcGISPro_1.png](/docs/screenshot_IncidentSetupArcGISPro_1.png?raw=true)
 
 If "Setup Pro Project Template" is selected, the tool will use the user provided input parameters to:
+
 1. Rename the template GDBs to the incident name
 2. Rename the project map to the incident name
 3. Insert the Credits/Author into the project map's metadata
