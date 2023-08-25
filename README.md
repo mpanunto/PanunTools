@@ -23,7 +23,8 @@ PanunTools is a ***very*** cleverly named toolbox created for GISS on wildfire i
 
 #### Incident Setup Toolset
 1. [Incident Setup AGOL](docs/README_IncidentSetupAGOL.md)
-2. [Invite Remove Users AGOL](docs/README_InviteRemoveUsersAGOL.md)
+2. [Incident Setup ArcGIS Pro](README_IncidentSetupArcGISPro.md)
+3. [Invite Remove Users AGOL](docs/README_InviteRemoveUsersAGOL.md)
 
 #### Miscellaneous Toolset
 1. [Bookmarks To Index Feature Class](docs/README_BookmarksToIndexFeatureClass.md)
