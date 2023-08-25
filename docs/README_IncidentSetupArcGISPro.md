@@ -18,9 +18,9 @@ If "Setup Pro Project Template" is selected, the tool will use the user provided
 7. Resource the broken event layers to the Master Incident GDB (only if the user requested it be created)
 </br>
 Once the tool has finished, users will still need to:
-    -Open the Pro Project Template and manually remove the broken incident GDBs from the project
-    -Add the correct named incident GDBs to the project
-    -Rename the project's home folder to the incident name
+* Open the Pro Project Template and manually remove the broken incident GDBs from the project
+* Add the correct named incident GDBs to the project
+* Rename the project's home folder to the incident name
 </br>
 </br>
 </br>
@@ -42,7 +42,7 @@ If "Create Master Projects" is selected, the tool will use the user provided inp
     - A broken Event Group Layer will be added to the project map for quick resourcing to Mobile GDB
 </br>
 Once the tool has finished, users will still need to:
- -Create their offline area
- -Resource the Event Group layer to their Mobile GDB
- -Remove the GISS Edit service from their map
- -Configure feature templates
+* Create their offline area
+* Resource the Event Group layer to their Mobile GDB
+* Remove the GISS Edit service from their map
+* Configure feature templates
