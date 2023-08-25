@@ -9,7 +9,6 @@ Tool that automates much of the process to setup the Pro Project Template, creat
 ![screenshot_IncidentSetupArcGISPro_1.png](/docs/screenshot_IncidentSetupArcGISPro_1.png?raw=true)
 
 If "Setup Pro Project Template" is selected, the tool will use the user provided input parameters to:
-
 1. Rename the template GDBs to the incident name
 2. Rename the project map to the incident name
 3. Insert the Credits/Author into the project map's metadata
@@ -44,6 +43,7 @@ If "Create Master Projects" is selected, the tool will use the user provided inp
     - A broken Event Group Layer will be added to the project map for quick resourcing to Mobile GDB
 </br>
 Once the tool has finished, users will still need to:
+
 * Create their offline area
 * Resource the Event Group layer to their Mobile GDB
 * Remove the GISS Edit service from their map
