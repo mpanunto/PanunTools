@@ -14,7 +14,7 @@ Additionally, this tool provides users with the ability to immediately upload th
 
 Here is a sample of what the spreadsheet looks like:
 
-![screenshot_PDFMultiExport_1.png](/docs/screenshot_PDFMultiExport_1.png?raw=true)
+![screenshot_PDFMultiExport_1.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_PDFMultiExport_1.png)
 
 ### To run the tool, users must:
 1. Extract PanunTools.tbx, PDFMultiExport.py, and PDFMultiExport.xlsx to the incident's tools folder
@@ -33,4 +33,4 @@ Here is a sample of what the spreadsheet looks like:
     - Toggle for performing Offline License Check
 5. Run tool
 
-![screenshot_PDFMultiExport_2.png](/docs/screenshot_PDFMultiExport_2.png?raw=true)
+![screenshot_PDFMultiExport_2.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_PDFMultiExport_2.png)
