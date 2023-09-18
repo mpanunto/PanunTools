@@ -14,7 +14,7 @@ The tool uses the ArcGIS API for Python to tap into the ArcGIS Online Organizati
 5.	Feature Service ItemID
 6.	Output Directory
 
-![screenshot_FeatureServiceAttachmentDownload_1.png](/docs/screenshot_FeatureServiceAttachmentDownload_1.png?raw=true)
+![screenshot_FeatureServiceAttachmentDownload_1.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_FeatureServiceAttachmentDownload_1.png)
 
 
 
