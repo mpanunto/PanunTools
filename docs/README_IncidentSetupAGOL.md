@@ -20,4 +20,4 @@ The tool uses the ArcGIS API for Python to tap into the NIFC Org, and create/org
 7. Toggles to create incident specific Web Maps    
 
 
-![screenshot_IncidentSetupAGOL_1.png](/docs/screenshot_IncidentSetupAGOL_1.png?raw=true)
+![screenshot_IncidentSetupAGOL_1.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_IncidentSetupAGOL_1.png)
