@@ -10,11 +10,11 @@ Tool that automates the Intersect & Dissolve process to obtain acres burned by o
 4. Coordinate system to perform acreage calculations
 5. Geometry measurement type
 
-![screenshot_CalculateOwnership_1.png](/docs/screenshot_CalculateOwnership_1.png?raw=true)
+![screenshot_CalculateOwnership_1.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_CalculateOwnership_1.png)
 \
 \
 \
 This tool doesn't generate any outputs. The calculations are provided to the user in the Geoprocessing Messages:
 \
 \
-![screenshot_CalculateOwnership_2.png](/docs/screenshot_CalculateOwnership_2.png?raw=true)
+![screenshot_CalculateOwnership_2.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_CalculateOwnership_2.png)
