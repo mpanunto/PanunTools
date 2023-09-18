@@ -12,7 +12,7 @@ Using the 'InviteRemoveUsersAGOL.csv' file, specify a series of ArcGIS Online gr
 - Values of "Invite" and "Remove" must be used to specify whether a user is invited or removed from a group. Any other value (including blanks) will have no effect.
 - There is no limit to the number of groups, or users that can be listed in the CSV file.
 
-![screenshot_InviteRemoveUsersAGOL_2.png](/docs/screenshot_InviteRemoveUsersAGOL_2.png?raw=true)
+![screenshot_InviteRemoveUsersAGOL_2.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_InviteRemoveUsersAGOL_2.png)
 
 ### User inputs
 
@@ -23,4 +23,4 @@ Using the 'InviteRemoveUsersAGOL.csv' file, specify a series of ArcGIS Online gr
 5. Specify path to InviteRemoveUsersAGOL.csv
 
 
-![screenshot_InviteRemoveUsersAGOL_1.png](/docs/screenshot_InviteRemoveUsersAGOL_1.png?raw=true)
+![screenshot_InviteRemoveUsersAGOL_1.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_InviteRemoveUsersAGOL_1.png)
