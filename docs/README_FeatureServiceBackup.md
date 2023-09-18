@@ -23,9 +23,9 @@ The tool uses the ArcGIS API for Python to tap into the ArcGIS Online Organizati
 12.	Toggle for clipping services to AOI
 13.	Specify path to AOI feature class
 
-![screenshot_FeatureServiceBackup_1.png](/docs/screenshot_FeatureServiceBackup_1.png?raw=true)
+![screenshot_FeatureServiceBackup_1.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_FeatureServiceBackup_1.png)
 
-![screenshot_FeatureServiceBackup_2.png](/docs/screenshot_FeatureServiceBackup_2.png?raw=true)
+![screenshot_FeatureServiceBackup_2.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_FeatureServiceBackup_2.png)
 
 
 
