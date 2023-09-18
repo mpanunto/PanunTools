@@ -21,6 +21,6 @@ First, a selection of 'Wildfire Daily Fire Perimeter' features is performed with
 11. Specify KMZ export directory
 
 
-![screenshot_CreateFirePerimeterExport_1.png](/docs/screenshot_CreateFirePerimeterExport_1.png?raw=true)
+![screenshot_CreateFirePerimeterExport_1.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_CreateFirePerimeterExport_1.png)
 
-![screenshot_CreateFirePerimeterExport_2.png](/docs/screenshot_CreateFirePerimeterExport_2.png?raw=true)
+![screenshot_CreateFirePerimeterExport_2.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_CreateFirePerimeterExport_2.png)
