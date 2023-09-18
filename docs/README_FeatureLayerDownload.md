@@ -33,6 +33,6 @@ A demonstration of this tool can be viewed [at this link](https://youtu.be/ReyW6
 12.	Toggle for using multiprocessor
 13.	Toggle for performing Offline License Check
 
-![screenshot_FeatureLayerDownload_1.png](/docs/screenshot_FeatureLayerDownload_1.png?raw=true)
+![screenshot_FeatureLayerDownload_1.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_FeatureLayerDownload_1.png)
 
-![screenshot_FeatureLayerDownload_2.png](/docs/screenshot_FeatureLayerDownload_2.png?raw=true)
+![screenshot_FeatureLayerDownload_2.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_FeatureLayerDownload_2.png)
