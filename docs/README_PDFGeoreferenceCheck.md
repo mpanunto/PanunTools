@@ -12,6 +12,6 @@ The tool will search through a user specified directory and look for PDF files (
 3. Specify PDF search directory
 4. Toggle for perform a PDF search recursively
 
-![screenshot_PDFGeoreferenceCheck_1.png](/docs/screenshot_PDFGeoreferenceCheck_1.png?raw=true)
+![screenshot_PDFGeoreferenceCheck_1.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_PDFGeoreferenceCheck_1.png)
 
-![screenshot_PDFGeoreferenceCheck_2.png](/docs/screenshot_PDFGeoreferenceCheck_2.png?raw=true)
+![screenshot_PDFGeoreferenceCheck_2.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_PDFGeoreferenceCheck_2.png)
