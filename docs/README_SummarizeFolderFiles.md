@@ -12,6 +12,6 @@ This tool summarizes folder and file sizes for a user specified directory. It ge
 2. Length of file summary csv (in number of rows)
 3. Path to output directory
 
-![screenshot_SummarizeFolderFiles_1.png](/docs/screenshot_SummarizeFolderFiles_1.png?raw=true)
+![screenshot_SummarizeFolderFiles_1.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_SummarizeFolderFiles_1.png)
 
-![screenshot_SummarizeFolderFiles_2.png](/docs/screenshot_SummarizeFolderFiles_2.png?raw=true)
+![screenshot_SummarizeFolderFiles_2.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_SummarizeFolderFiles_2.png)
