@@ -6,6 +6,6 @@ Tool that applies a symbology based on a raster's RGB cell values. Developed for
 1. Specify ArcGIS Pro Map containing the Topo Raster 24K dataset
 2. Specify the Topo Raster 24K layer
 
-![screenshot_TopoRaster24KSymbolize_2.png](/docs/screenshot_TopoRaster24KSymbolize_2.png?raw=true)
+![screenshot_TopoRaster24KSymbolize_2.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_TopoRaster24KSymbolize_2.png)
 
-![screenshot_TopoRaster24KSymbolize_1.png](/docs/screenshot_TopoRaster24KSymbolize_1.png?raw=true)
+![screenshot_TopoRaster24KSymbolize_1.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_TopoRaster24KSymbolize_1.png)
