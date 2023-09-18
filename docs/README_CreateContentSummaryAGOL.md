@@ -6,7 +6,7 @@ Tool that generates a CSV summary of a user's ArcGIS Online content.
 
 Using the ArcGIS API for Python, the tool will first connect to the user's specified ArcGIS Online Portal. It will then cycle through each content item that the user owns, and will pull together a variety of descriptive information. This information is then compiled into a dataframe and exported to a CSV file.
 
-![screenshot_CreateContentSummaryAGOL_1.png](/docs/screenshot_CreateContentSummaryAGOL_1.png?raw=true)
+![screenshot_CreateContentSummaryAGOL_1.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_CreateContentSummaryAGOL_1.png)
 
 ### User inputs
 
@@ -17,4 +17,4 @@ Using the ArcGIS API for Python, the tool will first connect to the user's speci
 5. Specify output directory
 
 
-![screenshot_CreateContentSummaryAGOL_2.png](/docs/screenshot_CreateContentSummaryAGOL_2.png?raw=true)
+![screenshot_CreateContentSummaryAGOL_2.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_CreateContentSummaryAGOL_2.png)
