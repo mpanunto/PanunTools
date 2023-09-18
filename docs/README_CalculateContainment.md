@@ -4,7 +4,7 @@ Tool that calculates the containment for one or more user specified incidents. T
 
 ### How does it work?
 \
-![screenshot_CalculateContainment_1.png](/docs/screenshot_CalculateContainment_1.png?raw=true)
+![screenshot_CalculateContainment_1.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_CalculateContainment_1.png)
 \
 If "Inspect Contained Feature Alignment" is selected, the tool will iterate through the provided list of IncidentNames and determine the "Contained" feature alignment for each. **Due to the nature of how this tool was designed, it is highly recommended to always run this inspection prior to calculating containment**. If alignment issues are detected, users can visually inspect the output feature classes to determine where these locations are. Proper Contained feature alignment is crucial for accurate containment calculations when using this tool, and is also necessary for the the [Update Perimeter IR](README_UpdatePerimeterIR.md) tool to function as intended.
 \
@@ -13,7 +13,7 @@ If "Inspect Contained Feature Alignment" is selected, the tool will iterate thro
 \
 \
 \
-![screenshot_CalculateContainment_2.png](/docs/screenshot_CalculateContainment_2.png?raw=true)
+![screenshot_CalculateContainment_2.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_CalculateContainment_2.png)
 \
 If "Calculate Containment" is selected, the tool will iterate through the provided list of IncidentNames and calculate containment for each. To do so, it first selects an incident's corresponding "Wildfire Daily Fire Perimeter" and "Contained" features. Next, a Union is performed on the "Wildfire Daily Fire Perimeter" in order to remove any interior gaps. Once gaps are removed, the perimeter is then converted to a line, and dissolved. The "Contained" features are also dissolved. Lastly, the two dissolved features are then projected to the user specified coordinate system prior to calculating geometry and containment percentage. If containment is calculated for more than one incident, a combined total containment will also be calculated across all incidents.
 
