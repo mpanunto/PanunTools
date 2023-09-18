@@ -18,7 +18,7 @@ This tool allows users to acquire/process the following datasets for an area of 
 12. Hillshade Raster 30 Meter
 13. Vector Hillshade 30 Meter  
 
-I’ve created a [Info Sheet](/docs/BaseDataAcquisition_InfoSheet.pdf?raw=true) that provides more information about each dataset, as well as their spatial coverages. Admittedly, the topo raster products may not be terribly useful considering the availability of vector data, but I figured they would be cool to incorporate anyway. A couple notes about these datasets:
+I’ve created a [Info Sheet](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/BaseDataAcquisition_InfoSheet.pdf) that provides more information about each dataset, as well as their spatial coverages. Admittedly, the topo raster products may not be terribly useful considering the availability of vector data, but I figured they would be cool to incorporate anyway. A couple notes about these datasets:
 
 **USGS Historical Topo Raster 100K/250K**: I attempted to identify the most recent GeoTIFF for each 100K and 250K quad by referencing the USGS’s master topo spreadsheet (listed in the attached Info Sheet PDF). As a result, each quad can have a vastly different looking topo map. So, these datasets can be a bit of a hodge podge.
 
