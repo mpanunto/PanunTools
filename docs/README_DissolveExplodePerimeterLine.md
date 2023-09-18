@@ -14,6 +14,6 @@ The tool iterates through the user specified list of IncidentName values, and pe
 5. Coordinate system to perform acreage calculations
 6. Geometry measurement type
 
-![screenshot_DissolveExplodePerimeterLine_1.png](/docs/screenshot_DissolveExplodePerimeterLine_1.png?raw=true)
+![screenshot_DissolveExplodePerimeterLine_1.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_DissolveExplodePerimeterLine_1.png)
 
-![screenshot_DissolveExplodePerimeterLine_2.png](/docs/screenshot_DissolveExplodePerimeterLine_2.png?raw=true)
+![screenshot_DissolveExplodePerimeterLine_2.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_DissolveExplodePerimeterLine_2.png)
