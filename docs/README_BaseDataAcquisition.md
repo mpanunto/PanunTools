@@ -41,7 +41,7 @@ To run, Users will need to:
 
 Once all the inputs are specified, users simply select the datasets that they want to acquire/process.
 
-![screenshot_BaseDataAcquisition_1.png](https://github.com/mpanunto/PanunTools/blob/main/docs/screenshot_BaseDataAcquisition_1.png)
+![screenshot_BaseDataAcquisition_1.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_BaseDataAcquisition_1.png)
 
 
 At this time, the tool does not support processing local data, everything must be downloaded. The output layer files must also be resourced manually.
