@@ -6,7 +6,7 @@ Tool that automates much of the process to setup the Pro Project Template, creat
 </br>
 </br>
 
-![screenshot_IncidentSetupArcGISPro_1.png](/docs/screenshot_IncidentSetupArcGISPro_1.png?raw=true)
+![screenshot_IncidentSetupArcGISPro_1.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_IncidentSetupArcGISPro_1.png)
 
 If "Setup Pro Project Template" is selected, the tool will use the user provided input parameters to:
 1. Rename the template GDBs to the incident name
@@ -28,7 +28,7 @@ Once the tool has finished, users will still need to:
 </br>
 </br>
 
-![screenshot_IncidentSetupArcGISPro_2.png](/docs/screenshot_IncidentSetupArcGISPro_2.png?raw=true)
+![screenshot_IncidentSetupArcGISPro_2.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_IncidentSetupArcGISPro_2.png)
 
 If "Create Master Projects" is selected, the tool will use the user provided input parameters to:
 1. Create copies of the Pro Project Template for each requested Master Project, and rename them accordingly
