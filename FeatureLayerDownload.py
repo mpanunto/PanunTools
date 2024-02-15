@@ -718,7 +718,6 @@ def worker_function_elevwetland(in_inputs_list):
             if(curr_elevcontour_wetland == "Wetlands"):
                 curr_download_path = download_path_list[i]
                 curr_download_path_basename = os.path.basename(curr_download_path)
-                curr_download_path_gdb = curr_download_path.replace(".zip", ".gdb")
 
                 #Try to download file, will retry if download fails
                 arcpy.AddMessage("...." + curr_download_path_basename +  " (" + str(i+1) + " out of " + str(len(download_path_list)) + ")" )
@@ -726,7 +725,11 @@ def worker_function_elevwetland(in_inputs_list):
                 zip_file = zipfile.ZipFile(curr_download_path)
                 zip_file.extractall(curr_scratchdir)
                 zip_file.close()
-                download_path_gdbdir_list.append(curr_download_path.replace("_watershed.zip", "_Watershed"))
+
+                curr_download_path_nozip = curr_download_path.replace(".zip", "")
+                curr_download_path_gdb = curr_download_path_nozip + "/" + curr_download_path_basename.replace(".zip", ".gdb")
+                curr_download_path_gdb = curr_download_path_gdb.replace("_Watershed.gdb", ".gdb")
+                download_path_gdbdir_list.append(curr_download_path_gdb)
 
 
         #Build list of feature class paths that will be merged together
@@ -740,12 +743,9 @@ def worker_function_elevwetland(in_inputs_list):
 
             if(curr_elevcontour_wetland == "Wetlands"):
                 curr_huc8_dir_basename = os.path.basename(curr_download_path_gdbdir)
-                curr_huc8_number = curr_huc8_dir_basename.replace("_Watershed", "")
-                curr_huc8_gdbname = curr_huc8_dir_basename.replace("_Watershed", ".gdb")
-                curr_huc8_hucname = curr_huc8_gdbname.replace(".gdb", "")
-                curr_huc8_gdbpath = curr_download_path_gdbdir + "/" + curr_huc8_gdbname
-                curr_elevcontour_wetland_fcpath = curr_huc8_gdbpath + "/" + curr_huc8_number + "_Wetlands"
-                elevcontour_wetland_fc_path_list.append(curr_elevcontour_wetland_fcpath)
+                curr_huc8_fc_name = curr_huc8_dir_basename.replace(".gdb", "_Wetlands")
+                curr_huc8_fc_path = curr_download_path_gdbdir + "/" + curr_huc8_fc_name
+                elevcontour_wetland_fc_path_list.append(curr_huc8_fc_path)
 
 
         #Determine if any GDBs are missing an Elev_Contour or Wetland feature class
