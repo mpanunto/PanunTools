@@ -24,7 +24,7 @@ I’ve created a [Info Sheet](https://raw.githubusercontent.com/mpanunto/PanunTo
 
 **USGS and USFS Topo Raster 24K**: The output symbology for these datasets are based on the image RGB values, but they will be given a random color scheme when first loaded into ArcGIS Pro. Users can either manually apply the RGB value for each class, or they can use the [Topo Raster 24K Symbology tool](/docs/README_TopoRaster24KSymbolize.md).
 
-**USFS Topo Vector**: Unlike the USGS Topo Vector dataset, the USFS Topo Vector dataset uses annotations
+**USFS Topo Vector (aka FSTopo Legacy)**: Unlike the USGS Topo Vector dataset, the USFS Topo Vector dataset uses annotations
 instead of labels. For the annotations to display properly, a series of fonts must be installed
 on the user's computer, which can be obtained at:
 https://data.fs.usda.gov/geodata/vector/fstopo/FSTopo_Layer_files_and_fonts.zip
