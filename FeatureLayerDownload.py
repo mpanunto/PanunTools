@@ -865,7 +865,7 @@ def execute_elevwetland(inputs):
 if __name__=='__main__':
 
     #ArcGIS Online Portal URL
-    #pro_portal_toggle = "No"
+    #pro_portal_toggle = "Yes"
     pro_portal_toggle = arcpy.GetParameterAsText(0)
 
     #ArcGIS Online Portal URL
@@ -881,11 +881,11 @@ if __name__=='__main__':
     password = arcpy.GetParameterAsText(3)
 
     #Path to AOI shapefile polygon
-    #aoi_shp_path = r"C:\Workspace\development\AOI_Shapefiles\AOI_UT.shp"
+    #aoi_shp_path = r"C:\Workspace\development\AOI_Shapefiles\AOI_SLC.shp"
     aoi_shp_path = arcpy.GetParameterAsText(4)
 
     #AOI Subdivision Area (in square miles)
-    #aoi_subdivision_area = "5000"
+    #aoi_subdivision_area = "1000"
     aoi_subdivision_area = arcpy.GetParameterAsText(5)
 
     #User defined output projection
@@ -902,10 +902,10 @@ if __name__=='__main__':
     #service_itemid_csv_path = r"C:\Workspace\development\PanunTools-main\FeatureLayerDownload.csv"
     service_itemid_csv_path = arcpy.GetParameterAsText(8)
 
-    #elevcontour_acquire = "No"
+    #elevcontour_acquire = "Yes"
     elevcontour_acquire = arcpy.GetParameterAsText(9)
 
-    #wetland_acquire = "No"
+    #wetland_acquire = "Yes"
     wetland_acquire = arcpy.GetParameterAsText(10)
 
     #Toggle for Multiprocessor use
@@ -944,17 +944,19 @@ if __name__=='__main__':
         "skip"
 
 
+    #COMMENTING OUT ON 05/15/24, THIS USED TO BE AN ISSUE, BUT DID NOT CAUSE PROBLEMS FOR ME
+    #IN RECENT TESTS. SO ALLOWING "https://nifc.maps.arcgis.com" FOR NOW
     #Check if active portal includes the text "nifc.maps.arcgis.com", throw error if so
-    arcpy.AddMessage("\u200B")
-    arcpy.AddMessage("SIGNING INTO PORTAL")
-    if(pro_portal_toggle == "Yes"):
-        active_portal_url = arcpy.GetActivePortalURL()
-        if("nifc.maps.arcgis.com" in active_portal_url):
-            arcpy.AddError("USERS ACTIVE PORTAL URL IS https://nifc.maps.arcgis.com. \
-            \nTO PROPERLY ESTABLISH NIFC SERVICE CONNECTIONS, THE ACTIVE PORTAL URL MUST BE https://www.arcgis.com")
-            raise arcpy.ExecuteError
-    else:
-        arcpy_portal = arcpy.SignInToPortal(portalurl, username, password)
+    #arcpy.AddMessage("\u200B")
+    #arcpy.AddMessage("SIGNING INTO PORTAL")
+    #if(pro_portal_toggle == "Yes"):
+        #active_portal_url = arcpy.GetActivePortalURL()
+        #if("nifc.maps.arcgis.com" in active_portal_url):
+            #arcpy.AddError("USERS ACTIVE PORTAL URL IS https://nifc.maps.arcgis.com. \
+            #\nTO PROPERLY ESTABLISH NIFC SERVICE CONNECTIONS, THE ACTIVE PORTAL URL MUST BE https://www.arcgis.com")
+            #raise arcpy.ExecuteError
+    #else:
+        #arcpy_portal = arcpy.SignInToPortal(portalurl, username, password)
 
     #Establish connection to the ArcGIS Online Org
     arcpy.AddMessage("\u200B")
