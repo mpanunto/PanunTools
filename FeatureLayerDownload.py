@@ -944,19 +944,17 @@ if __name__=='__main__':
         "skip"
 
 
-    #COMMENTING OUT ON 05/15/24, THIS USED TO BE AN ISSUE, BUT DID NOT CAUSE PROBLEMS FOR ME
-    #IN RECENT TESTS. SO ALLOWING "https://nifc.maps.arcgis.com" FOR NOW
     #Check if active portal includes the text "nifc.maps.arcgis.com", throw error if so
-    #arcpy.AddMessage("\u200B")
-    #arcpy.AddMessage("SIGNING INTO PORTAL")
-    #if(pro_portal_toggle == "Yes"):
-        #active_portal_url = arcpy.GetActivePortalURL()
-        #if("nifc.maps.arcgis.com" in active_portal_url):
-            #arcpy.AddError("USERS ACTIVE PORTAL URL IS https://nifc.maps.arcgis.com. \
-            #\nTO PROPERLY ESTABLISH NIFC SERVICE CONNECTIONS, THE ACTIVE PORTAL URL MUST BE https://www.arcgis.com")
-            #raise arcpy.ExecuteError
-    #else:
-        #arcpy_portal = arcpy.SignInToPortal(portalurl, username, password)
+    arcpy.AddMessage("\u200B")
+    arcpy.AddMessage("SIGNING INTO PORTAL")
+    if(pro_portal_toggle == "Yes"):
+        active_portal_url = arcpy.GetActivePortalURL()
+        if("nifc.maps.arcgis.com" in active_portal_url):
+            arcpy.AddError("USERS ACTIVE PORTAL URL IS https://nifc.maps.arcgis.com. \
+            \nTO PROPERLY ESTABLISH NIFC SERVICE CONNECTIONS, THE ACTIVE PORTAL URL MUST BE https://www.arcgis.com")
+            raise arcpy.ExecuteError
+    else:
+        arcpy_portal = arcpy.SignInToPortal(portalurl, username, password)
 
     #Establish connection to the ArcGIS Online Org
     arcpy.AddMessage("\u200B")
