@@ -103,17 +103,22 @@ def worker_function(in_inputs_list):
             ftpuploaddir_val = curr_in_inputs_list[28]
 
             clipgraphics_val = curr_in_inputs_list[29]
-            imagecompress_val = curr_in_inputs_list[30]
-            imagecompressquality_val = int(curr_in_inputs_list[31])
-            compressvectorgraphics_val = curr_in_inputs_list[32]
-            vectorresolution_val = int(curr_in_inputs_list[33])
-            rasterresample_val = curr_in_inputs_list[34]
-            embedfonts_val = curr_in_inputs_list[35]
-            layersattributes_val = curr_in_inputs_list[36]
+            removelayoutbackground_val = curr_in_inputs_list[30]
+            imagecompress_val = curr_in_inputs_list[31]
+            imagecompressquality_val = int(curr_in_inputs_list[32])
+            compressvectorgraphics_val = curr_in_inputs_list[33]
+            vectorresolution_val = int(curr_in_inputs_list[34])
+            rasterresample_val = curr_in_inputs_list[35]
+            embedfonts_val = curr_in_inputs_list[36]
+            convertmarkers_val = curr_in_inputs_list[37]
+            layersattributes_val = curr_in_inputs_list[38]
+            simulateoverprint_val = curr_in_inputs_list[39]
+            embedcolorprofile_val = curr_in_inputs_list[40]
+            pdfaccessibility_val = curr_in_inputs_list[41]
 
-            layoutname = curr_in_inputs_list[37]
-            aprxfilename = curr_in_inputs_list[38]
-            aprxpath = curr_in_inputs_list[39]
+            layoutname = curr_in_inputs_list[42]
+            aprxfilename = curr_in_inputs_list[43]
+            aprxpath = curr_in_inputs_list[44]
 
             #For some reason, the multiprocessor doesn't like the boolean values read from the spreadsheet, it seems
             #to be reading them in as strings instead of bools. Ensuring the values are bool here.
@@ -315,7 +320,9 @@ def worker_function(in_inputs_list):
                             if(mapseries == False):
                                 arcpy.AddMessage("....GEO EXPORT")
                                 lyt.exportToPDF(pdf_geo_outpath, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
-                                                image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val, layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val,
+                                                image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val,
+                                                layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val, embed_color_profile=embedcolorprofile_val,
+                                                pdf_accessibility=pdfaccessibility_val, keep_layout_background=removelayoutbackground_val, convert_markers=convertmarkers_val, simulate_overprint=simulateoverprint_val,
                                                 output_as_image=False, georef_info=True)
                                 #arcpy.AddMessage("......EXPORT COMPLETE")
                                 geo_export_complete = True
@@ -340,14 +347,18 @@ def worker_function(in_inputs_list):
                                 if(mapseries_pages == "ALL"):
                                     arcpy.AddMessage("........ALL PAGES")
                                     lyt.mapSeries.exportToPDF(pdf_geo_outpath, page_range_type=mapseries_pages, multiple_files=multiple_files_val, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
-                                                    image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val, layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val,
+                                                    image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val,
+                                                    layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val, embed_color_profile=embedcolorprofile_val,
+                                                    pdf_accessibility=pdfaccessibility_val, keep_layout_background=removelayoutbackground_val, convert_markers=convertmarkers_val, simulate_overprint=simulateoverprint_val,
                                                     output_as_image=False, georef_info=True)
 
                                 #If RANGE was requested, export range
                                 if(mapseries_pages == "RANGE"):
                                     arcpy.AddMessage("........PAGES " + mapseries_range_val)
                                     lyt.mapSeries.exportToPDF(pdf_geo_outpath, page_range_type=mapseries_pages, page_range_string=mapseries_range_val, multiple_files=multiple_files_val, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
-                                                    image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val, layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val,
+                                                    image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val,
+                                                    layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val, embed_color_profile=embedcolorprofile_val,
+                                                    pdf_accessibility=pdfaccessibility_val, keep_layout_background=removelayoutbackground_val, convert_markers=convertmarkers_val, simulate_overprint=simulateoverprint_val,
                                                     output_as_image=False, georef_info=True)
 
                                 #arcpy.AddMessage("..........EXPORT COMPLETE")
@@ -406,7 +417,9 @@ def worker_function(in_inputs_list):
                             if(mapseries == False):
                                 arcpy.AddMessage("....IMAGE EXPORT")
                                 lyt.exportToPDF(pdf_image_outpath, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
-                                                image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val, layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val,
+                                                image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val,
+                                                layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val, embed_color_profile=embedcolorprofile_val,
+                                                pdf_accessibility=pdfaccessibility_val, keep_layout_background=removelayoutbackground_val, convert_markers=convertmarkers_val, simulate_overprint=simulateoverprint_val,
                                                 output_as_image=True, georef_info=False)
                                 #arcpy.AddMessage("......EXPORT COMPLETE")
                                 image_export_complete = True
@@ -431,14 +444,18 @@ def worker_function(in_inputs_list):
                                 if(mapseries_pages == "ALL"):
                                     arcpy.AddMessage("........ALL PAGES")
                                     lyt.mapSeries.exportToPDF(pdf_image_outpath, page_range_type=mapseries_pages, multiple_files=multiple_files_val, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
-                                                    image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val, layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val,
+                                                    image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val,
+                                                    layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val, embed_color_profile=embedcolorprofile_val,
+                                                    pdf_accessibility=pdfaccessibility_val, keep_layout_background=removelayoutbackground_val, convert_markers=convertmarkers_val, simulate_overprint=simulateoverprint_val,
                                                     output_as_image=True, georef_info=False)
 
                                 #If RANGE was requested, export range
                                 if(mapseries_pages == "RANGE"):
                                     arcpy.AddMessage("........PAGES " + mapseries_range_val)
                                     lyt.mapSeries.exportToPDF(pdf_image_outpath, page_range_type=mapseries_pages, page_range_string=mapseries_range_val, multiple_files=multiple_files_val, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
-                                                    image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val, layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val,
+                                                    image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val,
+                                                    layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val, embed_color_profile=embedcolorprofile_val,
+                                                    pdf_accessibility=pdfaccessibility_val, keep_layout_background=removelayoutbackground_val, convert_markers=convertmarkers_val, simulate_overprint=simulateoverprint_val,
                                                     output_as_image=True, georef_info=False)
 
                                 #arcpy.AddMessage("..........EXPORT COMPLETE")
@@ -497,7 +514,9 @@ def worker_function(in_inputs_list):
                             if(mapseries == False):
                                 arcpy.AddMessage("....GEOIMAGE EXPORT")
                                 lyt.exportToPDF(pdf_geoimage_outpath, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
-                                                image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val, layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val,
+                                                image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val,
+                                                layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val, embed_color_profile=embedcolorprofile_val,
+                                                pdf_accessibility=pdfaccessibility_val, keep_layout_background=removelayoutbackground_val, convert_markers=convertmarkers_val, simulate_overprint=simulateoverprint_val,
                                                 georef_info=True, output_as_image=True)
                                 #arcpy.AddMessage("......EXPORT COMPLETE")
                                 geoimage_export_complete = True
@@ -522,14 +541,18 @@ def worker_function(in_inputs_list):
                                 if(mapseries_pages == "ALL"):
                                     arcpy.AddMessage("........ALL PAGES")
                                     lyt.mapSeries.exportToPDF(pdf_geoimage_outpath, page_range_type=mapseries_pages, multiple_files=multiple_files_val, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
-                                                    image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val, layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val,
+                                                    image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val,
+                                                    layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val, embed_color_profile=embedcolorprofile_val,
+                                                    pdf_accessibility=pdfaccessibility_val, keep_layout_background=removelayoutbackground_val, convert_markers=convertmarkers_val, simulate_overprint=simulateoverprint_val,
                                                     georef_info=True, output_as_image=True)
 
                                 #If RANGE was requested, export range
                                 if(mapseries_pages == "RANGE"):
                                     arcpy.AddMessage("........PAGES " + mapseries_range_val)
                                     lyt.mapSeries.exportToPDF(pdf_geoimage_outpath, page_range_type=mapseries_pages, page_range_string=mapseries_range_val, multiple_files=multiple_files_val, resolution=vectorresolution_val, image_quality=rasterresample_val, compress_vector_graphics=compressvectorgraphics_val,
-                                                    image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val, layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val,
+                                                    image_compression=imagecompress_val, jpeg_compression_quality=imagecompressquality_val, embed_fonts=embedfonts_val,
+                                                    layers_attributes=layersattributes_val, clip_to_elements=clipgraphics_val, embed_color_profile=embedcolorprofile_val,
+                                                    pdf_accessibility=pdfaccessibility_val, keep_layout_background=removelayoutbackground_val, convert_markers=convertmarkers_val, simulate_overprint=simulateoverprint_val,
                                                     georef_info=True, output_as_image=True)
 
                                 #arcpy.AddMessage("..........EXPORT COMPLETE")
@@ -1054,13 +1077,18 @@ if __name__=="__main__":
 
     #Create lists of export settings
     clipgraphics_list = [list(export_table_df["CLIP_GRAPHICS_EXTENT"])[i] for i in processing_needed_which_list]
+    removelayoutbackground_list = [list(export_table_df["REMOVE_LAYOUT_BACKGROUND"])[i] for i in processing_needed_which_list]
     imagecompress_list = [list(map(str, export_table_df["IMAGE_COMPRESSION"]))[i] for i in processing_needed_which_list]
     imagecompressquality_list = [list(map(int, export_table_df["IMAGE_COMPRESSION_QUALITY"]))[i] for i in processing_needed_which_list]
     compressvectorgraphics_list = [list(export_table_df["COMPRESS_VECTOR_GRAPHICS"])[i] for i in processing_needed_which_list]
     vectorresolution_list = [list(map(int, export_table_df["VECTOR_RESOLUTION"]))[i] for i in processing_needed_which_list]
     rasterresample_list = [list(map(str, export_table_df["RASTER_RESAMPLE"]))[i] for i in processing_needed_which_list]
     embedfonts_list = [list(export_table_df["EMBED_FONTS"])[i] for i in processing_needed_which_list]
+    convertmarkers_list = [list(map(str, export_table_df["CONVERT_MARKERS"]))[i] for i in processing_needed_which_list]
     layersattributes_list = [list(map(str, export_table_df["LAYERS_ATTRIBUTES"]))[i] for i in processing_needed_which_list]
+    simulateoverprint_list = [list(map(str, export_table_df["SIMULATE_OVERPRINT"]))[i] for i in processing_needed_which_list]
+    embedcolorprofile_list = [list(map(str, export_table_df["EMBED_COLOR_PROFILE"]))[i] for i in processing_needed_which_list]
+    pdfaccessibility_list = [list(map(str, export_table_df["PDF_ACCESSIBILITY"]))[i] for i in processing_needed_which_list]
 
     #Create lists of FTP settings
     ftpupload_list = [list(map(str, export_table_df["FTP_UPLOAD"]))[i] for i in processing_needed_which_list]
@@ -1090,7 +1118,7 @@ if __name__=="__main__":
                 export_list, exportrequest_list, exportrequest_dupe_list, productsdate_list, exportfilename_list, export_user_specified_list, geoops_maptype_list, geoops_pagesize_list, geoops_orientation_list, geoops_period_list, exportrequestlabel_list,
                 mapseries_pages_list, mapseries_range_list, mapseries_files_list,
                 ftpupload_list, ftpuploadrequest_list, ftpfilename_list, ftp_user_specified_list, ftpuploaddir_list,
-                clipgraphics_list, imagecompress_list, imagecompressquality_list, compressvectorgraphics_list, vectorresolution_list, rasterresample_list, embedfonts_list, layersattributes_list,
+                clipgraphics_list, removelayoutbackground_list, imagecompress_list, imagecompressquality_list, compressvectorgraphics_list, vectorresolution_list, rasterresample_list, embedfonts_list, convertmarkers_list, layersattributes_list, simulateoverprint_list, embedcolorprofile_list, pdfaccessibility_list,
                 layoutname_list, aprxfilename_list, aprxpath_list)))
 
 
