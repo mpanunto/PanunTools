@@ -2,7 +2,7 @@
 
 I know that several fire progression tools have been created over the years. This is simply one that I wrote a few seasons ago, and am offering it up as an alternative.
 
-***THIS TOOL REQUIRES AN ADVANCED LICENSE***
+***THIS TOOL REQUIRES AN ADVANCED LICENSE DUE TO THE USE OF [ARCGIS PRO'S ERASE TOOL](https://pro.arcgis.com/en/pro-app/latest/tool-reference/analysis/erase.htm)***
 
 ### How does it work?
 
