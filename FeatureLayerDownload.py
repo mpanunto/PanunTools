@@ -150,31 +150,23 @@ def worker_function_services(in_inputs_list):
 
         #Get feature layer, and properties
         curr_featurelayer = arcgis.features.FeatureLayer(curr_featurelayer_url)
-        curr_featurelayer_name = curr_featurelayer.properties.name
-        curr_featurelayer_name_short = curr_featurelayer_name.replace(" ", "")
-        curr_featurelayer_name_short = curr_featurelayer_name_short.replace("_", "")
-        curr_featurelayer_name_short = curr_featurelayer_name_short.replace("-", "")
-        curr_featurelayer_name_short = curr_featurelayer_name_short.replace("&", "")
-        curr_featurelayer_name_short = curr_featurelayer_name_short.replace(")", "")
-        curr_featurelayer_name_short = curr_featurelayer_name_short.replace("(", "")
-        curr_featureservice_name_short = curr_featureservice_name.replace(" ", "")
-        curr_featureservice_name_short = curr_featureservice_name_short.replace("_", "")
-        curr_featureservice_name_short = curr_featureservice_name_short.replace("-", "")
-        curr_featureservice_name_short = curr_featureservice_name_short.replace("&", "")
-        curr_featureservice_name_short = curr_featureservice_name_short.replace(")", "")
-        curr_featureservice_name_short = curr_featureservice_name_short.replace("(", "")
-        curr_featurelayer_uniqueidfield = curr_featurelayer.properties.uniqueIdField["name"]
-        curr_featurelayer_maxrecordcount = curr_featurelayer.properties.maxRecordCount
-        curr_featurelayer_standardmaxrecordcount = curr_featurelayer.properties.standardMaxRecordCount
-        curr_featurelayer_tilemaxrecordcount = curr_featurelayer.properties.tileMaxRecordCount
+        curr_featurelayer_name_short = ''.join(c for c in curr_featurelayer_name_input if c.isalnum())
+        curr_featureservice_name_short = ''.join(c for c in curr_featureservice_name if c.isalnum())
+
+        #These properties were not available in some services, causing issues.
+        #But, doesn't seem like I actually use these anywhere, so just commenting out here.
+        #curr_featurelayer_uniqueidfield = curr_featurelayer.properties.uniqueIdField["name"]
+        #curr_featurelayer_maxrecordcount = curr_featurelayer.properties.maxRecordCount
+        #curr_featurelayer_standardmaxrecordcount = curr_featurelayer.properties.standardMaxRecordCount
+        #curr_featurelayer_tilemaxrecordcount = curr_featurelayer.properties.tileMaxRecordCount
         curr_featurelayer_wkid = curr_featurelayer.properties.extent.spatialReference.wkid
         curr_featurelayer_sr = arcpy.SpatialReference(curr_featurelayer_wkid)
 
         #Print the name of the current feature layer
         if(curr_multiprocess == "Primary"):
-            arcpy.AddMessage("....PROCESSING FEATURE LAYER: " + curr_featurelayer_name)
+            arcpy.AddMessage("....PROCESSING FEATURE LAYER: " + curr_featurelayer_name_input)
         else:
-            arcpy.AddMessage("....PROCESSING FEATURE LAYER: " + curr_featurelayer_name + " (ObjID " + str(curr_objid_number) + ")")
+            arcpy.AddMessage("....PROCESSING FEATURE LAYER: " + curr_featurelayer_name_input + " (ObjID " + str(curr_objid_number) + ")")
 
 
 
@@ -603,15 +595,8 @@ def worker_function_services(in_inputs_list):
             curr_objid_number = curr_objid.replace("OBJID", "")
 
         #Get feature layer and feature service shortnames
-        curr_featurelayer_name_short = curr_featurelayer_name_input.replace(" ", "")
-        curr_featurelayer_name_short = curr_featurelayer_name_short.replace("_", "")
-        curr_featurelayer_name_short = curr_featurelayer_name_short.replace("-", "")
-        curr_featurelayer_name_short = curr_featurelayer_name_short.replace("&", "")
-        curr_featureservice_name_short = curr_featureservice_name.replace(" ", "")
-        curr_featureservice_name_short = curr_featureservice_name_short.replace("_", "")
-        curr_featureservice_name_short = curr_featureservice_name_short.replace("-", "")
-        curr_featureservice_name_short = curr_featureservice_name_short.replace("&", "")
-
+        curr_featurelayer_name_short = ''.join(c for c in curr_featurelayer_name_input if c.isalnum())
+        curr_featureservice_name_short = ''.join(c for c in curr_featureservice_name if c.isalnum())
 
         #Export CSV file containing information needed to retry query
         if(curr_multiprocess == "Primary"):
@@ -881,7 +866,7 @@ if __name__=='__main__':
     password = arcpy.GetParameterAsText(3)
 
     #Path to AOI shapefile polygon
-    #aoi_shp_path = r"C:\Workspace\development\AOI_Shapefiles\AOI_SLC.shp"
+    #aoi_shp_path = r"C:\Workspace_NonOneDrive\Trash\PanunTools\PanunTools-main\output_FeatureLayerDownload\AOI.shp"
     aoi_shp_path = arcpy.GetParameterAsText(4)
 
     #AOI Subdivision Area (in square miles)
@@ -895,17 +880,17 @@ if __name__=='__main__':
     output_prj = arcpy.GetParameterAsText(6)
 
     #Output GDB Directory
-    #outdir = r"C:\Workspace\development\PanunTools-main\output_FeatureLayerDownload"
+    #outdir = r"C:\Workspace_NonOneDrive\Trash\PanunTools\PanunTools-main\output_FeatureLayerDownload\Output"
     outdir = arcpy.GetParameterAsText(7)
 
     #Path to feature service ItemID CSV
-    #service_itemid_csv_path = r"C:\Workspace\development\PanunTools-main\FeatureLayerDownload.csv"
+    #service_itemid_csv_path = r"C:\Workspace_NonOneDrive\Trash\PanunTools\PanunTools-main\output_FeatureLayerDownload\FeatureLayerDownload_RIST_20250420.csv"
     service_itemid_csv_path = arcpy.GetParameterAsText(8)
 
-    #elevcontour_acquire = "Yes"
+    #elevcontour_acquire = "No"
     elevcontour_acquire = arcpy.GetParameterAsText(9)
 
-    #wetland_acquire = "Yes"
+    #wetland_acquire = "No"
     wetland_acquire = arcpy.GetParameterAsText(10)
 
     #Toggle for Multiprocessor use
@@ -1568,6 +1553,10 @@ if __name__=='__main__':
                 arcpy.AddMessage("..UNABLE TO CONNECT TO SERVICE, CHECK ACCESS PERMISSIONS (ItemID = " + curr_itemid + ")" )
                 continue
 
+            if(curr_service == None):
+                arcpy.AddMessage("..UNABLE TO CONNECT TO SERVICE, CHECK ACCESS PERMISSIONS (ItemID = " + curr_itemid + ")" )
+                continue
+
             curr_service_name = curr_service.name
 
             #If there is no service name, use the service title instead
@@ -1591,10 +1580,7 @@ if __name__=='__main__':
 
                         #Get name
                         curr_featurelayer_name = curr_featurelayer.properties.name
-                        curr_featurelayer_name_short = curr_featurelayer_name.replace(" ", "")
-                        curr_featurelayer_name_short = curr_featurelayer_name_short.replace("_", "")
-                        curr_featurelayer_name_short = curr_featurelayer_name_short.replace("-", "")
-                        curr_featurelayer_name_short = curr_featurelayer_name_short.replace("&", "")
+                        curr_featurelayer_name_short = ''.join(c for c in curr_featurelayer_name if c.isalnum())
 
                         arcpy.AddMessage("...." + curr_featurelayer_name + " (" + str(curr_iter) + ")")
 
