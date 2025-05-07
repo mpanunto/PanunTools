@@ -39,11 +39,12 @@ If "Create Master Projects" is selected, the tool will use the user provided inp
 5. If the requested Master Project contains the text "Repair" or "repair":
     - The "Event Group Repair Status" group layer will be added to the project map
 6. If requested, apply definition queries to the Event layers (see screenshot below)
+   ![screenshot_IncidentSetupArcGISPro_3.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_IncidentSetupArcGISPro_3.png)
+
 7. If requested, create an Edit project for the user
     - The GISS Edit Service will be added to the project map using the provided NIFC AGOL credentials
     - A broken Event Group Layer will be added to the project map for quick resourcing to Mobile GDB
 
-![screenshot_IncidentSetupArcGISPro_3.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_IncidentSetupArcGISPro_3.png)
 
 </br>
 Once the tool has finished, users will still need to:
