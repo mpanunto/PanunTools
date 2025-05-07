@@ -34,7 +34,7 @@ PanunTools is a ***very*** cleverly named toolbox created for GISS on wildfire i
 5. [Topo Raster 24K Symbolize](docs/README_TopoRaster24KSymbolize.md)
 
 \
-Script tool code and properties are password protected, but can be accessed by entering "password" into the Enter Password box. These tools have only been tested for use in ArcGIS Pro 3.2.
+Script tool code and properties are password protected, but can be accessed by entering "password" into the Enter Password box. These tools have only been tested for use in ArcGIS Pro 3.3.
 
 ## Usage
 
