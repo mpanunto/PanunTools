@@ -866,7 +866,7 @@ if __name__=='__main__':
     password = arcpy.GetParameterAsText(3)
 
     #Path to AOI shapefile polygon
-    #aoi_shp_path = r"C:\Workspace_NonOneDrive\Trash\PanunTools\PanunTools-main\output_FeatureLayerDownload\AOI.shp"
+    #aoi_shp_path = r"C:\Users\mpanunto\OneDrive - DOI\Workspace_OneDrive\development\AOI_Shapefiles\AOI_UT2.shp"
     aoi_shp_path = arcpy.GetParameterAsText(4)
 
     #AOI Subdivision Area (in square miles)
@@ -880,11 +880,11 @@ if __name__=='__main__':
     output_prj = arcpy.GetParameterAsText(6)
 
     #Output GDB Directory
-    #outdir = r"C:\Workspace_NonOneDrive\Trash\PanunTools\PanunTools-main\output_FeatureLayerDownload\Output"
+    #outdir = r"C:\Users\mpanunto\OneDrive - DOI\Workspace_OneDrive\development\PanunTools-main\output_FeatureLayerDownload\output"
     outdir = arcpy.GetParameterAsText(7)
 
     #Path to feature service ItemID CSV
-    #service_itemid_csv_path = r"C:\Workspace_NonOneDrive\Trash\PanunTools\PanunTools-main\output_FeatureLayerDownload\FeatureLayerDownload_RIST_20250420.csv"
+    #service_itemid_csv_path = r"C:\Users\mpanunto\OneDrive - DOI\Workspace_OneDrive\development\PanunTools-main/FeatureLayerDownload.csv"
     service_itemid_csv_path = arcpy.GetParameterAsText(8)
 
     #elevcontour_acquire = "No"
@@ -1643,6 +1643,23 @@ if __name__=='__main__':
     multiprocess_list_primary = ["Primary"] * featurelayer_count_primary
     multiprocess_toggle_list_primary = [multiprocess_toggle] * featurelayer_count_primary
     inputs_list_primary = list(map(list, zip(pro_portal_toggle_list_primary, portalurl_list_primary, username_list_primary, password_list_primary, aoi_path_list_primary, output_prj_list_primary, gdb_outdir_list_primary, featurelayerurl_list_primary, featurelayer_name_list_primary, featureservice_name_list_primary, multiprocess_list_primary, multiprocess_toggle_list_primary)))
+
+    #Test if user's output paths will hit Windows' character limit (260)
+    featurelayer_name_list_all = featurelayer_name_list_primary + featurelayer_name_list_secondary
+    featurelayer_name_short_list_all = [''.join(char for char in s if char.isalnum()) for s in featurelayer_name_list_all]
+
+    objid_fc_path_max = max(objid_fc_path_list, key=len)
+    objid_fc_path_max_basename = os.path.basename(objid_fc_path_max)
+    featurelayer_name_short_max = max(featurelayer_name_short_list_all, key=len)
+
+    fc_name_max = objid_fc_path_max_basename + "_prj_102100_" + featurelayer_name_short_max
+    gdb_name_max = fc_name_max + ".gdb"
+    fc_path_max = scratchdir + "/" + gdb_name_max + "/" + fc_name_max
+
+    if(len(fc_path_max) >= 260):
+        arcpy.AddError("LONGEST FEATURE CLASS OUTPUT PATH MAY BE " + str(len(fc_path_max)) + " CHARACTERS IN LENGTH")
+        arcpy.AddError("FEATURE CLASS OUTPUT PATHS MAY EXCEED WINDOWS CHARACTER LIMIT (260), SET A SHORTER OUTPUT DIRECTORY")
+        raise arcpy.ExecuteError
 
 
     ############################################################################
