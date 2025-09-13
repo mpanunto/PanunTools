@@ -4,16 +4,17 @@ To improve quality of life while performing the GISS Workflow, this tool does th
 1. Calculates geometry for all Event feature classes (optional, and only if geometries have changed)
 2. Inserts missing IrwinIDs and CpxNames, or replaces if incorrect (optional)
 3. Extracts elevations from DEMs, and inserts into Event Point ElevationFeet field (optional)
-4. Checks for null values in IncidentName field (optional)
-5. Checks for case sensitivity issues and hidden spaces in IncidentName fields (optional)
-6. Checks for proper attribution so that Wildfire Daily Fire Perimeters are accessible to public (optional)
-7. Checks for features with values of DeleteThis = Yes (optional) 
-8. Checks for missing Drop Point and Helispot labels (optional)
-9. Checks for features with FeatureStatus = Proposed (optional)
-10. Checks for features with FeatureStatus = In Review (optional)
-11. Checks for features with Duplicate Geometry (optional)
-12. Creates a new Master Incident GDB and Backup GDB (optional)
-13. Deletes all features in the newly created GDBs that do not match the user specified IncidentName(s) (optional)
+4. Extracts LandOwner from specified dataset, and inserts into Event Point & Event Line LandOwner field (optional)
+5. Checks for null values in IncidentName field (optional)
+6. Checks for case sensitivity issues and hidden spaces in IncidentName fields (optional)
+7. Checks for proper attribution so that Wildfire Daily Fire Perimeters are accessible to public (optional)
+8. Checks for features with values of DeleteThis = Yes (optional) 
+9. Checks for missing Drop Point and Helispot labels (optional)
+10. Checks for features with FeatureStatus = Proposed (optional)
+11. Checks for features with FeatureStatus = In Review (optional)
+12. Checks for features with Duplicate Geometry (optional)
+13. Creates a new Master Incident GDB and Backup GDB (optional)
+14. Deletes all features in the newly created GDBs that do not match the user specified IncidentName(s) (optional)
   
   
 ### How does it work?
@@ -38,21 +39,24 @@ The main idea behind this tool is that once all manual feature and attribute edi
 3. Toggle to insert extracted elevations into Event Point ElevationFeet field
 4. Path to DEM raster
 5. Specify if the DEM's elevation units are in meters or feet
-6. Path to Mobile GDB (aka local copy)
-7. Specify Coordinate System to use for GISAcres and LengthFeet Calculations
+6. Toggle to insert LandOwner information into Event Point and Event Line LandOwner field
+7. Specify Path to LandOwner feature class
+8. Specify field containing LandOwner information
+9. Path to Mobile GDB (aka local copy)
+10. Specify Coordinate System to use for GISAcres and LengthFeet Calculations
     - Point feature geometries are always calculated in WGS84
-8. Specify desired geometry measurement type
-9. Toggle to check for IncidentName issues (case sensitivity and hidden spaces)
-10. Toggle to check for public access to Wildfire Daily Fire Perimeters
-11. Toggle to check for features with values of DeleteThis = Yes
-12. Toggle to check for missing Drop Point and Helispot Labels
-13. Toggle to check for Proposed features
-14. Toggle to check for In Review features
-15. Toggle for Duplicate Geometries (Advanced License Only)
-16. Toggle for creating new Master Incident and Backup GDBs
-17. Path to Master Incident GDB
-18. Specify Incident GDB Backup directory
-19. Toggle to only keep features with user specified IncidentNames(s)
+11. Specify desired geometry measurement type
+12. Toggle to check for IncidentName issues (case sensitivity and hidden spaces)
+13. Toggle to check for public access to Wildfire Daily Fire Perimeters
+14. Toggle to check for features with values of DeleteThis = Yes
+15. Toggle to check for missing Drop Point and Helispot Labels
+16. Toggle to check for Proposed features
+17. Toggle to check for In Review features
+18. Toggle for Duplicate Geometries (Advanced License Only)
+19. Toggle for creating new Master Incident and Backup GDBs
+20. Path to Master Incident GDB
+21. Specify Incident GDB Backup directory
+22. Toggle to only keep features with user specified IncidentNames(s)
     - All other features will be deleted from the new Master Incident GDB
 
 ![screenshot_GISSWorkflowAssistant_1.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_GISSWorkflowAssistant_1.png)
