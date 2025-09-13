@@ -24,6 +24,6 @@ The below screenshot shows what the output attribute table looks like. Users can
 
 ![screenshot_CreateFireProgression_3.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_CreateFireProgression_3.png)
 
-The "Growth" fields attempt to provide the "Growth Day" associated with the perimeter. Perimeters captured before 0600 are given a growth day of the previous day to better align with the corresponding burn period.
+The "Growth" fields attempt to provide the growth day associated with the perimeter by applying some basic logic. Perimeters captured before 0600 are given a growth day of the ***previous day*** to better align with the corresponding burn period.
 
 A demonstration of this tool can be viewed [at this link](https://youtu.be/LGal9OCzmcc?t=305).
