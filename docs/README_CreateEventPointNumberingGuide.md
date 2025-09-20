@@ -6,7 +6,7 @@ Tool that creates a radial numbering guide to assist with numbering various Even
 
 ### How does it work?
 
-The user must provide the tool with a point feature class containing a single feature that represents the "center point" of the incident. This point will be used as the center point for the radial numbering guide, and will be buffered by the user provided distance (in miles).
+The user must provide the tool with a point feature class containing a single feature that represents the "center point" of the incident. This point will be used as the center point for the radial numbering guide and will be buffered by the user provided distance (in miles). This buffer will then be sliced into a number of equal sized features based on the user specified start/end range. 
 
 ### User Inputs
 
