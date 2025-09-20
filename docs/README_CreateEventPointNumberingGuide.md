@@ -1,6 +1,6 @@
 # Create Event Point Numbering Guide
 
-Tool that creates a radial numbering guide to assist with numbering various Event Points (Drop Points, Helispots, Sling Sites, etc)
+Tool that creates a radial numbering guide to assist with numbering various Event Points (Drop Points, Helispots, Sling Sites, etc).
 
 ### How does it work?
 The tool iterates through the user specified list of IncidentName values, and performs a selection of corresponding Contained and Uncontained features. Once selected, these features are dissolved, and then exploded (Multipart to Singlepart). The original Contained and Uncontained features are then deleted, and replaced with the newly exploded features. The user specified IrwinIDs are inserted into the newly exploded features.
