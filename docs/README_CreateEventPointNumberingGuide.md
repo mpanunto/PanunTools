@@ -1,6 +1,6 @@
 # Create Event Point Numbering Guide
 
-Tool that creates a radial numbering guide to assist with numbering various Event Points (Drop Points, Helispots, Sling Sites, etc).
+Tool that creates a radial guide to assist with numbering various Event Points (Drop Points, Helispots, Sling Sites, etc).
 
 ### How does it work?
 
