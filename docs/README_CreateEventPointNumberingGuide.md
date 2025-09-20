@@ -2,18 +2,18 @@
 
 Tool that creates a radial numbering guide to assist with numbering various Event Points (Drop Points, Helispots, Sling Sites, etc).
 
+![screenshot_CreateEventPointNumberingGuide_1.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_CreateEventPointNumberingGuide_1.png)
+
 ### How does it work?
-The tool iterates through the user specified list of IncidentName values, and performs a selection of corresponding Contained and Uncontained features. Once selected, these features are dissolved, and then exploded (Multipart to Singlepart). The original Contained and Uncontained features are then deleted, and replaced with the newly exploded features. The user specified IrwinIDs are inserted into the newly exploded features.
+
+The user must provide the tool with a point feature class containing a single feature that represents the "center point" of the incident. This point will be used as the center point for the radial numbering guide, and will be buffered by the user provided distance (in miles).
 
 ### User Inputs
 
-1. Specify IncidentName and IrwinID
-2. Specify Path to PerimeterLine Feature Class
-3. Toggle for Dissolving and Exploding Contained Features
-4. Toggle for Dissolving and Exploding Uncontained Features
-5. Coordinate system to perform acreage calculations
-6. Geometry measurement type
-
-![screenshot_CreateEventPointNumberingGuide_1.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_CreateEventPointNumberingGuide_1.png)
+1. Specify Path to Incident Center Point Feature Class
+2. Specify Event Point Numbering Range - Start
+3. Specify Event Point Numbering Range - End
+4. Specify Radius of Guide (miles)
+5. Specify Output Directory
 
 ![screenshot_CreateEventPointNumberingGuide_2.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_CreateEventPointNumberingGuide_2.png)
