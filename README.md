@@ -4,6 +4,8 @@
 
 PanunTools is a ***very*** cleverly named toolbox created for GISS on wildfire incidents, and currently contains the following toolsets and tools:
 
+ATTENTION: Several of these tools require a Standard or Advanced ArcGIS Pro license. Please consult the [License Requirements guide]((https://github.com/mpanunto/PanunTools/blob/main/docs/PanunToolsLicenseRequirements.pdf) for detailed information.
+
 #### Daily Workflow Toolset
 1. [Calculate Containment](docs/README_CalculateContainment.md)
 2. [Calculate Ownership](docs/README_CalculateOwnership.md)
