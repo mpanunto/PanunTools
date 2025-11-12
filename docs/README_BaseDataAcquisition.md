@@ -22,9 +22,9 @@ I’ve created a [Info Sheet](https://raw.githubusercontent.com/mpanunto/PanunTo
 
 **USGS Historical Topo Raster 100K/250K**: I attempted to identify the most recent GeoTIFF for each 100K and 250K quad by referencing the USGS’s master topo spreadsheet (listed in the attached Info Sheet PDF). As a result, each quad can have a vastly different looking topo map. So, these datasets can be a bit of a hodge podge.
 
-**USGS and USFS Topo Raster 24K**: The output symbology for these datasets are based on the image RGB values, but they will be given a random color scheme when first loaded into ArcGIS Pro. Users can either manually apply the RGB value for each class, or they can use the [Topo Raster 24K Symbology tool](/docs/README_TopoRaster24KSymbolize.md).
+**USGS and USFS Topo Raster Legacy 24K**: The output symbology for these datasets are based on the image RGB values, but they will be given a random color scheme when first loaded into ArcGIS Pro. Users can either manually apply the RGB value for each class, or they can use the [Topo Raster 24K Symbology tool](/docs/README_TopoRaster24KSymbolize.md).
 
-**USFS Topo Vector (aka FSTopo Legacy)**: Unlike the USGS Topo Vector dataset, the USFS Topo Vector dataset uses annotations
+**USFS Topo Vector Legacy (aka FSTopo Legacy)**: Unlike the USGS Topo Vector dataset, the USFS Topo Vector dataset uses annotations
 instead of labels. For the annotations to display properly, a series of fonts must be installed
 on the user's computer, which can be obtained at:
 https://data.fs.usda.gov/geodata/vector/fstopo/FSTopo_Layer_files_and_fonts.zip
