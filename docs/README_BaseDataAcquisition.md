@@ -7,8 +7,8 @@ This tool allows users to acquire/process the following datasets for an area of 
 1. USGS Topo Vector
 2. USGS Historical Topo Raster 100K
 3. USGS Historical Topo Raster 250K
-4. USFS Topo Vector (aka FSTopo Legacy)
-5. USFS Topo Raster 24K (aka FSTopo Legacy)
+4. USFS Topo Vector Legacy (aka FSTopo Legacy)
+5. USFS Topo Raster Legacy 24K (aka FSTopo Legacy)
 6. NAIP Imagery
 7. Surface Management Agency
 8. DEM 10 Meter (1/3rd Arc Second)
