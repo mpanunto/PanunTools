@@ -4,11 +4,11 @@ Tool that creates a reference grid for operational use.
 
 ### How does it work?
 
-The user must provide a point feature class containing a single feature, which is the reference point to create the grid. The point can represent the grid's CENTER or ORIGIN (bottom-left corner). 
+The user must provide a point feature class containing a single feature that serves as the grid’s reference point. This point can represent either the grid’s center or its origin (bottom-left corner). 
 
-Users must also specify the grid's width & height (in miles), and the grid cell size (in miles). Specific letters can also be excluded from the grid labeling to avoid communication conflicts (D for Drop Points, H for Helispots, S for Sling Sites, Division Labels, etc)
+Users must also define the grid’s width and height (in miles), along with the grid cell size (in miles). Specific letters can be excluded from grid labeling to prevent communication conflicts (for example: **D** for Drop Points, **H** for Helispots, **S** for Sling Sites, or Division labels, etc).
 
-Lastly, a Sub-Grid Factor must be specified that provides the desired resolution of the sub-grid (number of rows & columns per grid cell)
+Lastly, specify a Sub-Grid Factor to control the level of detail in the sub-grid — this determines how many rows and columns are created inside each grid cell.
 
 ### User Inputs
 
