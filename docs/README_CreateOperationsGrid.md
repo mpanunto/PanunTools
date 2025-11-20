@@ -21,7 +21,7 @@ Lastly, a Sub-Grid Factor must be specified that provides the desired resolution
 7. Specify Sub-Grid Factor (number of rows & columns for each grid cell)
 8. Specify Output Directory
 
-![screenshot_CreateOperationsGuide_2.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_CreateOperationsGuide_1.png)
+![screenshot_CreateOperationsGuide_2.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_CreateOperationsGrid_1.png)
 
 
 An output GDB with three feature classes will then be created based on the user's inputs:
@@ -29,4 +29,4 @@ An output GDB with three feature classes will then be created based on the user'
 - SubGrid
 - Header
 
-![screenshot_CreateOperationsGuide_1.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_CreateOperationsGuide_2.png)
+![screenshot_CreateOperationsGuide_1.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_CreateOperationsGrid_2.png)
