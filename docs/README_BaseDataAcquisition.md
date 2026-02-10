@@ -37,7 +37,7 @@ To run, Users will need to:
 2. Specify path to a AOI polygon shapefile
 3. Specify a AOI buffer size
 4. Specify path to the “BaseDataAcquisitionFiles.zip” file
-   - This .zip file comes in the download package, and contains all the layer files and index shapefiles that the tool references. 
+   - This .zip file comes in the download package inside the BaseDataDownload folder, and contains all the layer files and index shapefiles that the tool references. 
 
 Once all the inputs are specified, users simply select the datasets that they want to acquire/process.
 
