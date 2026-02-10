@@ -11,13 +11,12 @@ The tool uses the ArcGIS API for Python to tap into the NIFC Org, and create/org
 - Lastly, checks are performed on the layers of the two Mobile Editing web maps (Incident and Suppression Repair) to ensure they are Sync enabled.
 
 ### User inputs
-1. Specify NIFC ArcGIS Online Username
-2. Specify NIFC ArcGIS Online Password
-3. Specify Incident Name
-4. Specify Unique Fire ID
-5. Toggles to create incident specific AGOL Groups
-6. Toggles to create incident specific Feature Services
-7. Toggles to create incident specific Web Maps    
+1. Active portal check
+2. Specify Incident Name
+3. Specify Unique Fire ID
+4. Toggles to create incident specific AGOL Groups
+5. Toggles to create incident specific Feature Services
+6. Toggles to create incident specific Web Maps    
 
 
 ![screenshot_IncidentSetupAGOL_1.png](https://raw.githubusercontent.com/mpanunto/PanunTools/main/docs/screenshot_IncidentSetupAGOL_1.png)
