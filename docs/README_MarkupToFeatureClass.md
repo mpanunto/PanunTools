@@ -1,6 +1,6 @@
 # Markup to Feature Class
 
-This tool converts a ArcGIS Field Maps .markup file to GDB feature classes. It any attribute fields available in the .markup file (color, note, etc) are preserved in the output feature classes.
+This tool converts a ArcGIS Field Maps .markup file to GDB feature classes. Any attribute fields available in the .markup file (color, note, etc) are preserved in the output feature classes.
 
 ### User Inputs
 
