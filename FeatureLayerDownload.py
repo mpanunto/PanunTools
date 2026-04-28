@@ -91,18 +91,23 @@ def worker_function_services(in_inputs_list):
         #curr_featurelayer_name_input = inputs_list_secondary[1][8]
         curr_featurelayer_name_input = in_inputs_list[8]
 
-        #Features service name
-        #curr_featureservice_name = inputs_list_primary[65][9]
-        #curr_featureservice_name = inputs_list_secondary[1][9]
-        curr_featureservice_name = in_inputs_list[9]
+        #Feature layer short name
+        #curr_featurelayer_name_input = inputs_list_primary[65][9]
+        #curr_featurelayer_name_input = inputs_list_secondary[1][9]
+        curr_featurelayer_short_name_input = in_inputs_list[9]
 
-        #curr_multiprocess = inputs_list_primary[65][10]
-        #curr_multiprocess = inputs_list_secondary[1][10]
-        curr_multiprocess = in_inputs_list[10]
+        #Features service name
+        #curr_featureservice_name = inputs_list_primary[65][10]
+        #curr_featureservice_name = inputs_list_secondary[1][10]
+        curr_featureservice_name = in_inputs_list[10]
+
+        #curr_multiprocess = inputs_list_primary[65][11]
+        #curr_multiprocess = inputs_list_secondary[1][11]
+        curr_multiprocess = in_inputs_list[11]
 
         #curr_multiprocess_toggle = inputs_list_primary[65]
-        #curr_multiprocess_toggle = inputs_list_secondary[11]
-        curr_multiprocess_toggle = in_inputs_list[11]
+        #curr_multiprocess_toggle = inputs_list_secondary[12]
+        curr_multiprocess_toggle = in_inputs_list[12]
 
         #Get scratchdir
         curr_scratchdir = curr_outdir + "/_scratch"
@@ -149,8 +154,8 @@ def worker_function_services(in_inputs_list):
                 arcpy.AddMessage("......FAILED TO SIGN INTO PORTAL, TRYING AGAIN")
 
         #Get feature layer, and properties
-        curr_featurelayer = arcgis.features.FeatureLayer(curr_featurelayer_url)
-        curr_featurelayer_name_short = ''.join(c for c in curr_featurelayer_name_input if c.isalnum())
+        curr_featurelayer = arcgis.features.FeatureLayer(curr_featurelayer_url, gis)
+        curr_featurelayer_name_short = curr_featurelayer_short_name_input
         curr_featureservice_name_short = ''.join(c for c in curr_featureservice_name if c.isalnum())
 
         #These properties were not available in some services, causing issues.
@@ -213,17 +218,17 @@ def worker_function_services(in_inputs_list):
 
                     #Export CSV file containing information needed to retry query
                     if(curr_multiprocess == "Primary"):
-                        csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+                        csvdata = [{"NAME":curr_featurelayer_name_input, "SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                         projectfail_df = pandas.DataFrame(csvdata)
                         projectfail_csv_path = curr_outdir + "/primary_projectfail_" + curr_featurelayer_name_short + ".csv"
                         projectfail_df.to_csv(projectfail_csv_path, index=False)
                     if(curr_multiprocess == "Secondary"):
-                        csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+                        csvdata = [{"NAME":curr_featurelayer_name_input, "SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                         projectfail_df = pandas.DataFrame(csvdata)
                         projectfail_csv_path = curr_outdir + "/secondary_projectfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
                         projectfail_df.to_csv(projectfail_csv_path, index=False)
                     if(curr_multiprocess == "Tertiary"):
-                        csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+                        csvdata = [{"NAME":curr_featurelayer_name_input, "SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                         projectfail_df = pandas.DataFrame(csvdata)
                         projectfail_csv_path = curr_outdir + "/tertiary_projectfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
                         projectfail_df.to_csv(projectfail_csv_path, index=False)
@@ -231,32 +236,6 @@ def worker_function_services(in_inputs_list):
 
         #Reset environments
         arcpy.ResetEnvironments()
-
-        #COMMENTING THIS OUT FOR NOW BECAUSE IT SEEMS THE MULTIPROCESSING ENVIRONMENT
-        #IS MISSING MOST OF THE ENVIRONMENTAL SETTINGS, AND AS OF ARCGISPRO 2.9, WILL
-        #THROW ERRORS
-        #Get extent of projected AOI, and set extent environmental variable to that
-        #arcpy.AddMessage("..SETTING EXTENT FOR SELECTION")
-        #extent_check = False
-        #while(extent_check == False):
-            #try:
-                #aoi_fc_prj_extent = arcpy.Describe(aoi_fc_prj_path).extent
-                #curr_extent_xmin = aoi_fc_prj_extent.XMin
-                #curr_extent_ymin = aoi_fc_prj_extent.YMin
-                #curr_extent_xmax = aoi_fc_prj_extent.XMax
-                #curr_extent_ymax = aoi_fc_prj_extent.YMax
-                #arcpy.env.extent = arcpy.Extent(curr_extent_xmin, curr_extent_ymin, curr_extent_xmax, curr_extent_ymax)
-                #if(str(arcpy.env.extent.XMin) == "None"):
-                    #extent_check = False
-                    #arcpy.AddMessage("....EXTENT FAILED TO SET, RETRYING")
-                    #time.sleep(5)
-                #else:
-                    #extent_check = True
-            #except Exception as e:
-                #arcpy.AddMessage(e)
-                #arcpy.AddMessage("....EXTENT FAILED TO SET, RETRYING")
-                #time.sleep(5)
-
 
         ############################################################################
         ## SELECT FEATURES
@@ -271,8 +250,17 @@ def worker_function_services(in_inputs_list):
             while(select_test == False):
                 try:
 
+                    #TESTING THESE
+                    #curr_featurelayer_url = "https://carto.nationalmap.gov/arcgis/rest/services/contours/mapserver/1" #ContinentalLabels
+                    #curr_featurelayer_url = "https://carto.nationalmap.gov/arcgis/rest/services/contours/mapserver/2" #ContinentalContours
+                    #curr_featurelayer_url = "https://carto.nationalmap.gov/arcgis/rest/services/contours/mapserver/10" #100ftLabels
+                    #curr_featurelayer_url = "https://carto.nationalmap.gov/arcgis/rest/services/contours/mapserver/11" #100ft Contours
+                    #curr_featurelayer_url = "https://carto.nationalmap.gov/arcgis/rest/services/contours/mapserver/15" #50ft Labels
+                    #curr_featurelayer_url = "https://carto.nationalmap.gov/arcgis/rest/services/contours/mapserver/16" #50ft Contours
+
                     #Perform selection via arcpy
-                    selection = arcpy.SelectLayerByLocation_management(curr_featurelayer_url, overlap_type="INTERSECT", select_features=aoi_fc_prj_path, selection_type="NEW_SELECTION")
+                    selection_makelayer = arcpy.MakeFeatureLayer_management(curr_featurelayer_url, "selection_makelayer")
+                    selection = arcpy.SelectLayerByLocation_management(selection_makelayer, overlap_type="INTERSECT", select_features=aoi_fc_prj_path, selection_type="NEW_SELECTION")
                     selection_count = int(arcpy.GetCount_management(selection)[0])
 
                     #Perform selection via arcgis api
@@ -305,6 +293,7 @@ def worker_function_services(in_inputs_list):
                 except Exception as e:
                     arcpy.AddMessage(e)
                     select_attempt = select_attempt + 1
+                    arcpy.Delete_management("selection_makelayer")
                     if(select_attempt < 6):
                         arcpy.AddMessage("........SELECTION FAILED, RE-TRYING")
                         select_test = False
@@ -315,17 +304,17 @@ def worker_function_services(in_inputs_list):
 
                         #Export CSV file containing information needed to retry query
                         if(curr_multiprocess == "Primary"):
-                            csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+                            csvdata = [{"NAME":curr_featurelayer_name_input, "SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                             selectfail_df = pandas.DataFrame(csvdata)
                             selectfail_csv_path = curr_outdir + "/primary_selectfail_" + curr_featurelayer_name_short + ".csv"
                             selectfail_df.to_csv(selectfail_csv_path, index=False)
                         if(curr_multiprocess == "Secondary"):
-                            csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+                            csvdata = [{"NAME":curr_featurelayer_name_input, "SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                             selectfail_df = pandas.DataFrame(csvdata)
                             selectfail_csv_path = curr_outdir + "/secondary_selectfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
                             selectfail_df.to_csv(selectfail_csv_path, index=False)
                         if(curr_multiprocess == "Tertiary"):
-                            csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+                            csvdata = [{"NAME":curr_featurelayer_name_input, "SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                             selectfail_df = pandas.DataFrame(csvdata)
                             selectfail_csv_path = curr_outdir + "/tertiary_selectfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
                             selectfail_df.to_csv(selectfail_csv_path, index=False)
@@ -401,25 +390,6 @@ def worker_function_services(in_inputs_list):
             #Create spatial reference object from user defined output projection
             curr_output_prj_sr = arcpy.SpatialReference(text=curr_output_prj)
 
-            #COMMENTING THIS OUT FOR NOW BECAUSE IT SEEMS THE MULTIPROCESSING ENVIRONMENT
-            #IS MISSING MOST OF THE ENVIRONMENTAL SETTINGS, AND AS OF ARCGISPRO 2.9, WILL
-            #THROW ERRORS
-            #Define output coordinate system environmental variable
-            #arcpy.AddMessage("..SETTING OUTPUT COORDINATE SYSTEM")
-            #outcrs_check = False
-            #while(outcrs_check == False):
-                #try:
-                    #arcpy.env.outputCoordinateSystem = curr_output_prj_sr
-                    #if(arcpy.env.outputCoordinateSystem.name != curr_output_prj_sr.name):
-                        #arcpy.AddMessage("....OUTPUT COORDINATE SYSTEM FAILED TO SET, RETRYING")
-                        #time.sleep(5)
-                    #else:
-                        #outcrs_check = True
-                #except Exception as e:
-                    #arcpy.AddMessage(e)
-                    #arcpy.AddMessage("....OUTPUT COORDINATE SYSTEM FAILED TO SET, RETRYING")
-                    #time.sleep(5)
-
             #PERFORM EXPORT
             arcpy.AddMessage("......EXPORTING (" + str(selection_count) + " features)")
             export_test = False
@@ -477,17 +447,17 @@ def worker_function_services(in_inputs_list):
                         if(export_attempt >= 6):
                             #Export CSV file containing information needed to retry query
                             if(curr_multiprocess == "Primary"):
-                                csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+                                csvdata = [{"NAME":curr_featurelayer_name_input, "SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                                 exportcountfail_df = pandas.DataFrame(csvdata)
                                 exportcountfail_csv_path = curr_outdir + "/primary_exportcountfail_" + curr_featurelayer_name_short + ".csv"
                                 exportcountfail_df.to_csv(exportcountfail_csv_path, index=False)
                             if(curr_multiprocess == "Secondary"):
-                                csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+                                csvdata = [{"NAME":curr_featurelayer_name_input, "SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                                 exportcountfail_df = pandas.DataFrame(csvdata)
                                 exportcountfail_csv_path = curr_outdir + "/secondary_exportcountfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
                                 exportcountfail_df.to_csv(exportcountfail_csv_path, index=False)
                             if(curr_multiprocess == "Tertiary"):
-                                csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+                                csvdata = [{"NAME":curr_featurelayer_name_input, "SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                                 exportcountfail_df = pandas.DataFrame(csvdata)
                                 exportcountfail_csv_path = curr_outdir + "/tertiary_exportcountfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
                                 exportcountfail_df.to_csv(exportcountfail_csv_path, index=False)
@@ -508,17 +478,17 @@ def worker_function_services(in_inputs_list):
 
                         #Export CSV file containing information needed to retry query
                         if(curr_multiprocess == "Primary"):
-                            csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+                            csvdata = [{"NAME":curr_featurelayer_name_input, "SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                             exportfail_df = pandas.DataFrame(csvdata)
                             exportfail_csv_path = curr_outdir + "/primary_exportfail_" + curr_featurelayer_name_short + ".csv"
                             exportfail_df.to_csv(exportfail_csv_path, index=False)
                         if(curr_multiprocess == "Secondary"):
-                            csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+                            csvdata = [{"NAME":curr_featurelayer_name_input, "SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                             exportfail_df = pandas.DataFrame(csvdata)
                             exportfail_csv_path = curr_outdir + "/secondary_exportfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
                             exportfail_df.to_csv(exportfail_csv_path, index=False)
                         if(curr_multiprocess == "Tertiary"):
-                            csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+                            csvdata = [{"NAME":curr_featurelayer_name_input, "SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
                             exportfail_df = pandas.DataFrame(csvdata)
                             exportfail_csv_path = curr_outdir + "/tertiary_exportfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
                             exportfail_df.to_csv(exportfail_csv_path, index=False)
@@ -600,17 +570,17 @@ def worker_function_services(in_inputs_list):
 
         #Export CSV file containing information needed to retry query
         if(curr_multiprocess == "Primary"):
-            csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+            csvdata = [{"NAME":curr_featurelayer_name_input, "SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
             toplevelfail_df = pandas.DataFrame(csvdata)
             toplevelfail_csv_path = curr_outdir + "/primary_toplevelfail_" + curr_featurelayer_name_short + ".csv"
             toplevelfail_df.to_csv(toplevelfail_csv_path, index=False)
         if(curr_multiprocess == "Secondary"):
-            csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+            csvdata = [{"NAME":curr_featurelayer_name_input, "SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
             toplevelfail_df = pandas.DataFrame(csvdata)
             toplevelfail_csv_path = curr_outdir + "/secondary_toplevelfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
             toplevelfail_df.to_csv(toplevelfail_csv_path, index=False)
         if(curr_multiprocess == "Tertiary"):
-            csvdata = [{"SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+            csvdata = [{"NAME":curr_featurelayer_name_input, "SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
             toplevelfail_df = pandas.DataFrame(csvdata)
             toplevelfail_csv_path = curr_outdir + "/tertiary_toplevelfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
             toplevelfail_df.to_csv(toplevelfail_csv_path, index=False)
@@ -866,7 +836,7 @@ if __name__=='__main__':
     password = arcpy.GetParameterAsText(3)
 
     #Path to AOI shapefile polygon
-    #aoi_shp_path = r"C:\Users\mpanunto\OneDrive - DOI\Workspace_OneDrive\development\AOI_Shapefiles\AOI_UT2.shp"
+    #aoi_shp_path = r"C:\Users\mpanunto\OneDrive - DOI\Workspace_OneDrive\development\AOI_Shapefiles\AOI_NUIFC.shp"
     aoi_shp_path = arcpy.GetParameterAsText(4)
 
     #AOI Subdivision Area (in square miles)
@@ -880,11 +850,11 @@ if __name__=='__main__':
     output_prj = arcpy.GetParameterAsText(6)
 
     #Output GDB Directory
-    #outdir = r"C:\Users\mpanunto\OneDrive - DOI\Workspace_OneDrive\development\PanunTools-main\output_FeatureLayerDownload\output"
+    #outdir = r"C:\Workspace\output11"
     outdir = arcpy.GetParameterAsText(7)
 
     #Path to feature service ItemID CSV
-    #service_itemid_csv_path = r"C:\Users\mpanunto\OneDrive - DOI\Workspace_OneDrive\development\PanunTools-main/FeatureLayerDownload.csv"
+    #service_itemid_csv_path = r"C:\Workspace/FeatureLayerDownload_test_contours.csv"
     service_itemid_csv_path = arcpy.GetParameterAsText(8)
 
     #elevcontour_acquire = "No"
@@ -1122,7 +1092,7 @@ if __name__=='__main__':
         arcpy.AddMessage("ACQUIRING ELEVATION CONTOUR DATA")
 
         #Get feature layers from the basedata feature service
-        basedata_service = curr_service = gis.content.get("6dcb2dab3c314912a45872eabfa467e2")
+        basedata_service = gis.content.get("6dcb2dab3c314912a45872eabfa467e2")
         basedata_layers = basedata_service.layers
 
         #Create spatial dataframe from user defined AOI shapefile, and an AOI geometry object
@@ -1330,7 +1300,7 @@ if __name__=='__main__':
         arcpy.AddMessage("ACQUIRING WETLAND DATA")
 
         #Get feature layers from the basedata feature service
-        basedata_service = curr_service = gis.content.get("6dcb2dab3c314912a45872eabfa467e2")
+        basedata_service = gis.content.get("6dcb2dab3c314912a45872eabfa467e2")
         basedata_layers = basedata_service.layers
 
         #Create spatial dataframe from user defined AOI shapefile, and an AOI geometry object
@@ -1481,15 +1451,6 @@ if __name__=='__main__':
             arcpy.Merge_management(wetlands_fc_path_list, wetlands_final_out)
             arcpy.ResetEnvironments()
 
-            #COMMENTING THIS OUT BECAUSE I DON'T THINK THIS HUC8 DATASET CAN HAVE
-            #ANY DUPLICATE FEATURES ACROSS HUCS. THEY SHOULD ALL BE IDENTICAL ALREADY
-            #Remove identical features in output feature class
-            #arcpy.AddMessage("..REMOVING DUPLICATE FEATURES")
-            #try:
-                #arcpy.DeleteIdentical_management(wetlands_final_out, fields=["Shape"])
-            #except:
-                #arcpy.AddMessage("....FAILED TO REMOVE DUPLICATE FEATURES, SKIPPING")
-
             #Delete individual outputs and scratch files
             arcpy.AddMessage("..DELETING SCRATCH FILES")
             arcpy.Delete_management(wetlands_fc_path_list)
@@ -1530,43 +1491,322 @@ if __name__=='__main__':
     metadatadir = scratchdir + "/_metadata"
     os.mkdir(metadatadir)
 
+    #Define function to extract layer URLs from group layers
+    def extract_urls_from_grouplayer(obj):
+        urls = []
+        if isinstance(obj, dict):
+            for key, value in obj.items():
+                # Only recurse into "layers" keys
+                if key == "layers" and isinstance(value, list):
+                    for layer in value:
+                        urls.extend(extract_urls_from_grouplayer(layer))
+                elif key == "url":
+                    urls.append(value)
+        elif isinstance(obj, list):
+            for item in obj:
+                urls.extend(extract_urls_from_grouplayer(item))
+        return urls
+
+    #Define function to extract layer URLs from web maps
+    def extract_urls_from_webmap(layers):
+        urls = []
+        for layer in layers:
+            # If it's a feature layer with a URL, collect it
+            if "url" in layer:
+                urls.append(layer["url"])
+
+            # If it's a group layer, recurse into its "layers"
+            if layer.get("layerType") == "GroupLayer" and "layers" in layer:
+                urls.extend(extract_urls_from_webmap(layer["layers"]))
+        return urls
+
     #Create service connections, and build a list of feature layers
     arcpy.AddMessage("\u200B")
     arcpy.AddMessage("\u200B")
     arcpy.AddMessage("CONNECTING TO FEATURE SERVICES")
-    featurelayerurl_list_primary = []
-    featurelayerurl_list_secondary = []
+    featurelayer_url_list_primary = []
+    featurelayer_url_list_secondary = []
     featurelayer_name_list_primary = []
     featurelayer_name_list_secondary = []
-    featureservice_name_list_primary = []
-    featureservice_name_list_secondary = []
+    featurelayer_name_short_list_primary = []
+    featurelayer_name_short_list_secondary = []
+    featurelayer_name_short_list_all = []
+    service_name_list_primary = []
+    service_name_list_secondary = []
     curr_iter = 0
     for i in range(0, len(service_itemid_list)):
         curr_itemid = service_itemid_list[i]
         try:
 
-            #Get service and service name
-            try:
-                curr_service = gis.content.get(curr_itemid)
-            except Exception as e:
-                arcpy.AddMessage(e)
-                arcpy.AddMessage("..UNABLE TO CONNECT TO SERVICE, CHECK ACCESS PERMISSIONS (ItemID = " + curr_itemid + ")" )
-                continue
+            #If the user input is a 32-character alphanumeric string and is not a URL, that means its an ItemID
+            if(len(curr_itemid) == 32 and curr_itemid.isalnum() and not curr_itemid.startswith(('http://', 'https://', 'ftp://'))):
+                try:
 
-            if(curr_service == None):
-                arcpy.AddMessage("..UNABLE TO CONNECT TO SERVICE, CHECK ACCESS PERMISSIONS (ItemID = " + curr_itemid + ")" )
-                continue
+                    #Get service
+                    curr_item = gis.content.get(curr_itemid)
 
-            curr_service_name = curr_service.name
+                    #If no service information returned, skip
+                    if(curr_item == None):
+                        arcpy.AddMessage("..UNABLE TO CONNECT TO ITEM, CHECK ACCESS PERMISSIONS (ItemID = " + curr_itemid + ")" )
+                        continue
 
-            #If there is no service name, use the service title instead
-            if(curr_service_name == None):
-                curr_service_name = curr_service.title
+                    #If not a feature service, skip
+                    if(curr_item.type not in ["Feature Service", "Group Layer", "Web Map"]):
+                        arcpy.AddMessage("..NO FEATURE LAYERS FOUND, SKIPPING")
+                        continue
 
-            arcpy.AddMessage(".." + curr_service_name)
+                    #Get item name
+                    curr_item_name = curr_item.name
 
-            #Get a list of layers in the service
-            curr_service_layers = curr_service.layers
+                    #If there is no service name, use the service title instead
+                    if(curr_item_name == None):
+                        curr_item_name = curr_item.title
+
+                    #Print item name
+                    arcpy.AddMessage(".." + curr_item_name)
+
+                    #If a feature service, get a list of feature layers
+                    if(curr_item.type == "Feature Service"):
+                        curr_service_layers = curr_item.layers
+
+                    #If group layer, extract all the feature layer URLs, and create list of feature layers
+                    if(curr_item.type == "Group Layer"):
+                        group_layer_data = curr_item.get_data()
+                        curr_service_urls = extract_urls_from_grouplayer(group_layer_data)
+                        curr_service_layers = []
+                        for j in range(0, len(curr_service_urls)):
+                            curr_url = curr_service_urls[j]
+                            if(any(s in curr_url for s in ['FeatureServer', 'MapServer', 'featureserver', 'mapserver'])):
+                                if(curr_url.endswith("/FeatureServer") or curr_url.endswith("/MapServer")):
+                                    curr_flc = arcgis.features.FeatureLayerCollection(curr_url, gis)
+                                    curr_service_layers = curr_service_layers + curr_flc.layers
+                                else:
+                                    curr_service_layers = curr_service_layers + [arcgis.features.FeatureLayer(curr_url, gis)]
+
+                    #If web map, extract all the feature layer URLs, and create list of feature layers
+                    if(curr_item.type == "Web Map"):
+                        webmap_data = curr_item.get_data()
+                        webmap_top_layers = webmap_data.get("operationalLayers", [])
+                        curr_service_urls = extract_urls_from_webmap(webmap_top_layers)
+                        curr_service_layers = []
+                        for j in range(0, len(curr_service_urls)):
+                            curr_url = curr_service_urls[j]
+                            if(any(s in curr_url for s in ['FeatureServer', 'MapServer', 'featureserver', 'mapserver'])):
+                                if(curr_url.endswith("/FeatureServer") or curr_url.endswith("/MapServer")):
+                                    curr_flc = arcgis.features.FeatureLayerCollection(curr_url, gis)
+                                    curr_service_layers = curr_service_layers + curr_flc.layers
+                            else:
+                                curr_service_layers = curr_service_layers + [arcgis.features.FeatureLayer(curr_url, gis)]
+
+                    #Remove any duplicates in layer list
+                    curr_service_layers = sorted(list(set(curr_service_layers)), key=lambda layer: layer.url)
+
+                    #If no feature layers were found, skip item
+                    if(len(curr_service_layers) == 0):
+                        arcpy.AddMessage("..NO FEATURE LAYERS FOUND, SKIPPING")
+                        continue
+
+
+                except Exception as e:
+                    arcpy.AddMessage(e)
+                    arcpy.AddMessage("..UNABLE TO CONNECT TO ITEM, CHECK ACCESS PERMISSIONS (ItemID = " + curr_itemid + ")" )
+                    continue
+
+
+            #If the user input has "http" in it, that means its a URL
+            if("http" in curr_itemid):
+
+                #If URL has "item.html?=" AND "&sublayer=" in it, then it is a URL to an individual layer's details page.
+                if( ("item.html?id=" in curr_itemid) and ("&sublayer=" in curr_itemid) ):
+                    try:
+                        #Parse out the itemid and sublayer number
+                        curr_itemid_split1 = curr_itemid.split("?id=")
+                        curr_itemid_parse = curr_itemid_split1[1].split("&sublayer=")[0]
+                        curr_layer_id_parse = curr_itemid_split1[1].split("&sublayer=")[1]
+
+                        #Get service
+                        curr_item = gis.content.get(curr_itemid_parse)
+
+                        #If no service information returned, skip
+                        if(curr_item == None):
+                            arcpy.AddMessage("..UNABLE TO CONNECT TO ITEM, CHECK ACCESS PERMISSIONS (ItemID = " + curr_itemid + ")" )
+                            continue
+
+                        #If not a feature service, skip
+                        if(curr_item.type not in ["Feature Service", "Group Layer", "Web Map"]):
+                            arcpy.AddMessage("..NO FEATURE LAYERS FOUND, SKIPPING")
+                            continue
+
+                        #Get service and sublayer urls
+                        curr_service_url = curr_item.url
+                        curr_sublayer_url = curr_service_url + "/" + curr_layer_id_parse
+
+                        #Create feature layer
+                        curr_sublayer = arcgis.features.FeatureLayer(curr_sublayer_url, gis)
+
+                        #Get sublayer name
+                        curr_sublayer_name = curr_sublayer.properties.name
+
+                        #If there is no service name, use the service title instead
+                        if(curr_sublayer_name == None):
+                            curr_sublayer_name = curr_sublayer.title
+
+                        #Print service name
+                        arcpy.AddMessage(".." + curr_sublayer_name)
+
+                        #If a feature service, get a list of feature layers
+                        if(curr_item.type == "Feature Service"):
+                            curr_service_layers = [curr_sublayer_name]
+
+
+                    except Exception as e:
+                        arcpy.AddMessage(e)
+                        arcpy.AddMessage("..UNABLE TO CONNECT TO SERVICE, CHECK ACCESS PERMISSIONS (ItemID = " + curr_itemid + ")" )
+                        continue
+
+
+
+
+                #If URL has "item.html?=" in it, then it is a content item's detail URL. Need to extract just the ItemID from it.
+                if("item.html?id=" in curr_itemid):
+                    try:
+                        curr_itemid_split = curr_itemid.split("?id=")
+                        curr_itemid_parse = curr_itemid_split[1]
+
+                        #Get service
+                        curr_item = gis.content.get(curr_itemid_parse)
+
+                        #If no service information returned, skip
+                        if(curr_item == None):
+                            arcpy.AddMessage("..UNABLE TO CONNECT TO ITEM, CHECK ACCESS PERMISSIONS (ItemID = " + curr_itemid + ")" )
+                            continue
+
+                        #If not a feature service, skip
+                        if(curr_item.type not in ["Feature Service", "Group Layer", "Web Map"]):
+                            arcpy.AddMessage("..NO FEATURE LAYERS FOUND, SKIPPING")
+                            continue
+
+                        #Get service name
+                        curr_item_name = curr_item.name
+
+                        #If there is no service name, use the service title instead
+                        if(curr_item_name == None):
+                            curr_item_name = curr_item.title
+
+                        #Print service name
+                        arcpy.AddMessage(".." + curr_item_name)
+
+                        #If a feature service, get a list of feature layers
+                        if(curr_item.type == "Feature Service"):
+                            curr_service_layers = curr_item.layers
+
+                        #If group layer, extract all the feature layer URLs, and create list of feature layers
+                        if(curr_item.type == "Group Layer"):
+                            group_layer_data = curr_item.get_data()
+                            curr_service_urls = extract_urls_from_grouplayer(group_layer_data)
+                            curr_service_layers = []
+                            for j in range(0, len(curr_service_urls)):
+                                curr_url = curr_service_urls[j]
+                                if(any(s in curr_url for s in ['FeatureServer', 'MapServer', 'featureserver', 'mapserver'])):
+                                    if(curr_url.endswith("/FeatureServer") or curr_url.endswith("/MapServer")):
+                                        curr_flc = arcgis.features.FeatureLayerCollection(curr_url, gis)
+                                        curr_service_layers = curr_service_layers + curr_flc.layers
+                                    else:
+                                        curr_service_layers = curr_service_layers + [arcgis.features.FeatureLayer(curr_url, gis)]
+
+                        #If web map, extract all the feature layer URLs, and create list of feature layers
+                        if(curr_item.type == "Web Map"):
+                            webmap_data = curr_item.get_data()
+                            webmap_top_layers = webmap_data.get("operationalLayers", [])
+                            curr_service_urls = extract_urls_from_webmap(webmap_top_layers)
+                            curr_service_layers = []
+                            for j in range(0, len(curr_service_urls)):
+                                curr_url = curr_service_urls[j]
+                                if(any(s in curr_url for s in ['FeatureServer', 'MapServer', 'featureserver', 'mapserver'])):
+                                    if(curr_url.endswith("/FeatureServer") or curr_url.endswith("/MapServer")):
+                                        curr_flc = arcgis.features.FeatureLayerCollection(curr_url, gis)
+                                        curr_service_layers = curr_service_layers + curr_flc.layers
+                                    else:
+                                        curr_service_layers = curr_service_layers + [arcgis.features.FeatureLayer(curr_url, gis)]
+
+                        #Remove any duplicates in layer list
+                        curr_service_layers = sorted(list(set(curr_service_layers)), key=lambda layer: layer.url )
+
+                        #If no feature layers were found, skip item
+                        if(len(curr_service_layers) == 0):
+                            arcpy.AddMessage("..NO FEATURE LAYERS FOUND, SKIPPING")
+
+                    except Exception as e:
+                        arcpy.AddMessage(e)
+                        arcpy.AddMessage("..UNABLE TO CONNECT TO SERVICE, CHECK ACCESS PERMISSIONS (ItemID = " + curr_itemid + ")" )
+                        continue
+
+                #If URL ends with "/FeatureServer" or "/MapServer", then it is a top-level service
+                if(curr_itemid.endswith("/FeatureServer") or curr_itemid.endswith("/MapServer")):
+                    try:
+                        curr_item = arcgis.features.FeatureLayerCollection(curr_itemid, gis)
+
+                        #Get service name from the URL: assumes structure like /services/<name>/MapServer
+                        url_split = urllib.parse.urlparse(curr_itemid).path.split("/")
+                        name_index = url_split.index("services") + 1
+                        curr_item_name = url_split[name_index]
+
+                        arcpy.AddMessage(".." + curr_item_name)
+
+                        #Get service layers
+                        curr_service_layers = curr_item.layers
+                        curr_service_layers = sorted(list(set(curr_service_layers)), key=lambda layer: layer.url )
+
+                    except Exception as e:
+                        arcpy.AddMessage(e)
+                        arcpy.AddMessage("..UNABLE TO CONNECT TO SERVICE, CHECK ACCESS PERMISSIONS (ItemID = " + curr_itemid + ")" )
+                        continue
+
+
+                #If URL ends with "/FeatureServer/#" or "/MapServer/#", then it is an individual Feature Layer or Group Layer
+                if(len((parts := curr_itemid.rstrip('/').split('/'))) >= 2 and parts[-2] in ['FeatureServer','MapServer', 'featureserver', 'mapserver'] and parts[-1].isdigit()):
+                    try:
+
+                        curr_item = arcgis.features.FeatureLayer(curr_itemid, gis)
+                        curr_item_name = curr_item.properties.name
+                        curr_service_url = curr_item.url
+
+                        arcpy.AddMessage(".." + curr_item_name)
+
+                        #If group layer, get all layers within group
+                        if(curr_item.properties.type == "Group Layer"):
+                            curr_service_sublayers = curr_item.properties.subLayers
+
+                            curr_service_url_dirname = os.path.dirname(curr_service_url)
+                            curr_service_layers = []
+                            for j in range(0, len(curr_service_sublayers)):
+                                curr_sublayer = curr_service_sublayers[j]
+                                curr_sublayer_id = curr_sublayer["id"]
+                                curr_sublayer_name = curr_sublayer["name"]
+
+                                curr_sublayer_url = curr_service_url_dirname + "/" + str(curr_sublayer_id)
+                                curr_sublayer_service = arcgis.features.FeatureLayer(curr_sublayer_url, gis)
+
+                                #If sublayer is a feature layer, append to list.
+                                if(curr_sublayer_service.properties.type == "Feature Layer"):
+                                    curr_service_layers.append(curr_sublayer_service)
+
+                        #Else just get the single layer
+                        else:
+
+                            #Get a list of layers in the service
+                            curr_service_layers = [curr_item]
+
+                        curr_service_layers = sorted(list(set(curr_service_layers)), key=lambda layer: layer.url )
+
+
+                    except Exception as e:
+                        arcpy.AddMessage(e)
+                        arcpy.AddMessage("..UNABLE TO CONNECT TO SERVICE, CHECK ACCESS PERMISSIONS (ItemID = " + curr_itemid + ")" )
+                        continue
+
+
+
 
             #Loop through all the layers
             for j in range(0, len(curr_service_layers)):
@@ -1582,45 +1822,64 @@ if __name__=='__main__':
                         curr_featurelayer_name = curr_featurelayer.properties.name
                         curr_featurelayer_name_short = ''.join(c for c in curr_featurelayer_name if c.isalnum())
 
-                        arcpy.AddMessage("...." + curr_featurelayer_name + " (" + str(curr_iter) + ")")
+                        #If the first character of feature layer is a number this will screw things up because GDBs can't start with numbers.
+                        #Example: "4WDRoads"
+                        #So force it to start with "i_", just like GeoOps progression GDB, yielding "i_4WDRoads"
+                        if(curr_item_name[0].isdigit()):
+                            curr_item_name = "i_" + curr_item_name
+                        if(curr_featurelayer_name[0].isdigit()):
+                            curr_featurelayer_name = "i_" + curr_featurelayer_name
+                        if(curr_featurelayer_name_short[0].isdigit()):
+                            curr_featurelayer_name_short = "i_" + curr_featurelayer_name_short
+
+                        #If short name already exists, add a 1 on the end, then increase it until an unused name is discovered
+                        if(curr_featurelayer_name_short in featurelayer_name_short_list_all):
+                            shortname_check = False
+                            last_char = curr_featurelayer_name_short[len(curr_featurelayer_name_short) - 1]
+                            ending_number = 1
+                            while(shortname_check == False):
+                                curr_featurelayer_name_short = curr_featurelayer_name_short + str(ending_number)
+                                if(curr_featurelayer_name_short not in featurelayer_name_short_list_all):
+                                    shortname_check = True
+                                else:
+                                    ending_number = ending_number + 1
+
+                        #Add short name to list, which is used to test for duplicate names in the block above
+                        featurelayer_name_short_list_all.append(curr_featurelayer_name_short)
 
                         #Get URL
                         curr_featurelayer_url = curr_featurelayer.url
 
-                        #Download feature service metadata xml, then rename it
-                        #curr_service_metadata_path = metadatadir + "/metadata.xml"
-                        #curr_service_metadata_rename_path = metadatadir + "/" + curr_service_name + "_" + curr_featurelayer_name_short + ".xml"
-                        #if(os.path.exists(curr_service_metadata_path)):
-                            #os.remove(curr_service_metadata_path)
-                        #if(os.path.exists(curr_service_metadata_rename_path)):
-                            #os.remove(curr_service_metadata_rename_path)
-                        #curr_service.download_metadata(metadatadir)
-                        #os.rename(curr_service_metadata_path, curr_service_metadata_rename_path)
+                        #Get service name
+                        url_split = urllib.parse.urlparse(curr_featurelayer_url).path.split("/")
+                        curr_service_name = url_split[len(url_split)-3]
 
-                        #Download feature layer metadata xml
-                        #curr_featurelayer_metadata_path = metadatadir + "/" + curr_featurelayer_name_short + ".xml"
-                        #curr_featurelayer_metadata = arcpy.metadata.Metadata(curr_featurelayer)
-                        #curr_featurelayer_metadata.exportMetadata(curr_featurelayer_metadata_path)
+                        arcpy.AddMessage("...." + curr_featurelayer_name + " (" + str(curr_iter) + ")")
 
+                        #Test layer response time to identify slow ones
+                        #response_time_start = time.time()
+                        #curr_featurelayer.query(where='1=1', return_count_only=True)
+                        #response_time_end = time.time()
+                        #response_time = round((response_time_end - response_time_start), 1)
+                        #arcpy.AddMessage("...." + curr_featurelayer_name + " (" + str(curr_iter) + ")" + " - RESPONSE TIME OF " + str(response_time) + "s")
+                        #if(response_time >= float(response_time_thresh)):
+                            #arcpy.AddMessage("......RESPONSE TIME EXCEEDS USER THRESHOLD, SKIPPING)")
+                            #continue
 
-                        #Get metadata info from service, and feature layer
-                        #curr_service_description = curr_service.description
-                        #curr_service_termsofuse = curr_service.licenseInfo
-                        #curr_service_tags = curr_service.tags
-                        #curr_service_credits = curr_service.accessInformation
-                        #curr_service_owner = curr_service.owner
-                        #curr_featurelayer_description = curr_featurelayer.properties.description
-                        #curr_featurelayer_credits = curr_featurelayer.properties.copyrightText
 
                         #Append URLs to lists. If they are high-density datasets, send them through the secondary multiprocessor instead
-                        if(curr_featurelayer_name in ["HIFLD Plus GTAC", "Gap Roads GTAC", "Forest Service Roads", "NHDFlowline", "NHD Flowline GTAC", "NHDWaterbody", "BLM PLSS Sections", "FSVeg - Stands", "USA_Structures", "USA_Structures_A"]):
-                            featurelayerurl_list_secondary.append(curr_featurelayer_url)
+                        highdensity_list = ["Contour", "Label", "HIFLD Plus GTAC", "Road", "Flowline", "Waterbody", "Wetland", "PLSS", "FSVeg - Stands", "Structure"]
+                        highdensity_matches = [s for s in highdensity_list if s.lower() in curr_featurelayer_name.lower()]
+                        if(len(highdensity_matches) > 0):
+                            featurelayer_url_list_secondary.append(curr_featurelayer_url)
                             featurelayer_name_list_secondary.append(curr_featurelayer_name)
-                            featureservice_name_list_secondary.append(curr_service_name)
+                            featurelayer_name_short_list_secondary.append(curr_featurelayer_name_short)
+                            service_name_list_secondary.append(curr_service_name)
                         else:
-                            featurelayerurl_list_primary.append(curr_featurelayer_url)
+                            featurelayer_url_list_primary.append(curr_featurelayer_url)
                             featurelayer_name_list_primary.append(curr_featurelayer_name)
-                            featureservice_name_list_primary.append(curr_service_name)
+                            featurelayer_name_short_list_primary.append(curr_featurelayer_name_short)
+                            service_name_list_primary.append(curr_service_name)
 
                         curr_iter = curr_iter + 1
 
@@ -1632,7 +1891,7 @@ if __name__=='__main__':
             arcpy.AddMessage(e)
 
     #Create input lists for primary multiprocessing
-    featurelayer_count_primary = len(featurelayerurl_list_primary)
+    featurelayer_count_primary = len(featurelayer_url_list_primary)
     pro_portal_toggle_list_primary = [pro_portal_toggle] * featurelayer_count_primary
     portalurl_list_primary = [portalurl] * featurelayer_count_primary
     username_list_primary = [username] * featurelayer_count_primary
@@ -1642,12 +1901,9 @@ if __name__=='__main__':
     gdb_outdir_list_primary = [outdir] * featurelayer_count_primary
     multiprocess_list_primary = ["Primary"] * featurelayer_count_primary
     multiprocess_toggle_list_primary = [multiprocess_toggle] * featurelayer_count_primary
-    inputs_list_primary = list(map(list, zip(pro_portal_toggle_list_primary, portalurl_list_primary, username_list_primary, password_list_primary, aoi_path_list_primary, output_prj_list_primary, gdb_outdir_list_primary, featurelayerurl_list_primary, featurelayer_name_list_primary, featureservice_name_list_primary, multiprocess_list_primary, multiprocess_toggle_list_primary)))
+    inputs_list_primary = list(map(list, zip(pro_portal_toggle_list_primary, portalurl_list_primary, username_list_primary, password_list_primary, aoi_path_list_primary, output_prj_list_primary, gdb_outdir_list_primary, featurelayer_url_list_primary, featurelayer_name_list_primary, featurelayer_name_short_list_primary, service_name_list_primary, multiprocess_list_primary, multiprocess_toggle_list_primary)))
 
     #Test if user's output paths will hit Windows' character limit (260)
-    featurelayer_name_list_all = featurelayer_name_list_primary + featurelayer_name_list_secondary
-    featurelayer_name_short_list_all = [''.join(char for char in s if char.isalnum()) for s in featurelayer_name_list_all]
-
     objid_fc_path_max = max(objid_fc_path_list, key=len)
     objid_fc_path_max_basename = os.path.basename(objid_fc_path_max)
     featurelayer_name_short_max = max(featurelayer_name_short_list_all, key=len)
@@ -1675,13 +1931,14 @@ if __name__=='__main__':
     else:
         gis = GIS(portalurl, username, password)
 
-    #Run FeatureLayerDownload function
-    if(multiprocess_toggle == "true"):
+    #Run Multiprocessor FeatureLayerDownload function
+    if(len(inputs_list_primary) > 0 and multiprocess_toggle == "true"):
         arcpy.AddMessage("..BEGIN MULTIPROCESSING: " + str(len(inputs_list_primary)) + " FEATURE LAYER QUERIES TO PROCESS")
         FeatureLayerDownload.execute_services(inputs_list_primary)
         arcpy.AddMessage("..FINISHED MULTIPROCESSING")
 
-    else:
+    #Run Non-Multiprocessor FeatureLayerDownload function
+    if(len(inputs_list_primary) > 0 and multiprocess_toggle == "false"):
         for i in range(0, len(inputs_list_primary)):
             arcpy.AddMessage("..FEATURE LAYER QUERY " + str(i+1) + " OUT OF " + str(len(inputs_list_primary)))
             curr_inputs_list = inputs_list_primary[i]
@@ -1717,34 +1974,40 @@ if __name__=='__main__':
     primary_failcsv_list = primary_toplevelfailcsv_list + primary_queryfailcsv_list + primary_projectfailcsv_list + primary_selectfailcsv_list + primary_exportcountfail_list+ primary_exportfailcsv_list
 
     #If any secondary featurelayerurls, or if any queries, selections, or exports failed, run secondary multiprocessor
-    if((len(featurelayerurl_list_secondary) > 0) or (len(primary_failcsv_list) > 0)):
+    if((len(featurelayer_url_list_secondary) > 0) or (len(primary_failcsv_list) > 0)):
 
         #Get list of feature layer URLs from failed items
         primary_failcsv_urllist = []
         primary_failcsv_featurelayernamelist = []
+        primary_failcsv_featurelayernameshortlist = []
         primary_failcsv_featureservicenamelist = []
         for i in range(0, len(primary_failcsv_list)):
             curr_csv = primary_failcsv_list[i]
             curr_csv_path = outdir + "/" + curr_csv
             curr_df = pandas.read_csv(curr_csv_path)
             curr_featurelayer_url = curr_df["URL"][0]
-            curr_featurelayer = arcgis.features.FeatureLayer(curr_featurelayer_url)
-            curr_featurelayer_name = curr_featurelayer.properties.name
-            curr_featureservice = gis.content.get(curr_featurelayer.properties.serviceItemId)
-            curr_featureservice_name = curr_featureservice.name
+            curr_featurelayer_name = curr_df["NAME"][0]
+            curr_featurelayer_short_name = curr_df["SHORTNAME"][0]
+
+            #Get service name
+            url_split = urllib.parse.urlparse(curr_featurelayer_url).path.split("/")
+            curr_service_name = url_split[len(url_split)-3]
+
             primary_failcsv_urllist.append(curr_featurelayer_url)
             primary_failcsv_featurelayernamelist.append(curr_featurelayer_name)
-            primary_failcsv_featureservicenamelist.append(curr_featureservice_name)
+            primary_failcsv_featurelayernameshortlist.append(curr_featurelayer_short_name)
+            primary_failcsv_featureservicenamelist.append(curr_service_name)
 
         #If any feature layers failed during the primary multiprocessing, append them to the secondary list
         if(len(primary_failcsv_urllist)>0):
-            featurelayerurl_list_secondary = featurelayerurl_list_secondary + primary_failcsv_urllist
+            featurelayer_url_list_secondary = featurelayer_url_list_secondary + primary_failcsv_urllist
             featurelayer_name_list_secondary = featurelayer_name_list_secondary + primary_failcsv_featurelayernamelist
-            featureservice_name_list_secondary = featureservice_name_list_secondary + primary_failcsv_featureservicenamelist
+            featurelayer_name_short_list_secondary = featurelayer_name_short_list_secondary + primary_failcsv_featurelayernameshortlist
+            service_name_list_secondary = service_name_list_secondary + primary_failcsv_featureservicenamelist
 
         #Create input lists for secondary multiprocessing
         objid_count = len(objid_list)
-        featurelayer_count_secondary = len(featurelayerurl_list_secondary)
+        featurelayer_count_secondary = len(featurelayer_url_list_secondary)
         pro_portal_toggle_list_secondary = [pro_portal_toggle] * (objid_count * featurelayer_count_secondary)
         portalurl_list_secondary = [portalurl] * (objid_count * featurelayer_count_secondary)
         username_list_secondary = [username] * (objid_count * featurelayer_count_secondary)
@@ -1753,14 +2016,15 @@ if __name__=='__main__':
         objid_list_secondary = list(numpy.repeat(objid_list,featurelayer_count_secondary))
         output_prj_list_secondary = [output_prj] * (objid_count * featurelayer_count_secondary)
         gdb_outdir_list_secondary = [outdir] * (objid_count * featurelayer_count_secondary)
-        featurelayerurl_list_secondary_all = featurelayerurl_list_secondary * objid_count
+        featurelayer_url_list_secondary_all = featurelayer_url_list_secondary * objid_count
         featurelayer_name_list_secondary_all = featurelayer_name_list_secondary * objid_count
-        featureservice_name_list_secondary_all = featureservice_name_list_secondary * objid_count
+        featurelayer_name_short_list_secondary_all = featurelayer_name_short_list_secondary * objid_count
+        service_name_list_secondary_all = service_name_list_secondary * objid_count
         multiprocess_list_secondary = ["Secondary"] * (objid_count * featurelayer_count_secondary)
         multiprocess_toggle_list_secondary = [multiprocess_toggle] * (objid_count * featurelayer_count_secondary)
-        inputs_list_secondary = list(zip(pro_portal_toggle_list_secondary, portalurl_list_secondary, username_list_secondary, password_list_secondary, aoi_path_list_secondary, output_prj_list_secondary, gdb_outdir_list_secondary, featurelayerurl_list_secondary_all, featurelayer_name_list_secondary_all, featureservice_name_list_secondary_all, multiprocess_list_secondary, multiprocess_toggle_list_secondary))
+        inputs_list_secondary = list(zip(pro_portal_toggle_list_secondary, portalurl_list_secondary, username_list_secondary, password_list_secondary, aoi_path_list_secondary, output_prj_list_secondary, gdb_outdir_list_secondary, featurelayer_url_list_secondary_all, featurelayer_name_list_secondary_all, featurelayer_name_short_list_secondary_all, service_name_list_secondary_all, multiprocess_list_secondary, multiprocess_toggle_list_secondary))
 
-        #Run secondary multiprocessor
+        #Run secondary processing
         arcpy.AddMessage("\u200B")
         arcpy.AddMessage("\u200B")
         arcpy.AddMessage("SECONDARY FEATURE LAYER PROCESSING")
@@ -1826,6 +2090,7 @@ if __name__=='__main__':
         gdb_outdir_list_tertiary = []
         featurelayerurl_list_tertiary_all = []
         featurelayer_name_list_tertiary_all = []
+        featurelayer_name_short_list_tertiary_all = []
         featureservice_name_list_tertiary_all = []
         multiprocess_list_tertiary = []
         multiprocess_toggle_list_tertiary = []
@@ -1833,12 +2098,15 @@ if __name__=='__main__':
             curr_csv = secondary_failcsv_list[i]
             curr_csv_path = outdir + "/" + curr_csv
             curr_df = pandas.read_csv(curr_csv_path)
-            curr_featurelayer_name = curr_df["SHORTNAME"][0]
             curr_featurelayer_url = curr_df["URL"][0]
+            curr_featurelayer_name = curr_df["NAME"][0]
+            curr_featurelayer_short_name = curr_df["SHORTNAME"][0]
             curr_aoi_fc_path = curr_df["AOIFCPATH"][0]
-            curr_featurelayer = arcgis.features.FeatureLayer(curr_featurelayer_url)
-            curr_featureservice = gis.content.get(curr_featurelayer.properties.serviceItemId)
-            curr_featureservice_name = curr_featureservice.name
+
+            #New method for getting service name, more universal solution.
+            curr_featurelayer_url_split = urllib.parse.urlparse(curr_featurelayer_url).path.split("/")
+            curr_service_name_index = curr_featurelayer_url_split.index("services") + 1
+            curr_featureservice_name = curr_featurelayer_url_split[curr_service_name_index]
 
             #Append to input lists for tertiary processing
             pro_portal_toggle_list_tertiary.append(pro_portal_toggle)
@@ -1850,13 +2118,14 @@ if __name__=='__main__':
             gdb_outdir_list_tertiary.append(outdir)
             featurelayerurl_list_tertiary_all.append(curr_featurelayer_url)
             featurelayer_name_list_tertiary_all.append(curr_featurelayer_name)
+            featurelayer_name_short_list_tertiary_all.append(curr_featurelayer_short_name)
             featureservice_name_list_tertiary_all.append(curr_featureservice_name)
             multiprocess_list_tertiary.append("Tertiary")
             multiprocess_toggle_list_tertiary.append(multiprocess_toggle)
 
 
         #Create inputs list for tertiary processing
-        inputs_list_tertiary = list(zip(pro_portal_toggle_list_tertiary, portalurl_list_tertiary, username_list_tertiary, password_list_tertiary, aoi_path_list_tertiary, output_prj_list_tertiary, gdb_outdir_list_tertiary, featurelayerurl_list_tertiary_all, featurelayer_name_list_tertiary_all, featureservice_name_list_tertiary_all, multiprocess_list_tertiary, multiprocess_toggle_list_tertiary))
+        inputs_list_tertiary = list(zip(pro_portal_toggle_list_tertiary, portalurl_list_tertiary, username_list_tertiary, password_list_tertiary, aoi_path_list_tertiary, output_prj_list_tertiary, gdb_outdir_list_tertiary, featurelayerurl_list_tertiary_all, featurelayer_name_list_tertiary_all, featurelayer_name_short_list_tertiary_all, featureservice_name_list_tertiary_all, multiprocess_list_tertiary, multiprocess_toggle_list_tertiary))
 
         #Run tertiary processing
         arcpy.AddMessage("\u200B")
@@ -1921,6 +2190,10 @@ if __name__=='__main__':
         fcname_list.append(curr_fcname_split0)
     fcname_unique_list = sorted(list(set(fcname_list)), key=str.lower)
 
+    #Remove "FeatureLayerDownload" from list if it is in it
+    fcname_unique_list = [item for item in fcname_unique_list if "FeatureLayerDownload" not in item]
+
+
 
     ########################################################################
     ## LOOP THROUGH EACH SERIES OF GDBs, AND PULL DATA TOGETHER
@@ -1928,8 +2201,6 @@ if __name__=='__main__':
     for i in range(0, len(fcname_unique_list)):
         curr_fcname = fcname_unique_list[i]
         target_fc_path = master_gbd_outpath + "/" + curr_fcname
-        if(curr_fcname in ["FeatureLayerDownload"]):
-            continue
 
         arcpy.AddMessage("..PROCESSING: " + curr_fcname + " (" + str(i + 1) + " out of " + str(len(fcname_unique_list)) + ")")
         fcname_list_which = []
@@ -2088,78 +2359,10 @@ if __name__=='__main__':
 
         #Delete GDBs
         arcpy.AddMessage("....DELETING SCRATCH GDBs")
-        arcpy.Delete_management(gdb_path_list)
-
-
-
-##    ############################################################################
-##    ## PROCESS HIFLDRoads FEATURE CLASSES
-##    ############################################################################
-##    #Now merge PrimaryHighway/SecondaryHighway/Roads feature classes into a single feature class
-##    primaryhwy_target_fc_path = master_gbd_outpath + "/PrimaryHighway"
-##    secondaryhwy_target_fc_path = master_gbd_outpath + "/SecondaryHighway"
-##    roads_target_fc_path = master_gbd_outpath + "/Roads"
-##    hifldroads_fc_outpath = master_gbd_outpath + "/HIFLDRoads"
-##
-##    #If any of the PrimaryHighway/SecondaryHighway/Roads feature classes exist, continue
-##    if(arcpy.Exists(primaryhwy_target_fc_path) or arcpy.Exists(secondaryhwy_target_fc_path) or arcpy.Exists(roads_target_fc_path)):
-##
-##        arcpy.AddMessage("..PROCESSING: HIFLDRoads")
-##
-##        #Create hifld_merge_list
-##        hifld_merge_list = []
-##        hifld_count_list = []
-##        if(arcpy.Exists(primaryhwy_target_fc_path)):
-##            hifld_merge_list.append(primaryhwy_target_fc_path)
-##            primaryhwy_count = int(str(arcpy.GetCount_management(primaryhwy_target_fc_path)))
-##            hifld_count_list.append(primaryhwy_count)
-##        if(arcpy.Exists(secondaryhwy_target_fc_path)):
-##            hifld_merge_list.append(secondaryhwy_target_fc_path)
-##            secondaryhwy_count = int(str(arcpy.GetCount_management(secondaryhwy_target_fc_path)))
-##            hifld_count_list.append(secondaryhwy_count)
-##        if(arcpy.Exists(roads_target_fc_path)):
-##            hifld_merge_list.append(roads_target_fc_path)
-##            roads_count = int(str(arcpy.GetCount_management(roads_target_fc_path)))
-##            hifld_count_list.append(roads_count)
-##
-##        #Perform Merge
-##        arcpy.AddMessage("....MERGING PrimaryHighway/SecondaryHighway/Roads FEATURE CLASSES")
-##        arcpy.Merge_management(hifld_merge_list, hifldroads_fc_outpath)
-##        hifld_merge_count = int(str(arcpy.GetCount_management(hifldroads_fc_outpath)))
-##
-##        #If the feature counts don't match, retry with the Spatial Dataframe method
-##        if(hifld_merge_count != sum(hifld_count_list)):
-##
-##            arcpy.AddMessage("....ARCPY MERGE HAS DATA GAPS, RETRYING WITH SPATIAL DATAFRAMES")
-##            arcpy.Delete_management(hifldroads_fc_outpath)
-##
-##            #Create PrimaryHighway/SecondaryHighway/Roads SDFs
-##            sdf_concat_list = []
-##            if(arcpy.Exists(primaryhwy_target_fc_path)):
-##                primaryhwy_sdf = arcgis.GeoAccessor.from_featureclass(primaryhwy_target_fc_path)
-##                sdf_concat_list.append(primaryhwy_sdf)
-##            if(arcpy.Exists(secondaryhwy_target_fc_path)):
-##                secondaryhwy_sdf = arcgis.GeoAccessor.from_featureclass(secondaryhwy_target_fc_path)
-##                sdf_concat_list.append(secondaryhwy_sdf)
-##            if(arcpy.Exists(roads_target_fc_path)):
-##                roads_sdf = arcgis.GeoAccessor.from_featureclass(roads_target_fc_path)
-##                sdf_concat_list.append(roads_sdf)
-##
-##            #Concatenate PrimaryHighway/SecondaryHighway/Roads SDFs together
-##            if( len(sdf_concat_list) > 1):
-##                arcpy.AddMessage("....MERGING PrimaryHighway/SecondaryHighway/Roads FEATURE CLASSES")
-##                output_sdf = pandas.concat(sdf_concat_list)
-##            else:
-##                output_sdf = sdf_concat_list[0]
-##
-##            #Create output feature class
-##            arcpy.AddMessage("....CREATING OUTPUT FEATURE CLASS")
-##            output_sdf.spatial.to_featureclass(hifldroads_fc_outpath, sanitize_columns=False)
-##
-##            #Clear output_sdf from memory
-##            del output_sdf
-##            del sdf_concat_list
-##            gc.collect()
+        try:
+            arcpy.Delete_management(gdb_path_list)
+        except:
+            arcpy.AddMessage("......UNABLE TO DELETE SCRATCH GDBs DUE TO FILE LOCKS, DELETE MANUALLY")
 
 
     ############################################################################
@@ -2203,27 +2406,25 @@ if __name__=='__main__':
     arcpy.AddMessage("\u200B")
     arcpy.AddMessage("DELETING SCRATCH FILES")
 
-    #KEEPING SCRATCH FOLDER FOR NOW
-    #Get list of files in the scratch directory
-    #Delete everything except the AOI.gdb
-    #scratchdir_files = os.listdir(scratchdir)
-    #scratchdir_files.remove("AOI.gdb")
-    #if(len(scratchdir_files) > 0):
-        #for i in range(0, len(scratchdir_files)):
-            #curr_file_path = scratchdir + "/" + scratchdir_files[i]
-            #os.remove(curr_file_path)
-
     #Get list of files in the output directory
     #Delete everything except the FeatureLayerDownload.gdb and the failure CSV files
     outdir_files = os.listdir(outdir)
     outdir_files.remove("FeatureLayerDownload.gdb")
     outdir_files.remove("_scratch")
+    delete_filelock_test = False
     if(len(outdir_files) > 0):
         for i in range(0, len(outdir_files)):
             curr_file_path = outdir + "/" + outdir_files[i]
             curr_file_ext = curr_file_path[-3:]
             if(not curr_file_ext == "csv"):
-                os.remove(curr_file_path)
+                try:
+                    os.remove(curr_file_path)
+                except:
+                    delete_filelock_test = True
+
+    if(delete_filelock_test == True):
+        arcpy.AddMessage("..UNABLE TO DELETE SCRATCH FILES DUE TO FILE LOCKS, DELETE MANUALLY")
+
 
 
     arcpy.AddMessage("\u200B")
