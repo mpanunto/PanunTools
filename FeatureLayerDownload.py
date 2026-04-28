@@ -504,40 +504,70 @@ def worker_function_services(in_inputs_list):
 
                     #Project the exported feature class to match the user specified projection
                     project_check = False
+                    project_attempt = 1
                     while(project_check == False):
                         try:
                             arcpy.Project_management(curr_fc_path, curr_fc_prj_path, curr_output_prj_sr)
                             project_check = True
                         except Exception as e:
                             arcpy.AddMessage(e)
+                            project_attempt = project_attempt + 1
+
                             arcpy.AddMessage("........PROJECT FAILED, RE-TRYING")
+
+                            if(project_attempt < 6):
+                                arcpy.AddMessage("........PROJECTION FAILED, RE-TRYING")
+                                project_check = False
+                                time.sleep(5)
+                            if(project_attempt >= 6):
+                                arcpy.AddMessage("........PROJECTION FAILED 5 TIMES, SKIPPING DATASET")
+                                project_check = True
+
+                                #Export CSV file containing information needed to retry query
+                                if(curr_multiprocess == "Primary"):
+                                    csvdata = [{"NAME":curr_featurelayer_name_input, "SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+                                    projectfail_df = pandas.DataFrame(csvdata)
+                                    projectfail_csv_path = curr_outdir + "/primary_projectoutputfail_" + curr_featurelayer_name_short + ".csv"
+                                    projectfail_df.to_csv(projectfail_csv_path, index=False)
+                                if(curr_multiprocess == "Secondary"):
+                                    csvdata = [{"NAME":curr_featurelayer_name_input, "SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+                                    projectfail_df = pandas.DataFrame(csvdata)
+                                    projectfail_csv_path = curr_outdir + "/secondary_projectoutputfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                                    projectfail_df.to_csv(projectfail_csv_path, index=False)
+                                if(curr_multiprocess == "Tertiary"):
+                                    csvdata = [{"NAME":curr_featurelayer_name_input, "SHORTNAME":curr_featurelayer_name_short, "URL":curr_featurelayer_url, "AOIFCPATH":curr_aoi_fc_path}]
+                                    projectfail_df = pandas.DataFrame(csvdata)
+                                    projectfail_csv_path = curr_outdir + "/tertiary_projectoutputfail_" + curr_featurelayer_name_short + "_ObjID" + str(curr_objid_number) + ".csv"
+                                    projectfail_df.to_csv(projectfail_csv_path, index=False)
+
+                            #Delete projected output feature class if it exists
                             if(arcpy.Exists(curr_fc_prj_path)):
                                 arcpy.Delete_management(curr_fc_prj_path)
                             time.sleep(5)
 
-                    #Delete the original exported output
-                    delete_check = False
-                    while(delete_check == False):
-                        try:
-                            arcpy.Delete_management(curr_fc_path)
-                            delete_check = True
-                        except Exception as e:
-                            arcpy.AddMessage(e)
-                            arcpy.AddMessage("........DELETE FEATURE CLASS FAILED, RE-TRYING")
-                            time.sleep(5)
+                        #Delete the original exported output
+                        delete_check = False
+                        while(delete_check == False):
+                            try:
+                                arcpy.Delete_management(curr_fc_path)
+                                delete_check = True
+                            except Exception as e:
+                                arcpy.AddMessage(e)
+                                arcpy.AddMessage("........DELETE FEATURE CLASS FAILED, RE-TRYING")
+                                time.sleep(5)
 
-                    #Rename the projected feature class
-                    rename_check = False
-                    while(rename_check == False):
-                        try:
-                            arcpy.Rename_management(curr_fc_prj_path, curr_fc_path)
-                            rename_check = True
-                        except Exception as e:
-                            arcpy.AddMessage(e)
-                            arcpy.AddMessage("........RENAME FEATURE CLASS FAILED, RE-TRYING")
-                            time.sleep(5)
+                        #Rename the projected feature class
+                        rename_check = False
+                        while(rename_check == False):
+                            try:
+                                arcpy.Rename_management(curr_fc_prj_path, curr_fc_path)
+                                rename_check = True
+                            except Exception as e:
+                                arcpy.AddMessage(e)
+                                arcpy.AddMessage("........RENAME FEATURE CLASS FAILED, RE-TRYING")
+                                time.sleep(5)
 
-                    arcpy.AddMessage("......EXPORT COMPLETE")
+                        arcpy.AddMessage("......EXPORT COMPLETE")
                 else:
                     arcpy.AddMessage("......EXPORT COMPLETE")
 
