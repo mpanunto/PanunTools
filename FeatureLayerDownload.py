@@ -1898,7 +1898,7 @@ if __name__=='__main__':
 
 
                         #Append URLs to lists. If they are high-density datasets, send them through the secondary multiprocessor instead
-                        highdensity_list = ["Contour", "Label", "HIFLD Plus GTAC", "Road", "Flowline", "Waterbody", "Wetland", "PLSS", "FSVeg - Stands", "Structure"]
+                        highdensity_list = ["Contour", "Label", "HIFLD Plus GTAC", "NHD Flowline", "NHD Waterbody", "Wetland", "PLSS", "FSVeg - Stands", "USA Structures"]
                         highdensity_matches = [s for s in highdensity_list if s.lower() in curr_featurelayer_name.lower()]
                         if(len(highdensity_matches) > 0):
                             featurelayer_url_list_secondary.append(curr_featurelayer_url)
