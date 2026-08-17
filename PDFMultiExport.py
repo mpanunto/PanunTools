@@ -15,7 +15,8 @@ while(libraries_check == False):
     try:
         print("Importing Libraries")
         print(" ")
-        import arcpy, pandas, time, datetime, os, sys, multiprocessing, random, ftplib, glob, shutil
+        import os, sys, pandas, time, datetime, multiprocessing, random, ftplib, glob, shutil
+        import arcpy
         from urllib.request import urlopen
         from multiprocessing import Pool, freeze_support
         libraries_check = True
@@ -30,7 +31,7 @@ while(libraries_check == False):
             time.sleep(5)
         if(libraries_attempt >= 6):
             print("........LIBRARY IMPORT FAILED 5 TIMES, QUITTING")
-            time.sleep(60)
+            sys.exit(1)
 
 #There is a reported bug in Python
 #Apply the patch in a new class
@@ -42,6 +43,20 @@ class Explicit_FTP_TLS(ftplib.FTP_TLS):
         if self._prot_p:
             conn = self.context.wrap_socket(conn, server_hostname=self.host, session=self.sock.session)
         return conn, size
+
+#Global progress tracking variables - default to None, only populated when running via the multiprocessor Pool
+progress_counter = None
+progress_lock = None
+progress_total = None
+
+#Initializer function - runs once per worker process when the Pool starts, giving each
+#worker access to the same shared counter/lock/total so progress numbering stays unified
+#across all workers instead of restarting at "1 out of X" per worker
+def init_worker(shared_counter, shared_lock, shared_total):
+    global progress_counter, progress_lock, progress_total
+    progress_counter = shared_counter
+    progress_lock = shared_lock
+    progress_total = shared_total
 
 #Define function to export PDFs
 def worker_function(in_inputs_list):
@@ -138,6 +153,17 @@ def worker_function(in_inputs_list):
             #If export was requested, proceed
             if export == "YES":
 
+                #Determine progress numbering: use the shared global counter if running via the pool,
+                #otherwise fall back to local position within this call's job list (non-multiprocessor path)
+                if(progress_counter is not None):
+                    with progress_lock:
+                        progress_counter.value += 1
+                        curr_progress_num = progress_counter.value
+                    curr_progress_total = progress_total
+                else:
+                    curr_progress_num = i + 1
+                    curr_progress_total = export_count
+
                 if(exportrequest in ["GEO AND IMAGE", "GEO AND GEOIMAGE"] and exportrequest_label == "NO" and ftpupload_val == "YES" and ftpuploadrequest_val in ["GEO AND IMAGE", "GEO AND GEOIMAGE"]):
                     exportrequest_label = "YES - PREFIX"
 
@@ -166,9 +192,9 @@ def worker_function(in_inputs_list):
 
                 #Print the current export being processed
                 if(exportfilename == "GEO OPS"):
-                    arcpy.AddMessage(".." + geoops_str + " (" + str(i+1) + " out of " + str(export_count) + ")")
+                    arcpy.AddMessage(".." + geoops_str + " (" + str(curr_progress_num) + " out of " + str(curr_progress_total) + ")")
                 if(exportfilename == "USER SPECIFIED"):
-                    arcpy.AddMessage(".." + export_user_specified + " (" + str(i+1) + " out of " + str(export_count) + ")")
+                    arcpy.AddMessage(".." + export_user_specified + " (" + str(curr_progress_num) + " out of " + str(curr_progress_total) + ")")
 
                 #Create aprxpath variable
                 #If user selected "Specify Incident 'projects' Directory", need to concatenate the aprxfilename with the
@@ -404,6 +430,14 @@ def worker_function(in_inputs_list):
                         except Exception as e:
                             arcpy.AddMessage(e)
                             arcpy.AddMessage("......FAILED TO PERFORM GEO EXPORT, SKIPPING")
+                            time.sleep(5)
+                            try:
+                                fail_dirname = os.path.dirname(pdf_geo_outpath)
+                                fail_basename = os.path.basename(pdf_geo_outpath)
+                                fail_txt_path = fail_dirname + "/FAILED_" + fail_basename.replace(".pdf", ".txt")
+                                open(fail_txt_path, 'w').close()
+                            except Exception as fail_e:
+                                arcpy.AddMessage("......ALSO FAILED TO WRITE FAILURE LOG FILE: " + str(fail_e))
                             geo_export_complete = True
 
 
@@ -501,6 +535,14 @@ def worker_function(in_inputs_list):
                         except Exception as e:
                             arcpy.AddMessage(e)
                             arcpy.AddMessage("......FAILED TO PERFORM IMAGE EXPORT, SKIPPING")
+                            time.sleep(5)
+                            try:
+                                fail_dirname = os.path.dirname(pdf_image_outpath)
+                                fail_basename = os.path.basename(pdf_image_outpath)
+                                fail_txt_path = fail_dirname + "/FAILED_" + fail_basename.replace(".pdf", ".txt")
+                                open(fail_txt_path, 'w').close()
+                            except Exception as fail_e:
+                                arcpy.AddMessage("......ALSO FAILED TO WRITE FAILURE LOG FILE: " + str(fail_e))
                             image_export_complete = True
 
 
@@ -598,10 +640,35 @@ def worker_function(in_inputs_list):
                         except Exception as e:
                             arcpy.AddMessage(e)
                             arcpy.AddMessage("......FAILED TO PERFORM GEOIMAGE EXPORT, SKIPPING")
+                            time.sleep(5)
+                            try:
+                                fail_dirname = os.path.dirname(pdf_geoimage_outpath)
+                                fail_basename = os.path.basename(pdf_geoimage_outpath)
+                                fail_txt_path = fail_dirname + "/FAILED_" + fail_basename.replace(".pdf", ".txt")
+                                open(fail_txt_path, 'w').close()
+                            except Exception as fail_e:
+                                arcpy.AddMessage("......ALSO FAILED TO WRITE FAILURE LOG FILE: " + str(fail_e))
                             geoimage_export_complete = True
 
     except Exception as e:
         arcpy.AddMessage(e)
+        try:
+            if('pdf_geo_outpath' in locals()):
+                fail_ref_path = pdf_geo_outpath
+            elif('pdf_image_outpath' in locals()):
+                fail_ref_path = pdf_image_outpath
+            elif('pdf_geoimage_outpath' in locals()):
+                fail_ref_path = pdf_geoimage_outpath
+            else:
+                fail_ref_path = None
+
+            if(fail_ref_path is not None):
+                fail_dirname = os.path.dirname(fail_ref_path)
+                fail_basename = os.path.basename(fail_ref_path)
+                fail_txt_path = fail_dirname + "/FAILED_" + fail_basename.replace(".pdf", ".txt")
+                open(fail_txt_path, 'w').close()
+        except Exception as fail_e:
+            arcpy.AddMessage("FAILED TO WRITE FAILURE LOG FILE: " + str(fail_e))
         time.sleep(60)
 
 
@@ -754,8 +821,7 @@ def worker_function(in_inputs_list):
 
 
     if(multiprocess_toggle_val == "true"):
-        arcpy.AddMessage("\u200B")
-        arcpy.AddMessage("DONE!")
+        arcpy.AddMessage("..COMPLETED")
 
 
 
@@ -772,11 +838,18 @@ def execute(inputs):
     #cpucount = multiprocessing.cpu_count() - 1
 
     #Create pool of workers
-    pool = multiprocessing.Pool()
+    worker_count = min(len(inputs), multiprocessing.cpu_count())
+
+    #Shared counter, lock, and total job count so all workers report unified progress numbering
+    shared_counter = multiprocessing.Value('i', 0)
+    shared_lock = multiprocessing.Lock()
+    shared_total = len(inputs)
+
+    pool = multiprocessing.Pool(processes=worker_count, initializer=init_worker, initargs=(shared_counter, shared_lock, shared_total))
 
     #Submit jobs to workers
     for curr_input in inputs:
-        pool.imap_unordered(worker_function, [curr_input]) # args are passed as a list
+        pool.imap_unordered(worker_function, [[curr_input]]) # args are passed as a list
 
     pool.close()
     pool.join()
@@ -788,18 +861,18 @@ def execute(inputs):
 if __name__=="__main__":
 
     #Specify incident name, unit id, and incident number
-    #incident_name = "Deuel Creek"
+    #incident_name = "Shingle"
     incident_name = arcpy.GetParameterAsText(0)
 
-    #incident_id = "UT-NWS-000283"
+    #incident_id = "OR-3953S-000587"
     incident_id = arcpy.GetParameterAsText(1)
 
     #Specify the products directory
-    #products_dir = r"C:\Workspace\OneDrive - FireNet\2022_DeuelCreek\products"
+    #products_dir = r"C:\Workspace_NonOneDrive\Trash\PanunTools-main\output_PDFMultiExport\products"
     products_dir = arcpy.GetParameterAsText(2)
 
     #Specify the path to the "PDFMultiExport.xlsx" file
-    #export_table_xlsx_path = r"C:\Workspace\OneDrive - FireNet\2022_DeuelCreek\tools\PanunTools-main\PDFMultiExport_new.xlsx"
+    #export_table_xlsx_path = r"C:\Workspace_NonOneDrive\Trash\PanunTools-main\output_PDFMultiExport\PDFMultiExport_Shingle.xlsx"
     export_table_xlsx_path = arcpy.GetParameterAsText(3)
 
     #Toggle to specify projects directory, or use spreadsheet 'APRX_PATH' values
@@ -808,7 +881,7 @@ if __name__=="__main__":
     projects_toggle = arcpy.GetParameterAsText(4)
 
     #Specify Incident 'projects' Directory
-    #projects_dir = r"C:\Workspace\OneDrive - FireNet\2022_DeuelCreek\projects"
+    #projects_dir = r"C:\Workspace_NonOneDrive\Trash\PanunTools-main\output_PDFMultiExport\projects"
     projects_dir = arcpy.GetParameterAsText(5)
 
     #Toggle for FTP Upload
@@ -830,15 +903,22 @@ if __name__=="__main__":
 
 
 
+    #Resolve the real toolbox path/folder (sys.argv[0] points to a virtual
+    #wrapper path inside the .atbx, not a real file on disk)
+    scriptpath = sys.argv[0]
+    tbxpath = scriptpath[: scriptpath.lower().index(".atbx") + len(".atbx")]
+    tbxdir = os.path.dirname(tbxpath)
+
+    #Make sibling modules in the toolbox folder importable
+    if tbxdir not in sys.path:
+        sys.path.insert(0, tbxdir)
+
     import PDFMultiExport
 
     arcpy.AddMessage("\u200B")
     arcpy.AddMessage("PDF Multi Export tool developed by Matt Panunto, DOI-BLM")
 
     #Get toolbox version
-    scriptpath = sys.argv[0]
-    scriptdirpath = os.path.dirname(scriptpath)
-    tbxpath = scriptdirpath + "/PanunTools.tbx"
     tbximport = arcpy.ImportToolbox(tbxpath)
     tbxversion = arcpy.Usage(tbximport)
 
@@ -1154,58 +1234,20 @@ if __name__=="__main__":
             inputs_list_multiprocess.append(curr_input_list_geo)
             inputs_list_multiprocess.append(curr_input_list_geoimage)
 
-    #get CPU count, and range
-    cpu_count = multiprocessing.cpu_count()
-
-    #If the number of exports is less than the total number of logical processors available,
-    #set CPU count to equal number of exports
-    if(cpu_count > len(inputs_list_multiprocess)):
-        cpu_count = len(inputs_list_multiprocess)
 
     #Export maps. Use multiprocessor if user enabled it, else export one map at a time.
     if(multiprocess_toggle == "true"):
 
+        arcpy.AddMessage("\u200B")
+        arcpy.AddMessage("NOTE: MULTIPLE COMMAND PROMPT WINDOWS WILL OPEN. DO NOT CLOSE THESE WINDOWS MANUALLY - THEY WILL CLOSE AUTOMATICALLY WHEN ALL EXPORTS ARE FINISHED")
+        arcpy.AddMessage("\u200B")
+
         #Shuffle the inputs_list_multiprocess to randomize the processing order
         random.shuffle(inputs_list_multiprocess)
-        inputs_list_multiprocess_cpu_split = numpy.array_split(inputs_list_multiprocess, cpu_count)
-
-        #If any of the "inputs_list_multiprocess_cpu_split" elements contain multiple map series, reshuffle
-        #Reshuffle up to 1000 times
-        reshuffle_check = True
-        reshuffle_attempt = 0
-        while(reshuffle_check == True and reshuffle_attempt <= 1000):
-
-            #Build list of map series values
-            reshuffle_check_list = []
-            for i in range(0, len(inputs_list_multiprocess_cpu_split)):
-                curr_inputs_list_multiprocess_cpu_split = inputs_list_multiprocess_cpu_split[i]
-                mapseries_pages_val_list = []
-                for j in range(0, len(curr_inputs_list_multiprocess_cpu_split)):
-                    mapseries_pages_val_list.append(curr_inputs_list_multiprocess_cpu_split[j][19])
-
-                #Determine if any elements have 2 or more map series
-                mapseries_all_count = mapseries_pages_val_list.count("ALL")
-                mapseries_range_count = mapseries_pages_val_list.count("RANGE")
-                mapseries_sum_count = sum([mapseries_all_count, mapseries_range_count])
-                if(mapseries_sum_count >= 2):
-                    reshuffle_check_list.append(True)
-                else:
-                    reshuffle_check_list.append(False)
-
-            #If any elements have 2 or more map series, reshuffle
-            if(True in reshuffle_check_list):
-                reshuffle_check = True
-                random.shuffle(inputs_list_multiprocess)
-                inputs_list_multiprocess_cpu_split = numpy.array_split(inputs_list_multiprocess, cpu_count)
-                reshuffle_attempt = reshuffle_attempt + 1
-            else:
-                reshuffle_check = False
-        #arcpy.AddMessage(str(reshuffle_attempt) + " Reshuffle Attempts")
-
 
         arcpy.AddMessage("\u200B")
         arcpy.AddMessage("Begin multiprocessing")
-        PDFMultiExport.execute(inputs_list_multiprocess_cpu_split)
+        PDFMultiExport.execute(inputs_list_multiprocess)
         arcpy.AddMessage("..Finished multiprocessing")
 
     else:
