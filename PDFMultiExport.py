@@ -108,7 +108,7 @@ def worker_function(in_inputs_list):
             exportrequest_label = curr_in_inputs_list[20]
 
             mapseries_pages = curr_in_inputs_list[21]
-            mapseries_range = curr_in_inputs_list[22]
+            mapseries_range = str(curr_in_inputs_list[22])
             mapseries_files = curr_in_inputs_list[23]
 
             ftpupload_val = curr_in_inputs_list[24]
@@ -247,6 +247,7 @@ def worker_function(in_inputs_list):
                 #If Map Series, and RANGE is specified, remove the spaces from the user specified range
                 if(mapseries == True and mapseries_pages == "RANGE"):
                     mapseries_range_val = mapseries_range.replace(" ", "")
+
 
                 #Create datetime stamp for current time
                 now = datetime.datetime.now()
