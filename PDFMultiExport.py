@@ -873,7 +873,7 @@ if __name__=="__main__":
     products_dir = arcpy.GetParameterAsText(2)
 
     #Specify the path to the "PDFMultiExport.xlsx" file
-    #export_table_xlsx_path = r"C:\Workspace_NonOneDrive\Trash\PanunTools-main\output_PDFMultiExport\PDFMultiExport_Shingle.xlsx"
+    #export_table_xlsx_path = r"C:\Workspace_NonOneDrive\Trash\PanunTools-main\PDFMultiExport_RISTTest.xlsx"
     export_table_xlsx_path = arcpy.GetParameterAsText(3)
 
     #Toggle to specify projects directory, or use spreadsheet 'APRX_PATH' values
@@ -1032,6 +1032,9 @@ if __name__=="__main__":
     except:
         arcpy.AddError("UNABLE TO READ PDF MULTI EXPORT SPREADSHEET, CHECK TO MAKE SURE IT ISN'T CURRENTLY OPEN")
         raise arcpy.ExecuteError
+
+    #If any rows in the EXPORT column are null/empty, drop the rows
+    export_table_df = export_table_df[~pandas.isna(export_table_df["EXPORT"])].copy()
 
     #Check that FTP_UPLOAD_REQUEST values agree with the EXPORT_REQUEST
     ftpuploadrequest_match_check_list = []
